@@ -342,8 +342,7 @@
       width: 92px;
       height: 92px;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 60% 35%, #22c55e 0%, #15803d 48%, #1d4ed8 52%, #1e3a8a 100%);
+      background: radial-gradient(circle at 60% 35%, #22c55e 0%, #15803d 48%, #1d4ed8 52%, #1e3a8a 100%);
       border: 2.5px solid #facc15;
       position: relative;
       overflow: hidden;
@@ -831,8 +830,8 @@
       document.getElementById("startModal").classList.remove("hidden");
     }
 
-    /* ================= OPSIONAL GAMBAR EKSTERNAL (JIKA ADA DI REPO) ================= */
-    function loadOptionalImg(src) {
+    /* ================= ASET TERPISAH (bg-akademi.png, ryu.png, sinta.png, bot-ai.png) ================= */
+    function loadAsset(src) {
       const img = new Image();
       img.ready = false;
       img.onload = () => { img.ready = true; };
@@ -840,8 +839,12 @@
       return img;
     }
 
-    const customBgImg = loadOptionalImg("bg-akademi.png");
-    const customBotImg = loadOptionalImg("maskot.png");
+    const assets = {
+      bg: loadAsset("bg-akademi.png"),
+      ryu: loadAsset("ryu.png"),
+      sinta: loadAsset("sinta.png"),
+      botai: loadAsset("bot-ai.png")
+    };
 
     /* ================= STATE GAME RPG ================= */
     const state = {
@@ -1107,7 +1110,6 @@
       ctx.translate(cx, cy + floatY);
       ctx.scale(scale, scale);
 
-      // Tebing batu kerucut terbalik
       const rockGrad = ctx.createLinearGradient(0, 0, 0, 85);
       rockGrad.addColorStop(0, "#475569");
       rockGrad.addColorStop(1, "#1e293b");
@@ -1121,13 +1123,11 @@
       ctx.closePath();
       ctx.fill();
 
-      // Rumput atas
       ctx.fillStyle = "#16a34a";
       ctx.beginPath();
       ctx.ellipse(0, 0, 94, 18, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Menara kecil di pulau
       ctx.fillStyle = "#e2e8f0";
       ctx.fillRect(-18, -36, 16, 34);
       ctx.fillStyle = "#2563eb";
@@ -1138,7 +1138,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Air terjun berkilau
       if (hasWaterfall) {
         const wfGrad = ctx.createLinearGradient(0, 8, 0, 145);
         wfGrad.addColorStop(0, "rgba(186, 230, 253, 0.92)");
@@ -1154,7 +1153,6 @@
       const cx = 640;
       const baseY = 315;
 
-      // Pegunungan latar
       ctx.fillStyle = "#3b5998";
       ctx.beginPath();
       ctx.moveTo(0, 320);
@@ -1169,7 +1167,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Menara kiri & kanan kastil
       const towers = [
         { x: cx - 185, y: baseY - 125, w: 48, h: 125, roofH: 52 },
         { x: cx - 115, y: baseY - 165, w: 56, h: 165, roofH: 64 },
@@ -1188,12 +1185,10 @@
         ctx.closePath();
         ctx.fill();
 
-        // Jendela menyala
         ctx.fillStyle = "#38bdf8";
         ctx.fillRect(t.x + t.w / 2 - 4, t.y + 24, 8, 18);
       }
 
-      // Badan utama kastil & kristal biru tengah
       ctx.fillStyle = "#94a3b8";
       ctx.fillRect(cx - 125, baseY - 135, 250, 135);
 
@@ -1210,7 +1205,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Gerbang portal bercahaya
       const portalGrad = ctx.createRadialGradient(cx, baseY - 42, 8, cx, baseY - 42, 58);
       portalGrad.addColorStop(0, "#e0f2fe");
       portalGrad.addColorStop(0.6, "#0284c7");
@@ -1223,7 +1217,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Papan nama Akademi Pemrograman
       ctx.fillStyle = "#0f172a";
       ctx.strokeStyle = "#38bdf8";
       ctx.lineWidth = 2;
@@ -1240,19 +1233,16 @@
     }
 
     function drawCourtyardAndBanners() {
-      // Lantai plaza batu & rumput tepi
       const groundGrad = ctx.createLinearGradient(0, 315, 0, 720);
       groundGrad.addColorStop(0, "#475569");
       groundGrad.addColorStop(1, "#1e293b");
       ctx.fillStyle = groundGrad;
       ctx.fillRect(0, 315, canvas.width, 405);
 
-      // Rumput & bunga di sisi kiri-kanan
       ctx.fillStyle = "#15803d";
       ctx.fillRect(0, 315, 290, 95);
       ctx.fillRect(990, 315, 290, 95);
 
-      // Jalan utama berperspektif
       const pathGrad = ctx.createLinearGradient(0, 315, 0, 720);
       pathGrad.addColorStop(0, "#cbd5e1");
       pathGrad.addColorStop(1, "#94a3b8");
@@ -1265,7 +1255,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Garis ubin jalan
       ctx.strokeStyle = "rgba(51, 65, 85, 0.35)";
       ctx.lineWidth = 2;
       for (let y = 355; y < 710; y += 48) {
@@ -1275,7 +1264,6 @@
         ctx.stroke();
       }
 
-      // 2 Banner biru berlogo buku di sisi kiri (seperti referensi)
       const bannersX = [255, 345];
       for (const bx of bannersX) {
         ctx.fillStyle = "#1e3a8a";
@@ -1291,7 +1279,6 @@
         ctx.fill();
         ctx.stroke();
 
-        // Ikon buku putih
         ctx.strokeStyle = "#ffffff";
         ctx.lineWidth = 2;
         ctx.strokeRect(bx - 12, 185, 24, 18);
@@ -1322,75 +1309,69 @@
     }
 
     function drawSinta(npc) {
-      const bob = Math.sin(animTick) * 2;
+      const bob = Math.sin(animTick) * 2.5;
       ctx.save();
       ctx.translate(npc.x, npc.y + bob);
 
-      // Bayangan
       ctx.fillStyle = "rgba(15, 23, 42, 0.38)";
       ctx.beginPath();
-      ctx.ellipse(0, 46, 26, 9, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 48, 26, 9, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Kaki & sepatu
-      ctx.fillStyle = "#fde68a";
-      ctx.fillRect(-9, 22, 6, 18);
-      ctx.fillRect(3, 22, 6, 18);
-      ctx.fillStyle = "#1e293b";
-      ctx.fillRect(-10, 38, 8, 7);
-      ctx.fillRect(2, 38, 8, 7);
+      if (assets.sinta.ready) {
+        ctx.drawImage(assets.sinta, -48, -68, 96, 114);
+      } else {
+        ctx.fillStyle = "#fde68a";
+        ctx.fillRect(-9, 22, 6, 18);
+        ctx.fillRect(3, 22, 6, 18);
+        ctx.fillStyle = "#1e293b";
+        ctx.fillRect(-10, 38, 8, 7);
+        ctx.fillRect(2, 38, 8, 7);
 
-      // Rok lipit biru akademi
-      ctx.fillStyle = "#1d4ed8";
-      ctx.beginPath();
-      ctx.moveTo(-15, 4);
-      ctx.lineTo(15, 4);
-      ctx.lineTo(21, 25);
-      ctx.lineTo(-21, 25);
-      ctx.closePath();
-      ctx.fill();
+        ctx.fillStyle = "#1d4ed8";
+        ctx.beginPath();
+        ctx.moveTo(-15, 4);
+        ctx.lineTo(15, 4);
+        ctx.lineTo(21, 25);
+        ctx.lineTo(-21, 25);
+        ctx.closePath();
+        ctx.fill();
 
-      // Blazer putih-biru
-      ctx.fillStyle = "#f8fafc";
-      ctx.beginPath();
-      ctx.roundRect(-13, -18, 26, 24, 6);
-      ctx.fill();
-      ctx.strokeStyle = "#2563eb";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+        ctx.fillStyle = "#f8fafc";
+        ctx.beginPath();
+        ctx.roundRect(-13, -18, 26, 24, 6);
+        ctx.fill();
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-      // Dasi pita emas
-      ctx.fillStyle = "#facc15";
-      ctx.beginPath();
-      ctx.arc(0, -11, 3.5, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#facc15";
+        ctx.beginPath();
+        ctx.arc(0, -11, 3.5, 0, Math.PI * 2);
+        ctx.fill();
 
-      // Rambut panjang belakang
-      ctx.fillStyle = "#1e1b4b";
-      ctx.beginPath();
-      ctx.roundRect(-19, -42, 38, 44, 14);
-      ctx.fill();
+        ctx.fillStyle = "#1e1b4b";
+        ctx.beginPath();
+        ctx.roundRect(-19, -42, 38, 44, 14);
+        ctx.fill();
 
-      // Wajah
-      ctx.fillStyle = "#fde68a";
-      ctx.beginPath();
-      ctx.arc(0, -32, 15, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#fde68a";
+        ctx.beginPath();
+        ctx.arc(0, -32, 15, 0, Math.PI * 2);
+        ctx.fill();
 
-      // Poni rambut
-      ctx.fillStyle = "#1e1b4b";
-      ctx.beginPath();
-      ctx.arc(0, -36, 16, Math.PI, 0);
-      ctx.fill();
+        ctx.fillStyle = "#1e1b4b";
+        ctx.beginPath();
+        ctx.arc(0, -36, 16, Math.PI, 0);
+        ctx.fill();
 
-      // Mata anime
-      ctx.fillStyle = "#1d4ed8";
-      ctx.beginPath();
-      ctx.arc(-5, -31, 2.5, 0, Math.PI * 2);
-      ctx.arc(5, -31, 2.5, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#1d4ed8";
+        ctx.beginPath();
+        ctx.arc(-5, -31, 2.5, 0, Math.PI * 2);
+        ctx.arc(5, -31, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-      // Nama & jabatan
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 13px Segoe UI";
       ctx.textAlign = "center";
@@ -1400,7 +1381,7 @@
       ctx.fillText("Pemandu Akademi", 0, 76);
 
       ctx.restore();
-      drawQuestBadge(npc.x, npc.y - 66);
+      drawQuestBadge(npc.x, npc.y - 74);
     }
 
     function drawBotAI(npc) {
@@ -1410,13 +1391,12 @@
 
       ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
       ctx.beginPath();
-      ctx.ellipse(0, 46 - floatY, 26, 9, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 48 - floatY, 26, 9, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      if (customBotImg.ready) {
-        ctx.drawImage(customBotImg, -46, -54, 92, 96);
+      if (assets.botai.ready) {
+        ctx.drawImage(assets.botai, -48, -62, 96, 104);
       } else {
-        // Fallback robot AI detail
         ctx.fillStyle = "#f1f5f9";
         ctx.beginPath();
         ctx.roundRect(-18, -10, 36, 32, 10);
@@ -1454,11 +1434,11 @@
       ctx.fillText("Bot AI", 0, 62 - floatY);
       ctx.restore();
 
-      drawQuestBadge(npc.x, npc.y - 68 + floatY);
+      drawQuestBadge(npc.x, npc.y - 72 + floatY);
     }
 
     function drawRyu() {
-      const step = Math.sin(state.walkPhase) * 7;
+      const step = Math.sin(state.walkPhase) * 6;
       const py = state.y - state.zJump;
 
       ctx.save();
@@ -1467,73 +1447,70 @@
       ctx.ellipse(state.x, state.y + 50, 28, 10, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.translate(state.x, py);
+      ctx.translate(state.x, py + step * 0.35);
       ctx.scale(state.facing, 1);
 
-      // Kaki celana gelap & sepatu futuristik
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(-13, 18 + step * 0.6, 10, 24 - step * 0.4);
-      ctx.fillRect(3, 18 - step * 0.6, 10, 24 + step * 0.4);
-      ctx.fillStyle = "#38bdf8";
-      ctx.fillRect(-14, 38 + step * 0.6, 12, 6);
-      ctx.fillRect(2, 38 - step * 0.6, 12, 6);
+      if (assets.ryu.ready) {
+        ctx.drawImage(assets.ryu, -54, -74, 108, 124);
+      } else {
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(-13, 18 + step * 0.6, 10, 24 - step * 0.4);
+        ctx.fillRect(3, 18 - step * 0.6, 10, 24 + step * 0.4);
+        ctx.fillStyle = "#38bdf8";
+        ctx.fillRect(-14, 38 + step * 0.6, 12, 6);
+        ctx.fillRect(2, 38 - step * 0.6, 12, 6);
 
-      // Jaket putih-hitam beraksen neon SMK Bina Mandiri
-      ctx.fillStyle = "#111827";
-      ctx.beginPath();
-      ctx.roundRect(-19, -16, 38, 36, 8);
-      ctx.fill();
-      ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
+        ctx.fillStyle = "#111827";
+        ctx.beginPath();
+        ctx.roundRect(-19, -16, 38, 36, 8);
+        ctx.fill();
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
 
-      // Kerah putih & tulisan SMK BINA MANDIRI
-      ctx.fillStyle = "#f8fafc";
-      ctx.fillRect(-17, -14, 7, 32);
-      ctx.fillRect(10, -14, 7, 32);
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(-17, -14, 7, 32);
+        ctx.fillRect(10, -14, 7, 32);
 
-      ctx.fillStyle = "#e0f2fe";
-      ctx.font = "bold 8px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("SMK", 0, -2);
-      ctx.fillStyle = "#38bdf8";
-      ctx.font = "bold 6.5px Segoe UI";
-      ctx.fillText("BINA MANDIRI", 0, 8);
+        ctx.fillStyle = "#e0f2fe";
+        ctx.font = "bold 8px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText("SMK", 0, -2);
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "bold 6.5px Segoe UI";
+        ctx.fillText("BINA MANDIRI", 0, 8);
 
-      // Kepala & rambut perak anime
-      ctx.fillStyle = "#fde68a";
-      ctx.beginPath();
-      ctx.arc(0, -32, 16, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#fde68a";
+        ctx.beginPath();
+        ctx.arc(0, -32, 16, 0, Math.PI * 2);
+        ctx.fill();
 
-      ctx.fillStyle = "#e2e8f0";
-      ctx.beginPath();
-      ctx.arc(0, -36, 17, Math.PI * 0.85, Math.PI * 2.15);
-      ctx.fill();
-      // Jambul perak
-      ctx.beginPath();
-      ctx.moveTo(-10, -48);
-      ctx.lineTo(0, -60);
-      ctx.lineTo(9, -47);
-      ctx.closePath();
-      ctx.fill();
+        ctx.fillStyle = "#e2e8f0";
+        ctx.beginPath();
+        ctx.arc(0, -36, 17, Math.PI * 0.85, Math.PI * 2.15);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(-10, -48);
+        ctx.lineTo(0, -60);
+        ctx.lineTo(9, -47);
+        ctx.closePath();
+        ctx.fill();
 
-      // Mata biru
-      ctx.fillStyle = "#0284c7";
-      ctx.beginPath();
-      ctx.arc(6, -31, 2.8, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#0284c7";
+        ctx.beginPath();
+        ctx.arc(6, -31, 2.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-      // Efek ayunan pedang kode biru-emas
       if (state.attackTimer > 0) {
         ctx.save();
-        ctx.translate(20, -4);
+        ctx.translate(22, -6);
         ctx.rotate(-0.7 + (18 - state.attackTimer) * 0.14);
         ctx.strokeStyle = "#38bdf8";
         ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(40, -24);
+        ctx.lineTo(42, -24);
         ctx.stroke();
 
         ctx.strokeStyle = "#fef08a";
@@ -1555,10 +1532,9 @@
     function drawWorld() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (customBgImg.ready) {
-        ctx.drawImage(customBgImg, 0, 0, canvas.width, canvas.height);
+      if (assets.bg.ready) {
+        ctx.drawImage(assets.bg, 0, 0, canvas.width, canvas.height);
       } else {
-        // Langit biru cerah + awan lembut
         const sky = ctx.createLinearGradient(0, 0, 0, 320);
         sky.addColorStop(0, "#1e3a8a");
         sky.addColorStop(0.55, "#3b82f6");
@@ -1572,7 +1548,6 @@
         drawCourtyardAndBanners();
       }
 
-      // Gambar karakter berurutan berdasarkan posisi Y
       const entities = [
         ...npcs.map((n) => ({ y: n.y, draw: () => (n.type === "sinta" ? drawSinta(n) : drawBotAI(n)) })),
         { y: state.y, draw: drawRyu }
