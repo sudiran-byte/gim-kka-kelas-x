@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The World of Coding - SMK Bina Mandiri</title>
   <style>
     * {
@@ -19,29 +19,36 @@
       height: 100%;
       min-height: 100dvh;
       color: #f8fafc;
-      background: radial-gradient(circle at 50% 35%, #27436b 0%, #16263d 55%, #0e1828 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #0b1324;
       overflow: hidden;
     }
 
     /* ================= MODAL AWAL ================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 35%, #27436b 0%, #16263d 55%, #0e1828 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 40;
+    }
+
+    .modal-backdrop.hidden {
+      display: none;
+    }
+
     .audio-modal {
       width: 100%;
-      max-width: 500px;
+      max-width: 490px;
       background: linear-gradient(180deg, #1b2847 0%, #121c33 100%);
       border: 1.5px solid #d4a843;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 223, 130, 0.2);
       border-radius: 16px;
-      padding: 28px 24px 26px;
+      padding: 26px 24px;
       text-align: center;
       position: relative;
-      z-index: 30;
-    }
-
-    .audio-modal.hidden {
-      display: none;
     }
 
     .sparkle {
@@ -49,15 +56,14 @@
       top: 10px;
       color: #facc15;
       font-size: 13px;
-      opacity: 0.9;
     }
     .sparkle.left { left: 12px; }
     .sparkle.right { right: 12px; }
 
     .mascot-stage {
-      width: 220px;
-      height: 220px;
-      margin: 0 auto 14px;
+      width: 210px;
+      height: 210px;
+      margin: 0 auto 12px;
       position: relative;
       filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.48));
     }
@@ -138,18 +144,14 @@
       cursor: pointer;
     }
 
-    /* ================= LAYAR GAME RPG ================= */
+    /* ================= LAYAR GAME RPG FULL-VIEWPORT ================= */
     .game-screen {
       display: none;
-      width: 100vw;
-      height: 100dvh;
-      max-width: 100vw;
-      max-height: 100dvh;
-      position: fixed;
-      inset: 0;
+      width: 100%;
+      height: 100%;
+      position: relative;
       overflow: hidden;
       background: #0b192c;
-      z-index: 10;
     }
 
     .game-screen.active {
@@ -169,77 +171,99 @@
       left: 10px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       z-index: 12;
-      max-width: 260px;
+      max-width: 280px;
     }
 
     .player-card {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(12, 23, 42, 0.85);
-      border: 1.5px solid #60a5fa;
-      border-radius: 10px;
-      padding: 6px 9px;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(13, 25, 48, 0.9), rgba(24, 44, 82, 0.85));
+      border: 1.5px solid #38bdf8;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      border-radius: 12px;
+      padding: 7px 10px;
     }
 
-    .avatar-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+    .avatar-ring {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #e0f2fe, #1d4ed8);
+      border: 2px solid #facc15;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       font-size: 13px;
-      border: 1.5px solid #fde047;
+      color: #0f172a;
       flex-shrink: 0;
+      overflow: hidden;
     }
 
     .stat-lines {
       flex: 1;
-      font-size: 11px;
+      font-size: 11.5px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10.5px;
+      margin-top: 2px;
     }
 
     .bar-track {
-      width: 125px;
-      height: 7px;
-      background: rgba(30, 41, 59, 0.9);
+      width: 155px;
+      height: 8px;
+      background: rgba(15, 23, 42, 0.9);
       border-radius: 99px;
       overflow: hidden;
       margin-top: 2px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .bar-hp {
       height: 100%;
       width: 100%;
-      background: linear-gradient(90deg, #ef4444, #f97316);
+      background: linear-gradient(90deg, #dc2626, #f87171);
       transition: width 0.25s;
     }
 
     .bar-exp {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
       transition: width 0.25s;
     }
 
     .quest-box {
-      background: rgba(15, 23, 42, 0.85);
-      border-left: 3px solid #facc15;
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.65));
+      border-left: 3.5px solid #facc15;
       border-radius: 8px;
-      padding: 6px 9px;
-      font-size: 11px;
-      line-height: 1.35;
+      padding: 8px 10px;
+      font-size: 11.5px;
+      line-height: 1.4;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
     .quest-title {
       color: #facc15;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quest-dist {
+      color: #fde047;
+      font-weight: 700;
+      margin-top: 4px;
+      font-size: 11px;
     }
 
     /* Banner Tengah Atas */
@@ -248,26 +272,29 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(90deg, rgba(15, 23, 42, 0.15), rgba(14, 116, 144, 0.9), rgba(15, 23, 42, 0.15));
-      border-top: 1.5px solid #38bdf8;
-      border-bottom: 1.5px solid #38bdf8;
-      padding: 5px 18px;
+      background: linear-gradient(90deg, rgba(14, 116, 144, 0.2), rgba(14, 116, 144, 0.95) 20%, rgba(14, 116, 144, 0.95) 80%, rgba(14, 116, 144, 0.2));
+      border-top: 2px solid #38bdf8;
+      border-bottom: 2px solid #38bdf8;
+      padding: 6px 32px;
       text-align: center;
       z-index: 12;
       white-space: nowrap;
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
     }
 
     .title-banner .main-t {
-      font-size: 12.5px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.9px;
       color: #fef08a;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     }
 
     .title-banner .sub-t {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       color: #e0f2fe;
+      letter-spacing: 0.5px;
     }
 
     /* HUD Kanan Atas */
@@ -278,21 +305,20 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 6px;
+      gap: 8px;
       z-index: 12;
     }
 
     .top-pills {
       display: flex;
       align-items: center;
-      gap: 5px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      background: rgba(12, 23, 42, 0.85);
-      padding: 4px 8px;
+      gap: 6px;
+      background: rgba(12, 23, 42, 0.88);
+      padding: 5px 10px;
       border-radius: 99px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      font-size: 11px;
+      border: 1px solid #38bdf8;
+      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .hud-icon-btn {
@@ -300,194 +326,255 @@
       color: #f8fafc;
       border: 1px solid #64748b;
       border-radius: 6px;
-      padding: 3px 7px;
-      font-size: 10.5px;
+      padding: 3px 8px;
+      font-size: 11px;
       cursor: pointer;
     }
 
+    .minimap-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
     .minimap {
-      width: 78px;
-      height: 78px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
-      background: radial-gradient(circle, #1e3a5f, #0f172a);
-      border: 2px solid #facc15;
+      background:
+        radial-gradient(circle at 60% 35%, #22c55e 0%, #15803d 48%, #1d4ed8 52%, #1e3a8a 100%);
+      border: 2.5px solid #facc15;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
+    }
+
+    .minimap::before {
+      content: "N";
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      font-weight: 800;
+      color: #fef08a;
+    }
+
+    .minimap-road {
+      position: absolute;
+      width: 10px;
+      height: 70px;
+      background: rgba(226, 232, 240, 0.55);
+      left: 41px;
+      top: 12px;
+      border-radius: 4px;
     }
 
     .minimap-dot-player {
-      width: 7px;
-      height: 7px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #facc15;
+      border: 1.5px solid #0f172a;
       position: absolute;
       transform: translate(-50%, -50%);
     }
 
     .minimap-dot-npc {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #38bdf8;
+      border: 1px solid #ffffff;
       position: absolute;
       transform: translate(-50%, -50%);
     }
 
-    /* Papan Informasi */
+    .minimap-label {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid #38bdf8;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #e0f2fe;
+    }
+
+    /* Papan Kayu Informasi Samping Kanan */
     .info-board {
       position: absolute;
-      right: 10px;
-      top: 46%;
+      right: 14px;
+      top: 47%;
       transform: translateY(-50%);
-      width: 185px;
-      background: rgba(69, 39, 16, 0.88);
-      border: 1.5px solid #d97706;
+      width: 215px;
+      background: linear-gradient(180deg, #78350f, #451a03);
+      border: 2.5px solid #d97706;
       border-radius: 10px;
-      padding: 8px 10px;
-      font-size: 10.5px;
+      padding: 10px 12px;
+      font-size: 11px;
       z-index: 10;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
     }
 
     .info-board-title {
       font-weight: 800;
-      color: #fde68a;
-      margin-bottom: 4px;
-      font-size: 11.5px;
+      color: #fde047;
+      margin-bottom: 6px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(253, 224, 71, 0.3);
+      padding-bottom: 4px;
     }
 
-    .info-board ul {
+    .info-list {
+      list-style: none;
       margin: 0;
-      padding-left: 14px;
-      line-height: 1.35;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       color: #fef3c7;
     }
 
+    .info-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.35;
+    }
+
+    .check-badge {
+      background: #16a34a;
+      color: #ffffff;
+      font-weight: 800;
+      border-radius: 4px;
+      padding: 0 4px;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
     /* Kontrol Bawah */
-    .dpad {
+    .dpad-ring {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      width: 108px;
-      height: 108px;
+      bottom: 16px;
+      left: 16px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.72));
+      border: 2px solid rgba(125, 211, 252, 0.65);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 4px;
+      padding: 6px;
       z-index: 14;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
     }
 
     .dpad-btn {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid #38bdf8;
-      border-radius: 8px;
+      background: transparent;
+      border: none;
       color: #e0f2fe;
-      font-weight: 700;
-      font-size: 13px;
+      font-weight: 800;
+      font-size: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 50%;
     }
 
     .dpad-btn:active {
-      background: #0284c7;
+      background: rgba(56, 189, 248, 0.35);
     }
 
     .dpad-center {
-      background: rgba(56, 189, 248, 0.25);
+      background: radial-gradient(circle, #38bdf8, #0284c7);
+      border: 2px solid #bae6fd;
       border-radius: 50%;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.75);
     }
 
     .sys-log {
       position: absolute;
-      bottom: 14px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(360px, 42%);
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid #475569;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 11px;
+      width: min(410px, 44%);
+      background: rgba(12, 23, 42, 0.88);
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 11.5px;
       color: #fde047;
       text-align: center;
       z-index: 12;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
     }
 
     .action-cluster {
       position: absolute;
-      bottom: 12px;
-      right: 12px;
+      bottom: 16px;
+      right: 16px;
       display: flex;
       align-items: flex-end;
-      gap: 6px;
+      gap: 8px;
       z-index: 14;
     }
 
     .bag-menu-col {
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      margin-right: 2px;
+      gap: 6px;
+      margin-right: 4px;
     }
 
     .act-small {
-      padding: 5px 10px;
-      border-radius: 14px;
+      padding: 6px 12px;
+      border-radius: 16px;
       border: 1.5px solid #f59e0b;
-      background: rgba(30, 41, 59, 0.9);
+      background: rgba(30, 41, 59, 0.92);
       color: #fef3c7;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
     }
 
     .act-circle {
-      width: 48px;
-      height: 48px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
-      border: 2px solid #38bdf8;
-      background: rgba(15, 23, 42, 0.85);
+      border: 2px solid #7dd3fc;
+      background: radial-gradient(circle, rgba(30, 58, 138, 0.85), rgba(15, 23, 42, 0.92));
       color: #f8fafc;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
     }
 
     .act-attack {
-      width: 62px;
-      height: 62px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      border: 2px solid #facc15;
-      background: radial-gradient(circle, #2563eb, #1e3a8a);
+      border: 2.5px solid #fde047;
+      background: radial-gradient(circle, #38bdf8, #1d4ed8 70%, #1e3a8a);
       color: #ffffff;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.65);
     }
 
-    /* Penyesuaian layar kecil / HP */
-    @media (max-width: 640px) {
-      .audio-modal {
-        margin: 12px;
-        padding: 20px 16px;
-      }
-      .mascot-stage {
-        width: 175px;
-        height: 175px;
-      }
+    @media (max-width: 720px) {
       .title-banner {
-        top: 58px;
-        padding: 4px 12px;
+        top: 64px;
+        padding: 4px 14px;
       }
       .info-board {
         display: none;
       }
       .sys-log {
-        bottom: 126px;
+        bottom: 136px;
         width: calc(100% - 24px);
         max-width: none;
       }
@@ -552,45 +639,49 @@
 </head>
 <body>
   <!-- ================= MODAL AWAL ================= -->
-  <div id="startModal" class="audio-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <span class="sparkle left">✦</span>
-    <span class="sparkle right">✦</span>
+  <div id="startModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="audio-modal">
+      <span class="sparkle left">✦</span>
+      <span class="sparkle right">✦</span>
 
-    <div class="mascot-stage" aria-label="Maskot Koding dan AI melambaikan tangan">
-      <img src="maskot.png" alt="Maskot Koding dan AI" class="mascot-layer part-body" />
-      <img src="maskot.png" alt="" aria-hidden="true" class="mascot-layer part-hand" />
-    </div>
+      <div class="mascot-stage" aria-label="Maskot Koding dan AI melambaikan tangan">
+        <img src="maskot.png" alt="Maskot Koding dan AI" class="mascot-layer part-body" />
+        <img src="maskot.png" alt="" aria-hidden="true" class="mascot-layer part-hand" />
+      </div>
 
-    <h1 id="modalTitle" class="modal-title">Mau main dengan musik?</h1>
-    <p class="modal-desc">
-      Musik latar bisa dimatikan kapan saja. Efek suara (tombol, langkah, notifikasi)
-      tetap menyala dan bisa diatur lewat menu di dalam game.
-    </p>
+      <h1 id="modalTitle" class="modal-title">Mau main dengan musik?</h1>
+      <p class="modal-desc">
+        Musik latar bisa dimatikan kapan saja. Efek suara (tombol, langkah, notifikasi)
+        tetap menyala dan bisa diatur lewat menu di dalam game.
+      </p>
 
-    <div class="btn-row">
-      <button class="btn-music" onclick="mulaiGame(true)">🔊 Dengan musik</button>
-      <button class="btn-mute" onclick="mulaiGame(false)">🔇 Tanpa musik</button>
+      <div class="btn-row">
+        <button class="btn-music" onclick="mulaiGame(true)">🔊 Dengan musik</button>
+        <button class="btn-mute" onclick="mulaiGame(false)">🔇 Tanpa musik</button>
+      </div>
     </div>
   </div>
 
   <!-- ================= LAYAR GAME RPG ================= -->
   <main id="gameScreen" class="game-screen">
-    <canvas id="worldCanvas" width="1120" height="630"></canvas>
+    <canvas id="worldCanvas" width="1280" height="720"></canvas>
 
     <div class="hud-top-left">
       <div class="player-card">
-        <div class="avatar-badge">RYU</div>
+        <div class="avatar-ring">RYU</div>
         <div class="stat-lines">
-          <div><strong>Ryu</strong> · <span id="lvText">Lv. 1</span></div>
-          <div>HP <span id="hpText">100/100</span></div>
+          <div><strong>Ryu</strong> · <span id="lvText" style="color:#fde047;">Lv. 1</span></div>
+          <div class="bar-row"><span>HP</span><span id="hpText">100 / 100</span></div>
           <div class="bar-track"><div id="hpBar" class="bar-hp"></div></div>
-          <div>EXP <span id="expText">0/100</span></div>
+          <div class="bar-row"><span>EXP</span><span id="expText">0 / 100</span></div>
           <div class="bar-track"><div id="expBar" class="bar-exp"></div></div>
         </div>
       </div>
+
       <div class="quest-box">
-        <div class="quest-title">! Misi Utama</div>
-        <div id="questDesc">Temui Sinta atau Bot AI untuk memulai misi Koding & Kecerdasan Artifisial Kelas X.</div>
+        <div class="quest-title"><span>!</span> Misi Utama</div>
+        <div id="questDesc">Temui Sinta (Pemandu Akademi) atau Bot AI untuk menyelesaikan misi Koding & AI!</div>
+        <div id="questDist" class="quest-dist">▲ 123 m ke target terdekat</div>
       </div>
     </div>
 
@@ -604,26 +695,29 @@
         <span>🪙 <strong id="coinText">0</strong></span>
         <span>💎 <strong id="gemText">0</strong></span>
         <button class="hud-icon-btn" id="musicBtnHud" onclick="toggleMusik()">♪ Off</button>
-        <button class="hud-icon-btn" onclick="toggleFullscreen()">⛶ Layar</button>
         <button class="hud-icon-btn" onclick="kembaliKeMenuAwal()">Awal</button>
       </div>
-      <div class="minimap" title="Kerajaan Coding">
-        <div class="minimap-dot-npc" style="left: 38%; top: 58%;"></div>
-        <div class="minimap-dot-npc" style="left: 74%; top: 52%;"></div>
-        <div id="minimapPlayer" class="minimap-dot-player" style="left: 50%; top: 72%;"></div>
+      <div class="minimap-wrap">
+        <div class="minimap" title="Kerajaan Coding">
+          <div class="minimap-road"></div>
+          <div class="minimap-dot-npc" style="left: 36%; top: 58%;"></div>
+          <div class="minimap-dot-npc" style="left: 72%; top: 54%;"></div>
+          <div id="minimapPlayer" class="minimap-dot-player" style="left: 50%; top: 74%;"></div>
+        </div>
+        <div class="minimap-label">Kerajaan Coding</div>
       </div>
     </div>
 
     <aside class="info-board">
       <div class="info-board-title">📢 Informasi</div>
-      <ul>
-        <li>Selesaikan misi untuk mendapatkan EXP & Koin!</li>
-        <li>Pelajari Koding, Logika & AI Kelas X!</li>
-        <li>Dekati karakter bertanda <strong>!</strong> lalu tekan <strong>Serang / Misi</strong>.</li>
+      <ul class="info-list">
+        <li><span class="check-badge">✓</span><span>Selesaikan misi untuk mendapatkan XP!</span></li>
+        <li><span class="check-badge">✓</span><span>Pelajari Coding, AI dan Jaringan!</span></li>
+        <li><span class="check-badge">✓</span><span>Jadilah Programmer Handal SMK Bina Mandiri!</span></li>
       </ul>
     </aside>
 
-    <div class="dpad">
+    <div class="dpad-ring">
       <div></div>
       <button class="dpad-btn" onmousedown="setDir('up',1)" onmouseup="setDir('up',0)" ontouchstart="setDir('up',1)" ontouchend="setDir('up',0)">▲</button>
       <div></div>
@@ -644,7 +738,7 @@
       </div>
       <button class="act-circle" id="runBtn" onclick="toggleLari()">🏃 Lari</button>
       <button class="act-circle" onclick="lompat()">🦘 Lompat</button>
-      <button class="act-attack" onclick="aksiInteraksi()">⚔️ Serang / Misi</button>
+      <button class="act-attack" onclick="aksiInteraksi()">⚔️ Serang</button>
     </div>
 
     <div id="popupOverlay" class="overlay-popup">
@@ -653,21 +747,6 @@
   </main>
 
   <script>
-    /* ================= FULLSCREEN ================= */
-    function toggleFullscreen() {
-      bunyiKlik(640);
-      const target = document.getElementById("gameScreen") || document.documentElement;
-      if (!document.fullscreenElement) {
-        if (target.requestFullscreen) {
-          target.requestFullscreen().catch(() => {
-            setLog("Gunakan rotasi layar atau menu browser HP untuk mode layar penuh.");
-          });
-        }
-      } else if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
-
     /* ================= AUDIO ================= */
     let audioCtx = null;
     let musikAktif = false;
@@ -752,10 +831,22 @@
       document.getElementById("startModal").classList.remove("hidden");
     }
 
+    /* ================= OPSIONAL GAMBAR EKSTERNAL (JIKA ADA DI REPO) ================= */
+    function loadOptionalImg(src) {
+      const img = new Image();
+      img.ready = false;
+      img.onload = () => { img.ready = true; };
+      img.src = src;
+      return img;
+    }
+
+    const customBgImg = loadOptionalImg("bg-akademi.png");
+    const customBotImg = loadOptionalImg("maskot.png");
+
     /* ================= STATE GAME RPG ================= */
     const state = {
-      x: 560,
-      y: 465,
+      x: 640,
+      y: 535,
       zJump: 0,
       vzJump: 0,
       lari: false,
@@ -779,8 +870,8 @@
         type: "sinta",
         nama: "Sinta",
         role: "Pemandu Akademi",
-        x: 390,
-        y: 375,
+        x: 455,
+        y: 430,
         soal: {
           judul: "Misi 1 — Urutan Algoritma (Koding Kelas X)",
           tanya: "Sebelum model AI dilatih mengenali data gambar, langkah manakah yang paling tepat dilakukan terlebih dahulu?",
@@ -799,8 +890,8 @@
         type: "botai",
         nama: "Bot AI",
         role: "Asisten Kecerdasan Artifisial",
-        x: 785,
-        y: 345,
+        x: 910,
+        y: 410,
         soal: {
           judul: "Misi 2 — Logika Percabangan & Klasifikasi AI",
           tanya: "Dalam program klasifikasi spam email, jika skor_spam >= 0.8 maka tandai 'Spam', jika tidak maka 'Kotak Masuk'. Konsep ini disebut...",
@@ -838,14 +929,14 @@
     function toggleLari() {
       bunyiKlik(620);
       state.lari = !state.lari;
-      document.getElementById("runBtn").style.borderColor = state.lari ? "#facc15" : "#38bdf8";
+      document.getElementById("runBtn").style.borderColor = state.lari ? "#facc15" : "#7dd3fc";
       setLog(state.lari ? "Mode Lari aktif!" : "Mode Jalan normal.");
     }
 
     function lompat() {
       if (state.zJump === 0) {
         bunyiKlik(740);
-        state.vzJump = 8.5;
+        state.vzJump = 9.5;
       }
     }
 
@@ -855,24 +946,28 @@
 
     function updateHud() {
       document.getElementById("lvText").textContent = "Lv. " + state.level;
-      document.getElementById("hpText").textContent = state.hp + "/" + state.maxHp;
-      document.getElementById("expText").textContent = state.exp + "/100";
+      document.getElementById("hpText").textContent = state.hp + " / " + state.maxHp;
+      document.getElementById("expText").textContent = state.exp + " / 100";
       document.getElementById("coinText").textContent = state.coins;
       document.getElementById("gemText").textContent = state.gems;
       document.getElementById("hpBar").style.width = Math.max(0, (state.hp / state.maxHp) * 100) + "%";
       document.getElementById("expBar").style.width = Math.min(100, state.exp) + "%";
 
-      const px = Math.max(12, Math.min(88, (state.x / 1120) * 100));
-      const py = Math.max(12, Math.min(88, (state.y / 630) * 100));
+      const px = Math.max(14, Math.min(86, (state.x / 1280) * 100));
+      const py = Math.max(14, Math.min(86, (state.y / 720) * 100));
       const dot = document.getElementById("minimapPlayer");
       dot.style.left = px + "%";
       dot.style.top = py + "%";
+
+      const minDist = Math.min(...npcs.map((n) => Math.hypot(n.x - state.x, n.y - state.y)));
+      document.getElementById("questDist").textContent =
+        minDist < 125 ? "▲ Target sudah dekat! Tekan Serang" : `▲ ${Math.round(minDist * 0.35)} m ke target terdekat`;
     }
 
     function aksiInteraksi() {
       bunyiKlik(680);
-      state.attackTimer = 16;
-      const dekat = npcs.find((n) => Math.hypot(n.x - state.x, n.y - state.y) < 105);
+      state.attackTimer = 18;
+      const dekat = npcs.find((n) => Math.hypot(n.x - state.x, n.y - state.y) < 125);
       if (!dekat) {
         setLog("Ryu mengayunkan pedang kode! Dekati Sinta atau Bot AI untuk mengambil misi.");
         return;
@@ -948,8 +1043,7 @@
         card.innerHTML = `
           <h3>⊞ Menu Akademi</h3>
           <p>Pengaturan cepat & panduan kontrol:</p>
-          <p style="font-size:12.5px;">• Gerak: Tombol Panah / WASD atau D-Pad kiri bawah<br>• Interaksi / Misi: Tombol <strong>Serang / Misi</strong> atau tekan <strong>F</strong></p>
-          <button class="choice-btn" onclick="toggleFullscreen()">⛶ Mode Layar Penuh</button>
+          <p style="font-size:12.5px;">• Gerak: Tombol Panah / WASD atau D-Pad kiri bawah<br>• Interaksi / Misi: Tombol <strong>Serang</strong> atau tekan <strong>F</strong></p>
           <button class="choice-btn" onclick="toggleMusik(); updateHud();">🔊 Toggle Musik Latar</button>
           <button class="choice-btn" onclick="tutupPopup(); kembaliKeMenuAwal();">↩ Kembali ke Layar Pembuka</button>
           <button class="choice-btn" style="text-align:center; background:#0f172a;" onclick="tutupPopup()">Tutup</button>
@@ -962,7 +1056,7 @@
       document.getElementById("popupOverlay").classList.remove("show");
     }
 
-    /* ================= LOOP & KARAKTER CANVAS ================= */
+    /* ================= LOOP & RENDER DUNIA RPG ================= */
     const canvas = document.getElementById("worldCanvas");
     const ctx = canvas.getContext("2d");
     let animTick = 0;
@@ -984,19 +1078,16 @@
         if (vx > 0) state.facing = 1;
 
         const moving = vx !== 0 || vy !== 0;
-        const speed = state.lari ? 5.2 : 3.0;
+        const speed = state.lari ? 6.0 : 3.4;
         if (vx !== 0 && vy !== 0) {
           vx *= Math.SQRT1_2;
           vy *= Math.SQRT1_2;
         }
-        state.x = Math.max(90, Math.min(870, state.x + vx * speed));
-        state.y = Math.max(245, Math.min(545, state.y + vy * speed));
+        state.x = Math.max(110, Math.min(1010, state.x + vx * speed));
+        state.y = Math.max(325, Math.min(620, state.y + vy * speed));
 
-        if (moving) {
-          state.walkPhase += state.lari ? 0.34 : 0.22;
-        } else {
-          state.walkPhase = 0;
-        }
+        if (moving) state.walkPhase += state.lari ? 0.34 : 0.22;
+        else state.walkPhase = 0;
 
         if (state.zJump > 0 || state.vzJump > 0) {
           state.zJump += state.vzJump;
@@ -1010,22 +1101,223 @@
       updateHud();
     }
 
+    function drawFloatingIsland(cx, cy, scale, hasWaterfall) {
+      const floatY = Math.sin(animTick * 0.7 + cx) * 4;
+      ctx.save();
+      ctx.translate(cx, cy + floatY);
+      ctx.scale(scale, scale);
+
+      // Tebing batu kerucut terbalik
+      const rockGrad = ctx.createLinearGradient(0, 0, 0, 85);
+      rockGrad.addColorStop(0, "#475569");
+      rockGrad.addColorStop(1, "#1e293b");
+      ctx.fillStyle = rockGrad;
+      ctx.beginPath();
+      ctx.moveTo(-90, 0);
+      ctx.lineTo(90, 0);
+      ctx.lineTo(42, 65);
+      ctx.lineTo(-10, 85);
+      ctx.lineTo(-55, 52);
+      ctx.closePath();
+      ctx.fill();
+
+      // Rumput atas
+      ctx.fillStyle = "#16a34a";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 94, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Menara kecil di pulau
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fillRect(-18, -36, 16, 34);
+      ctx.fillStyle = "#2563eb";
+      ctx.beginPath();
+      ctx.moveTo(-22, -36);
+      ctx.lineTo(-10, -56);
+      ctx.lineTo(2, -36);
+      ctx.closePath();
+      ctx.fill();
+
+      // Air terjun berkilau
+      if (hasWaterfall) {
+        const wfGrad = ctx.createLinearGradient(0, 8, 0, 145);
+        wfGrad.addColorStop(0, "rgba(186, 230, 253, 0.92)");
+        wfGrad.addColorStop(1, "rgba(56, 189, 248, 0.05)");
+        ctx.fillStyle = wfGrad;
+        ctx.fillRect(-44, 8, 16, 135);
+      }
+
+      ctx.restore();
+    }
+
+    function drawAcademyCastle() {
+      const cx = 640;
+      const baseY = 315;
+
+      // Pegunungan latar
+      ctx.fillStyle = "#3b5998";
+      ctx.beginPath();
+      ctx.moveTo(0, 320);
+      ctx.lineTo(180, 175);
+      ctx.lineTo(390, 290);
+      ctx.lineTo(520, 195);
+      ctx.lineTo(790, 210);
+      ctx.lineTo(1060, 165);
+      ctx.lineTo(1280, 310);
+      ctx.lineTo(1280, 340);
+      ctx.lineTo(0, 340);
+      ctx.closePath();
+      ctx.fill();
+
+      // Menara kiri & kanan kastil
+      const towers = [
+        { x: cx - 185, y: baseY - 125, w: 48, h: 125, roofH: 52 },
+        { x: cx - 115, y: baseY - 165, w: 56, h: 165, roofH: 64 },
+        { x: cx + 59, y: baseY - 165, w: 56, h: 165, roofH: 64 },
+        { x: cx + 137, y: baseY - 125, w: 48, h: 125, roofH: 52 }
+      ];
+
+      for (const t of towers) {
+        ctx.fillStyle = "#cbd5e1";
+        ctx.fillRect(t.x, t.y, t.w, t.h);
+        ctx.fillStyle = "#1d4ed8";
+        ctx.beginPath();
+        ctx.moveTo(t.x - 6, t.y);
+        ctx.lineTo(t.x + t.w / 2, t.y - t.roofH);
+        ctx.lineTo(t.x + t.w + 6, t.y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Jendela menyala
+        ctx.fillStyle = "#38bdf8";
+        ctx.fillRect(t.x + t.w / 2 - 4, t.y + 24, 8, 18);
+      }
+
+      // Badan utama kastil & kristal biru tengah
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillRect(cx - 125, baseY - 135, 250, 135);
+
+      const crystalGrad = ctx.createLinearGradient(cx, baseY - 245, cx, baseY - 110);
+      crystalGrad.addColorStop(0, "#e0f2fe");
+      crystalGrad.addColorStop(0.5, "#38bdf8");
+      crystalGrad.addColorStop(1, "#1d4ed8");
+      ctx.fillStyle = crystalGrad;
+      ctx.beginPath();
+      ctx.moveTo(cx, baseY - 248);
+      ctx.lineTo(cx - 34, baseY - 165);
+      ctx.lineTo(cx, baseY - 110);
+      ctx.lineTo(cx + 34, baseY - 165);
+      ctx.closePath();
+      ctx.fill();
+
+      // Gerbang portal bercahaya
+      const portalGrad = ctx.createRadialGradient(cx, baseY - 42, 8, cx, baseY - 42, 58);
+      portalGrad.addColorStop(0, "#e0f2fe");
+      portalGrad.addColorStop(0.6, "#0284c7");
+      portalGrad.addColorStop(1, "#1e3a8a");
+      ctx.fillStyle = portalGrad;
+      ctx.beginPath();
+      ctx.arc(cx, baseY - 38, 46, Math.PI, 0);
+      ctx.lineTo(cx + 46, baseY);
+      ctx.lineTo(cx - 46, baseY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Papan nama Akademi Pemrograman
+      ctx.fillStyle = "#0f172a";
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(cx - 108, baseY - 122, 216, 36, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#fef08a";
+      ctx.font = "bold 12px Segoe UI";
+      ctx.textAlign = "center";
+      ctx.fillText("AKADEMI", cx, baseY - 107);
+      ctx.fillText("PEMROGRAMAN", cx, baseY - 92);
+    }
+
+    function drawCourtyardAndBanners() {
+      // Lantai plaza batu & rumput tepi
+      const groundGrad = ctx.createLinearGradient(0, 315, 0, 720);
+      groundGrad.addColorStop(0, "#475569");
+      groundGrad.addColorStop(1, "#1e293b");
+      ctx.fillStyle = groundGrad;
+      ctx.fillRect(0, 315, canvas.width, 405);
+
+      // Rumput & bunga di sisi kiri-kanan
+      ctx.fillStyle = "#15803d";
+      ctx.fillRect(0, 315, 290, 95);
+      ctx.fillRect(990, 315, 290, 95);
+
+      // Jalan utama berperspektif
+      const pathGrad = ctx.createLinearGradient(0, 315, 0, 720);
+      pathGrad.addColorStop(0, "#cbd5e1");
+      pathGrad.addColorStop(1, "#94a3b8");
+      ctx.fillStyle = pathGrad;
+      ctx.beginPath();
+      ctx.moveTo(500, 315);
+      ctx.lineTo(780, 315);
+      ctx.lineTo(1040, 720);
+      ctx.lineTo(240, 720);
+      ctx.closePath();
+      ctx.fill();
+
+      // Garis ubin jalan
+      ctx.strokeStyle = "rgba(51, 65, 85, 0.35)";
+      ctx.lineWidth = 2;
+      for (let y = 355; y < 710; y += 48) {
+        ctx.beginPath();
+        ctx.moveTo(270, y);
+        ctx.lineTo(1010, y);
+        ctx.stroke();
+      }
+
+      // 2 Banner biru berlogo buku di sisi kiri (seperti referensi)
+      const bannersX = [255, 345];
+      for (const bx of bannersX) {
+        ctx.fillStyle = "#1e3a8a";
+        ctx.strokeStyle = "#facc15";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(bx - 24, 150);
+        ctx.lineTo(bx + 24, 150);
+        ctx.lineTo(bx + 24, 248);
+        ctx.lineTo(bx, 268);
+        ctx.lineTo(bx - 24, 248);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Ikon buku putih
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(bx - 12, 185, 24, 18);
+        ctx.beginPath();
+        ctx.moveTo(bx, 185);
+        ctx.lineTo(bx, 203);
+        ctx.stroke();
+      }
+    }
+
     function drawQuestBadge(x, y) {
-      const bob = Math.sin(animTick * 1.4) * 3;
+      const bob = Math.sin(animTick * 1.5) * 4;
       ctx.save();
       ctx.translate(x, y + bob);
       ctx.fillStyle = "#facc15";
       ctx.beginPath();
-      ctx.arc(0, 0, 12, 0, Math.PI * 2);
+      ctx.arc(0, 0, 14, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = "#78350f";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
       ctx.stroke();
 
       ctx.fillStyle = "#0f172a";
-      ctx.font = "bold 15px Segoe UI";
+      ctx.font = "bold 17px Segoe UI";
       ctx.textAlign = "center";
-      ctx.fillText("!", 0, 5);
+      ctx.fillText("!", 0, 6);
       ctx.restore();
     }
 
@@ -1034,178 +1326,220 @@
       ctx.save();
       ctx.translate(npc.x, npc.y + bob);
 
-      ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
+      // Bayangan
+      ctx.fillStyle = "rgba(15, 23, 42, 0.38)";
       ctx.beginPath();
-      ctx.ellipse(0, 28, 20, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 46, 26, 9, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#1e3a8a";
+      // Kaki & sepatu
+      ctx.fillStyle = "#fde68a";
+      ctx.fillRect(-9, 22, 6, 18);
+      ctx.fillRect(3, 22, 6, 18);
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(-10, 38, 8, 7);
+      ctx.fillRect(2, 38, 8, 7);
+
+      // Rok lipit biru akademi
+      ctx.fillStyle = "#1d4ed8";
       ctx.beginPath();
-      ctx.moveTo(-12, 4);
-      ctx.lineTo(12, 4);
-      ctx.lineTo(16, 20);
-      ctx.lineTo(-16, 20);
+      ctx.moveTo(-15, 4);
+      ctx.lineTo(15, 4);
+      ctx.lineTo(21, 25);
+      ctx.lineTo(-21, 25);
       ctx.closePath();
       ctx.fill();
 
+      // Blazer putih-biru
       ctx.fillStyle = "#f8fafc";
-      ctx.fillRect(-10, -10, 20, 16);
-      ctx.strokeStyle = "#facc15";
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(-10, -10, 20, 16);
-
-      ctx.fillStyle = "#fde68a";
       ctx.beginPath();
-      ctx.arc(0, -22, 12, 0, Math.PI * 2);
+      ctx.roundRect(-13, -18, 26, 24, 6);
+      ctx.fill();
+      ctx.strokeStyle = "#2563eb";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Dasi pita emas
+      ctx.fillStyle = "#facc15";
+      ctx.beginPath();
+      ctx.arc(0, -11, 3.5, 0, Math.PI * 2);
       ctx.fill();
 
+      // Rambut panjang belakang
       ctx.fillStyle = "#1e1b4b";
       ctx.beginPath();
-      ctx.arc(0, -25, 13, Math.PI * 0.9, Math.PI * 2.1);
+      ctx.roundRect(-19, -42, 38, 44, 14);
       ctx.fill();
-      ctx.fillRect(-14, -24, 5, 22);
-      ctx.fillRect(9, -24, 5, 22);
 
-      ctx.fillStyle = "#0f172a";
+      // Wajah
+      ctx.fillStyle = "#fde68a";
       ctx.beginPath();
-      ctx.arc(-4, -21, 1.8, 0, Math.PI * 2);
-      ctx.arc(4, -21, 1.8, 0, Math.PI * 2);
+      ctx.arc(0, -32, 15, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 12px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText(npc.nama, 0, 42);
-      ctx.restore();
+      // Poni rambut
+      ctx.fillStyle = "#1e1b4b";
+      ctx.beginPath();
+      ctx.arc(0, -36, 16, Math.PI, 0);
+      ctx.fill();
 
-      drawQuestBadge(npc.x, npc.y - 46);
+      // Mata anime
+      ctx.fillStyle = "#1d4ed8";
+      ctx.beginPath();
+      ctx.arc(-5, -31, 2.5, 0, Math.PI * 2);
+      ctx.arc(5, -31, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Nama & jabatan
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 13px Segoe UI";
+      ctx.textAlign = "center";
+      ctx.fillText("Sinta", 0, 62);
+      ctx.fillStyle = "#bae6fd";
+      ctx.font = "11px Segoe UI";
+      ctx.fillText("Pemandu Akademi", 0, 76);
+
+      ctx.restore();
+      drawQuestBadge(npc.x, npc.y - 66);
     }
 
     function drawBotAI(npc) {
-      const floatY = Math.sin(animTick * 1.2) * 4;
-      const wave = Math.sin(animTick * 3.2) * 0.25;
+      const floatY = Math.sin(animTick * 1.2) * 5;
       ctx.save();
       ctx.translate(npc.x, npc.y + floatY);
 
       ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
       ctx.beginPath();
-      ctx.ellipse(0, 28 - floatY, 22, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 46 - floatY, 26, 9, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#e2e8f0";
-      ctx.beginPath();
-      ctx.roundRect(-14, -6, 28, 24, 7);
-      ctx.fill();
-      ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      if (customBotImg.ready) {
+        ctx.drawImage(customBotImg, -46, -54, 92, 96);
+      } else {
+        // Fallback robot AI detail
+        ctx.fillStyle = "#f1f5f9";
+        ctx.beginPath();
+        ctx.roundRect(-18, -10, 36, 32, 10);
+        ctx.fill();
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
 
-      ctx.fillStyle = "#0284c7";
-      ctx.font = "bold 10px monospace";
-      ctx.textAlign = "center";
-      ctx.fillText("</>", 0, 9);
+        ctx.fillStyle = "#0284c7";
+        ctx.font = "bold 12px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("</>", 0, 10);
 
-      ctx.save();
-      ctx.translate(-16, -2);
-      ctx.rotate(-0.6 + wave);
-      ctx.fillStyle = "#38bdf8";
-      ctx.beginPath();
-      ctx.arc(-4, -6, 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+        ctx.fillStyle = "#f8fafc";
+        ctx.beginPath();
+        ctx.roundRect(-21, -46, 42, 32, 12);
+        ctx.fill();
+        ctx.stroke();
 
-      ctx.fillStyle = "#f1f5f9";
-      ctx.beginPath();
-      ctx.roundRect(-16, -34, 32, 24, 9);
-      ctx.fill();
-      ctx.strokeStyle = "#38bdf8";
-      ctx.stroke();
+        ctx.fillStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.roundRect(-15, -39, 30, 18, 6);
+        ctx.fill();
 
-      ctx.fillStyle = "#0f172a";
-      ctx.beginPath();
-      ctx.roundRect(-12, -29, 24, 14, 5);
-      ctx.fill();
-
-      ctx.fillStyle = "#22d3ee";
-      ctx.beginPath();
-      ctx.arc(-5, -22, 3.2, 0, Math.PI * 2);
-      ctx.arc(5, -22, 3.2, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = "#22d3ee";
+        ctx.beginPath();
+        ctx.arc(-6, -30, 4, 0, Math.PI * 2);
+        ctx.arc(6, -30, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 12px Segoe UI";
-      ctx.fillText(npc.nama, 0, 42 - floatY);
+      ctx.font = "bold 13px Segoe UI";
+      ctx.textAlign = "center";
+      ctx.fillText("Bot AI", 0, 62 - floatY);
       ctx.restore();
 
-      drawQuestBadge(npc.x, npc.y - 52 + floatY);
+      drawQuestBadge(npc.x, npc.y - 68 + floatY);
     }
 
     function drawRyu() {
-      const step = Math.sin(state.walkPhase) * 6;
+      const step = Math.sin(state.walkPhase) * 7;
       const py = state.y - state.zJump;
 
       ctx.save();
-      ctx.fillStyle = "rgba(15, 23, 42, 0.42)";
+      ctx.fillStyle = "rgba(15, 23, 42, 0.45)";
       ctx.beginPath();
-      ctx.ellipse(state.x, state.y + 28, 22, 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(state.x, state.y + 50, 28, 10, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.translate(state.x, py);
       ctx.scale(state.facing, 1);
 
-      ctx.fillStyle = "#1e293b";
-      ctx.fillRect(-10, 12 + step * 0.6, 8, 14 - step * 0.4);
-      ctx.fillRect(2, 12 - step * 0.6, 8, 14 + step * 0.4);
-
+      // Kaki celana gelap & sepatu futuristik
       ctx.fillStyle = "#0f172a";
+      ctx.fillRect(-13, 18 + step * 0.6, 10, 24 - step * 0.4);
+      ctx.fillRect(3, 18 - step * 0.6, 10, 24 + step * 0.4);
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(-14, 38 + step * 0.6, 12, 6);
+      ctx.fillRect(2, 38 - step * 0.6, 12, 6);
+
+      // Jaket putih-hitam beraksen neon SMK Bina Mandiri
+      ctx.fillStyle = "#111827";
       ctx.beginPath();
-      ctx.roundRect(-15, -8, 30, 24, 6);
+      ctx.roundRect(-19, -16, 38, 36, 8);
       ctx.fill();
       ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      ctx.fillStyle = "#38bdf8";
+      // Kerah putih & tulisan SMK BINA MANDIRI
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(-17, -14, 7, 32);
+      ctx.fillRect(10, -14, 7, 32);
+
+      ctx.fillStyle = "#e0f2fe";
       ctx.font = "bold 8px Segoe UI";
       ctx.textAlign = "center";
-      ctx.fillText("SBM", 0, 8);
+      ctx.fillText("SMK", 0, -2);
+      ctx.fillStyle = "#38bdf8";
+      ctx.font = "bold 6.5px Segoe UI";
+      ctx.fillText("BINA MANDIRI", 0, 8);
 
+      // Kepala & rambut perak anime
       ctx.fillStyle = "#fde68a";
       ctx.beginPath();
-      ctx.arc(0, -21, 12.5, 0, Math.PI * 2);
+      ctx.arc(0, -32, 16, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = "#e2e8f0";
       ctx.beginPath();
-      ctx.arc(0, -24, 13.5, Math.PI * 0.85, Math.PI * 2.15);
+      ctx.arc(0, -36, 17, Math.PI * 0.85, Math.PI * 2.15);
       ctx.fill();
+      // Jambul perak
       ctx.beginPath();
-      ctx.moveTo(-6, -34);
-      ctx.lineTo(2, -42);
-      ctx.lineTo(7, -33);
+      ctx.moveTo(-10, -48);
+      ctx.lineTo(0, -60);
+      ctx.lineTo(9, -47);
       ctx.closePath();
       ctx.fill();
 
+      // Mata biru
       ctx.fillStyle = "#0284c7";
       ctx.beginPath();
-      ctx.arc(5, -20, 2.2, 0, Math.PI * 2);
+      ctx.arc(6, -31, 2.8, 0, Math.PI * 2);
       ctx.fill();
 
+      // Efek ayunan pedang kode biru-emas
       if (state.attackTimer > 0) {
         ctx.save();
-        ctx.translate(16, -2);
-        ctx.rotate(-0.6 + (16 - state.attackTimer) * 0.14);
+        ctx.translate(20, -4);
+        ctx.rotate(-0.7 + (18 - state.attackTimer) * 0.14);
         ctx.strokeStyle = "#38bdf8";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(28, -18);
+        ctx.lineTo(40, -24);
         ctx.stroke();
 
         ctx.strokeStyle = "#fef08a";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.arc(10, -6, 22, -0.9, 0.5);
+        ctx.arc(14, -8, 30, -0.9, 0.5);
         ctx.stroke();
         ctx.restore();
       }
@@ -1213,61 +1547,32 @@
       ctx.restore();
 
       ctx.fillStyle = "#fde047";
-      ctx.font = "bold 11px Segoe UI";
+      ctx.font = "bold 12px Segoe UI";
       ctx.textAlign = "center";
-      ctx.fillText("Ryu", state.x, state.y + 42);
+      ctx.fillText("Ryu", state.x, state.y + 66);
     }
 
     function drawWorld() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const sky = ctx.createLinearGradient(0, 0, 0, 270);
-      sky.addColorStop(0, "#1d4ed8");
-      sky.addColorStop(0.55, "#60a5fa");
-      sky.addColorStop(1, "#bae6fd");
-      ctx.fillStyle = sky;
-      ctx.fillRect(0, 0, canvas.width, 270);
+      if (customBgImg.ready) {
+        ctx.drawImage(customBgImg, 0, 0, canvas.width, canvas.height);
+      } else {
+        // Langit biru cerah + awan lembut
+        const sky = ctx.createLinearGradient(0, 0, 0, 320);
+        sky.addColorStop(0, "#1e3a8a");
+        sky.addColorStop(0.55, "#3b82f6");
+        sky.addColorStop(1, "#bae6fd");
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, 320);
 
-      ctx.fillStyle = "#166534";
-      ctx.beginPath();
-      ctx.ellipse(170, 125, 78, 22, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#38bdf8";
-      ctx.fillRect(140, 138, 12, 75);
+        drawFloatingIsland(220, 125, 0.9, true);
+        drawFloatingIsland(1030, 115, 1.0, false);
+        drawAcademyCastle();
+        drawCourtyardAndBanners();
+      }
 
-      ctx.fillStyle = "#166534";
-      ctx.beginPath();
-      ctx.ellipse(930, 115, 86, 24, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#1e3a8a";
-      ctx.fillRect(435, 95, 250, 145);
-      ctx.fillStyle = "#38bdf8";
-      ctx.beginPath();
-      ctx.moveTo(560, 48);
-      ctx.lineTo(470, 110);
-      ctx.lineTo(650, 110);
-      ctx.closePath();
-      ctx.fill();
-
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(485, 74, 150, 26);
-      ctx.fillStyle = "#fef08a";
-      ctx.font = "bold 11px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("AKADEMI PEMROGRAMAN", 560, 91);
-
-      ctx.fillStyle = "#334155";
-      ctx.fillRect(0, 240, canvas.width, 390);
-      ctx.fillStyle = "#cbd5e1";
-      ctx.beginPath();
-      ctx.moveTo(450, 240);
-      ctx.lineTo(670, 240);
-      ctx.lineTo(860, 630);
-      ctx.lineTo(260, 630);
-      ctx.closePath();
-      ctx.fill();
-
+      // Gambar karakter berurutan berdasarkan posisi Y
       const entities = [
         ...npcs.map((n) => ({ y: n.y, draw: () => (n.type === "sinta" ? drawSinta(n) : drawBotAI(n)) })),
         { y: state.y, draw: drawRyu }
