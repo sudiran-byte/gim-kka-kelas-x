@@ -3,1248 +3,1116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The World of Coding - SMK Bina Mandiri</title>
+  <title>Petualangan Koding & AI — SMK Bina Mandiri</title>
   <style>
+    :root {
+      --bg-dark: #091120;
+      --bg-card: #111e36;
+      --bg-card-2: #162746;
+      --accent: #38bdf8;
+      --accent-2: #22c55e;
+      --gold: #facc15;
+      --danger: #f87171;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: rgba(56, 189, 248, 0.25);
+    }
+
     * {
       box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
     }
 
     html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 100dvh;
-      color: #f8fafc;
-      background: #0b1324;
-      overflow: hidden;
+      min-height: 100%;
+      background: radial-gradient(circle at top right, #172d54 0%, var(--bg-dark) 60%);
+      color: var(--text);
     }
 
-    /* ================= MODAL AWAL ================= */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at 50% 35%, #27436b 0%, #16263d 55%, #0e1828 100%);
+    .app-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    /* ================= HEADER & PLAYER STATS ================= */
+    .topbar {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      z-index: 40;
-    }
-
-    .modal-backdrop.hidden {
-      display: none;
-    }
-
-    .audio-modal {
-      width: 100%;
-      max-width: 490px;
-      background: linear-gradient(180deg, #1b2847 0%, #121c33 100%);
-      border: 1.5px solid #d4a843;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 223, 130, 0.2);
-      border-radius: 16px;
-      padding: 26px 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    .sparkle {
-      position: absolute;
-      top: 10px;
-      color: #facc15;
-      font-size: 13px;
-    }
-    .sparkle.left { left: 12px; }
-    .sparkle.right { right: 12px; }
-
-    .mascot-stage {
-      width: 210px;
-      height: 210px;
-      margin: 0 auto 12px;
-      position: relative;
-      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.48));
-    }
-
-    .mascot-layer {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
-
-    .part-body {
-      z-index: 1;
-      clip-path: polygon(
-        0% 0%, 100% 0%, 100% 100%, 0% 100%,
-        0% 34%, 43% 34%, 43% 62%, 22% 62%, 22% 34%, 0% 34%
-      );
-    }
-
-    .part-hand {
-      z-index: 2;
-      clip-path: polygon(22% 34%, 43% 34%, 43% 62%, 22% 62%);
-      transform-origin: 39% 58%;
-      animation: dadahTangan 1.3s ease-in-out infinite;
-    }
-
-    @keyframes dadahTangan {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-18deg); }
-      50% { transform: rotate(8deg); }
-      75% { transform: rotate(-18deg); }
-    }
-
-    .modal-title {
-      margin: 0 0 10px;
-      font-size: 21px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .modal-desc {
-      margin: 0 auto 22px;
-      max-width: 400px;
-      font-size: 13.5px;
-      line-height: 1.55;
-      color: #cbd5e1;
-    }
-
-    .btn-row {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
       flex-wrap: wrap;
-    }
-
-    .btn-music {
-      padding: 11px 22px;
-      border-radius: 10px;
-      border: 1px solid #fde68a;
-      background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
-      color: #1e293b;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
-    }
-
-    .btn-mute {
-      padding: 11px 20px;
-      border-radius: 10px;
-      border: 1px solid #475569;
-      background: #23304d;
-      color: #e2e8f0;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    /* ================= LAYAR GAME RPG FULL-VIEWPORT ================= */
-    .game-screen {
-      display: none;
-      width: 100%;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-      background: #0b192c;
-    }
-
-    .game-screen.active {
-      display: block;
-    }
-
-    canvas#worldCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* HUD Kiri Atas */
-    .hud-top-left {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 12;
-      max-width: 280px;
-    }
-
-    .player-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, rgba(13, 25, 48, 0.9), rgba(24, 44, 82, 0.85));
-      border: 1.5px solid #38bdf8;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-      border-radius: 12px;
-      padding: 7px 10px;
-    }
-
-    .avatar-ring {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #e0f2fe, #1d4ed8);
-      border: 2px solid #facc15;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 13px;
-      color: #0f172a;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .stat-lines {
-      flex: 1;
-      font-size: 11.5px;
-    }
-
-    .bar-row {
-      display: flex;
-      align-items: center;
       justify-content: space-between;
-      font-size: 10.5px;
+      align-items: center;
+      gap: 14px;
+      background: rgba(17, 30, 54, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      margin-bottom: 18px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--gold);
+      letter-spacing: 0.4px;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-pill {
+      background: rgba(9, 17, 32, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      min-width: 115px;
+    }
+
+    .stat-pill strong {
+      display: block;
+      font-size: 15px;
+      color: #ffffff;
       margin-top: 2px;
     }
 
-    .bar-track {
-      width: 155px;
-      height: 8px;
-      background: rgba(15, 23, 42, 0.9);
+    .xp-wrap {
+      min-width: 170px;
+    }
+
+    .xp-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: #cbd5e1;
+      margin-bottom: 5px;
+    }
+
+    .xp-track {
+      height: 9px;
+      background: #070e1a;
       border-radius: 99px;
       overflow: hidden;
-      margin-top: 2px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
-    .bar-hp {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #dc2626, #f87171);
-      transition: width 0.25s;
-    }
-
-    .bar-exp {
+    .xp-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #0284c7, #38bdf8);
-      transition: width 0.25s;
+      background: linear-gradient(90deg, #0284c7, #38bdf8, #4ade80);
+      transition: width 0.35s ease;
     }
 
-    .quest-box {
-      background: linear-gradient(90deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.65));
-      border-left: 3.5px solid #facc15;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 11.5px;
-      line-height: 1.4;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-    }
-
-    .quest-title {
-      color: #facc15;
-      font-weight: 800;
-      margin-bottom: 2px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .quest-dist {
-      color: #fde047;
-      font-weight: 700;
-      margin-top: 4px;
-      font-size: 11px;
-    }
-
-    /* Banner Tengah Atas */
-    .title-banner {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, rgba(14, 116, 144, 0.2), rgba(14, 116, 144, 0.95) 20%, rgba(14, 116, 144, 0.95) 80%, rgba(14, 116, 144, 0.2));
-      border-top: 2px solid #38bdf8;
-      border-bottom: 2px solid #38bdf8;
-      padding: 6px 32px;
-      text-align: center;
-      z-index: 12;
-      white-space: nowrap;
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
-    }
-
-    .title-banner .main-t {
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: 0.9px;
-      color: #fef08a;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    }
-
-    .title-banner .sub-t {
-      font-size: 11px;
-      font-weight: 700;
-      color: #e0f2fe;
-      letter-spacing: 0.5px;
-    }
-
-    /* HUD Kanan Atas */
-    .hud-top-right {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-      z-index: 12;
-    }
-
-    .top-pills {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(12, 23, 42, 0.88);
-      padding: 5px 10px;
-      border-radius: 99px;
-      border: 1px solid #38bdf8;
-      font-size: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-
-    .hud-icon-btn {
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #64748b;
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    .minimap-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .minimap {
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 60% 35%, #22c55e 0%, #15803d 48%, #1d4ed8 52%, #1e3a8a 100%);
-      border: 2.5px solid #facc15;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
-    }
-
-    .minimap::before {
-      content: "N";
-      position: absolute;
-      top: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 9px;
-      font-weight: 800;
-      color: #fef08a;
-    }
-
-    .minimap-road {
-      position: absolute;
-      width: 10px;
-      height: 70px;
-      background: rgba(226, 232, 240, 0.55);
-      left: 41px;
-      top: 12px;
-      border-radius: 4px;
-    }
-
-    .minimap-dot-player {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #facc15;
-      border: 1.5px solid #0f172a;
-      position: absolute;
-      transform: translate(-50%, -50%);
-    }
-
-    .minimap-dot-npc {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #38bdf8;
-      border: 1px solid #ffffff;
-      position: absolute;
-      transform: translate(-50%, -50%);
-    }
-
-    .minimap-label {
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid #38bdf8;
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #e0f2fe;
-    }
-
-    /* Papan Kayu Informasi Samping Kanan */
-    .info-board {
-      position: absolute;
-      right: 14px;
-      top: 47%;
-      transform: translateY(-50%);
-      width: 215px;
-      background: linear-gradient(180deg, #78350f, #451a03);
-      border: 2.5px solid #d97706;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 11px;
-      z-index: 10;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-    }
-
-    .info-board-title {
-      font-weight: 800;
-      color: #fde047;
-      margin-bottom: 6px;
-      font-size: 13px;
-      border-bottom: 1px solid rgba(253, 224, 71, 0.3);
-      padding-bottom: 4px;
-    }
-
-    .info-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      color: #fef3c7;
-    }
-
-    .info-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      line-height: 1.35;
-    }
-
-    .check-badge {
-      background: #16a34a;
-      color: #ffffff;
-      font-weight: 800;
-      border-radius: 4px;
-      padding: 0 4px;
-      font-size: 10px;
-      flex-shrink: 0;
-    }
-
-    /* Kontrol Bawah */
-    .dpad-ring {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.72));
-      border: 2px solid rgba(125, 211, 252, 0.65);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      padding: 6px;
-      z-index: 14;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-    }
-
-    .dpad-btn {
-      background: transparent;
+    .btn {
       border: none;
-      color: #e0f2fe;
-      font-weight: 800;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .dpad-btn:active {
-      background: rgba(56, 189, 248, 0.35);
-    }
-
-    .dpad-center {
-      background: radial-gradient(circle, #38bdf8, #0284c7);
-      border: 2px solid #bae6fd;
-      border-radius: 50%;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.75);
-    }
-
-    .sys-log {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(410px, 44%);
-      background: rgba(12, 23, 42, 0.88);
-      border: 1px solid #38bdf8;
       border-radius: 10px;
-      padding: 7px 12px;
-      font-size: 11.5px;
-      color: #fde047;
-      text-align: center;
-      z-index: 12;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
     }
 
-    .action-cluster {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      z-index: 14;
+    .btn:active {
+      transform: scale(0.98);
     }
 
-    .bag-menu-col {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-right: 4px;
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
-    .act-small {
-      padding: 6px 12px;
+    .btn-primary {
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #061326;
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #fde047, #eab308);
+      color: #1e293b;
+    }
+
+    .btn-success {
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #052e16;
+    }
+
+    .btn-ghost {
+      background: rgba(30, 41, 59, 0.85);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    /* ================= LEVEL ROADMAP ================= */
+    .level-map-card {
+      background: rgba(17, 30, 54, 0.85);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      border: 1.5px solid #f59e0b;
-      background: rgba(30, 41, 59, 0.92);
-      color: #fef3c7;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
+      padding: 16px 18px;
+      margin-bottom: 18px;
     }
 
-    .act-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 2px solid #7dd3fc;
-      background: radial-gradient(circle, rgba(30, 58, 138, 0.85), rgba(15, 23, 42, 0.92));
-      color: #f8fafc;
-      font-size: 10.5px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .act-attack {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: 2.5px solid #fde047;
-      background: radial-gradient(circle, #38bdf8, #1d4ed8 70%, #1e3a8a);
-      color: #ffffff;
-      font-size: 11.5px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 22px rgba(56, 189, 248, 0.65);
-    }
-
-    @media (max-width: 720px) {
-      .title-banner {
-        top: 64px;
-        padding: 4px 14px;
-      }
-      .info-board {
-        display: none;
-      }
-      .sys-log {
-        bottom: 136px;
-        width: calc(100% - 24px);
-        max-width: none;
-      }
-    }
-
-    /* Popup Misi / Tas / Menu */
-    .overlay-popup {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.78);
-      z-index: 25;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .overlay-popup.show {
+    .section-heading {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
-    .popup-card {
-      width: 100%;
-      max-width: 480px;
-      background: #111c33;
-      border: 1.5px solid #38bdf8;
-      border-radius: 14px;
-      padding: 20px;
+    .section-heading h2 {
+      margin: 0;
+      font-size: 15.5px;
+      color: #e0f2fe;
     }
 
-    .popup-card h3 {
+    .section-heading span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 12px;
+    }
+
+    .level-node {
+      background: var(--bg-card-2);
+      border: 1.5px solid rgba(148, 163, 184, 0.22);
+      border-radius: 13px;
+      padding: 12px 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .level-node:hover:not(.locked) {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .level-node.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
+    }
+
+    .level-node.completed {
+      border-color: rgba(74, 222, 128, 0.65);
+      background: linear-gradient(180deg, rgba(22, 101, 52, 0.28), var(--bg-card-2));
+    }
+
+    .level-node.locked {
+      opacity: 0.55;
+      cursor: not-allowed;
+      background: rgba(11, 19, 36, 0.7);
+    }
+
+    .level-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: rgba(56, 189, 248, 0.16);
+      color: #7dd3fc;
+      margin-bottom: 6px;
+    }
+
+    .level-node.completed .level-badge {
+      background: rgba(74, 222, 128, 0.2);
+      color: #86efac;
+    }
+
+    .level-node.locked .level-badge {
+      background: rgba(148, 163, 184, 0.15);
+      color: #94a3b8;
+    }
+
+    .level-node h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .level-node p {
+      margin: 0;
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.38;
+    }
+
+    .level-progress-mini {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    /* ================= MAIN STAGE (MATERI & MISI) ================= */
+    .stage-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 860px) {
+      .stage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(17, 30, 54, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .panel h2 {
       margin: 0 0 8px;
-      color: #fde047;
-      font-size: 17px;
+      font-size: 18px;
+      color: #ffffff;
     }
 
-    .popup-card p {
-      margin: 0 0 14px;
+    .materi-summary {
       font-size: 13.5px;
-      line-height: 1.5;
+      line-height: 1.6;
+      color: #cbd5e1;
+      margin: 0 0 14px;
+    }
+
+    .concept-box {
+      background: rgba(9, 17, 32, 0.85);
+      border-left: 3.5px solid var(--accent);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+
+    .concept-box h4 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: #7dd3fc;
+    }
+
+    .concept-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12.5px;
+      line-height: 1.55;
       color: #e2e8f0;
     }
 
-    .choice-btn {
-      width: 100%;
-      text-align: left;
-      padding: 9px 12px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #1e293b;
-      color: #f8fafc;
-      font-size: 13px;
-      cursor: pointer;
+    pre.code-sample {
+      margin: 0;
+      background: #060c18;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #bae6fd;
+      overflow-x: auto;
     }
 
-    .choice-btn:hover {
-      border-color: #38bdf8;
-      background: #273752;
+    /* ================= MISI LIST & INTERACTION ================= */
+    .mission-item {
+      background: rgba(9, 17, 32, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mission-item.done {
+      border-color: rgba(74, 222, 128, 0.5);
+      background: rgba(20, 83, 45, 0.22);
+    }
+
+    .mission-item.selected {
+      border-color: var(--gold);
+    }
+
+    .mission-meta h4 {
+      margin: 0 0 3px;
+      font-size: 13.5px;
+      color: #ffffff;
+    }
+
+    .mission-meta p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .reward-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .active-challenge {
+      margin-top: 14px;
+      background: rgba(9, 17, 32, 0.92);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      border-radius: 14px;
+      padding: 15px;
+    }
+
+    .challenge-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--gold);
+      margin: 0 0 6px;
+    }
+
+    .challenge-prompt {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #f1f5f9;
+      margin: 0 0 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: #14233f;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .option-btn:hover {
+      border-color: var(--accent);
+      background: #1b3057;
+    }
+
+    textarea.code-editor {
+      width: 100%;
+      min-height: 105px;
+      background: #050a14;
+      color: #86efac;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+
+    .feedback-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      display: none;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box.ok {
+      background: rgba(22, 163, 74, 0.2);
+      border: 1px solid #4ade80;
+      color: #bbf7d0;
+    }
+
+    .feedback-box.err {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #f87171;
+      color: #fecaca;
+    }
+
+    .next-level-banner {
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(22, 163, 74, 0.22), rgba(2, 132, 199, 0.22));
+      border: 1px solid #4ade80;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .next-level-banner.show {
+      display: flex;
     }
   </style>
 </head>
 <body>
-  <!-- ================= MODAL AWAL ================= -->
-  <div id="startModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="audio-modal">
-      <span class="sparkle left">✦</span>
-      <span class="sparkle right">✦</span>
-
-      <div class="mascot-stage" aria-label="Maskot Koding dan AI melambaikan tangan">
-        <img src="maskot.png" alt="Maskot Koding dan AI" class="mascot-layer part-body" />
-        <img src="maskot.png" alt="" aria-hidden="true" class="mascot-layer part-hand" />
+  <div class="app-shell">
+    <!-- TOPBAR STATUS -->
+    <header class="topbar">
+      <div class="brand">
+        <h1>🚀 Petualangan Koding & AI</h1>
+        <p>Belajar bertahap dari Level 1 hingga Level 5 — Selesaikan misi untuk membuka level & materi lebih lengkap</p>
       </div>
 
-      <h1 id="modalTitle" class="modal-title">Mau main dengan musik?</h1>
-      <p class="modal-desc">
-        Musik latar bisa dimatikan kapan saja. Efek suara (tombol, langkah, notifikasi)
-        tetap menyala dan bisa diatur lewat menu di dalam game.
-      </p>
-
-      <div class="btn-row">
-        <button class="btn-music" onclick="mulaiGame(true)">🔊 Dengan musik</button>
-        <button class="btn-mute" onclick="mulaiGame(false)">🔇 Tanpa musik</button>
+      <div class="stats-bar">
+        <div class="stat-pill">
+          <span>Level Saat Ini</span>
+          <strong id="hudLevel">Level 1</strong>
+        </div>
+        <div class="stat-pill">
+          <span>Koin Misi</span>
+          <strong id="hudCoins">0</strong>
+        </div>
+        <div class="stat-pill xp-wrap">
+          <div class="xp-label">
+            <span>Total XP</span>
+            <span id="hudXpText">0 / 100 XP</span>
+          </div>
+          <div class="xp-track">
+            <div id="hudXpBar" class="xp-fill"></div>
+          </div>
+        </div>
+        <button class="btn btn-ghost" onclick="resetProgress()">↻ Reset</button>
       </div>
-    </div>
+    </header>
+
+    <!-- PETA LEVEL BERTAHAP -->
+    <section class="level-map-card">
+      <div class="section-heading">
+        <h2>🗺️ Peta Tahapan Belajar</h2>
+        <span id="overallProgressText">0 / 10 Misi Selesai</span>
+      </div>
+      <div id="levelsGrid" class="levels-grid"></div>
+    </section>
+
+    <!-- KONTEN MATERI & MISI LEVEL AKTIF -->
+    <main class="stage-grid">
+      <!-- PANEL KIRI: MATERI BERTAHAP -->
+      <section class="panel">
+        <span id="materiTag" class="panel-tag">Tahap 1 · Dasar</span>
+        <h2 id="materiTitle">Memuat materi...</h2>
+        <p id="materiDesc" class="materi-summary"></p>
+
+        <div class="concept-box">
+          <h4>📌 Poin Materi Inti</h4>
+          <ul id="materiPoints"></ul>
+        </div>
+
+        <div class="concept-box" style="border-left-color: var(--gold); margin-bottom: 0;">
+          <h4 style="color: #fde047;">💻 Contoh Kode / Pola Logika</h4>
+          <pre id="materiCode" class="code-sample"></pre>
+        </div>
+      </section>
+
+      <!-- PANEL KANAN: DAFTAR MISI & RUANG PENYELESAIAN -->
+      <section class="panel">
+        <span class="panel-tag">Tugas & Misi Level</span>
+        <h2 id="missionPanelTitle">Selesaikan Misi untuk Naik Tahap</h2>
+        <div id="missionsList"></div>
+
+        <div id="challengeBox" class="active-challenge">
+          <div id="challengeTitle" class="challenge-title">Pilih misi di atas untuk memulai</div>
+          <p id="challengePrompt" class="challenge-prompt">Setiap misi yang berhasil diselesaikan memberi XP dan koin untuk membuka level berikutnya.</p>
+          <div id="challengeWorkspace"></div>
+          <div id="feedbackBox" class="feedback-box"></div>
+        </div>
+
+        <div id="nextLevelBanner" class="next-level-banner">
+          <div>
+            <strong style="color:#86efac;">🎉 Semua misi di level ini selesai!</strong>
+            <div style="font-size:12px; color:#e2e8f0;">Tahap berikutnya dengan materi yang lebih lengkap sudah terbuka.</div>
+          </div>
+          <button id="btnGoNextLevel" class="btn btn-success" onclick="goToNextLevel()">Lanjut ke Level Berikutnya →</button>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- ================= LAYAR GAME RPG ================= -->
-  <main id="gameScreen" class="game-screen">
-    <canvas id="worldCanvas" width="1280" height="720"></canvas>
-
-    <div class="hud-top-left">
-      <div class="player-card">
-        <div class="avatar-ring">RYU</div>
-        <div class="stat-lines">
-          <div><strong>Ryu</strong> · <span id="lvText" style="color:#fde047;">Lv. 1</span></div>
-          <div class="bar-row"><span>HP</span><span id="hpText">100 / 100</span></div>
-          <div class="bar-track"><div id="hpBar" class="bar-hp"></div></div>
-          <div class="bar-row"><span>EXP</span><span id="expText">0 / 100</span></div>
-          <div class="bar-track"><div id="expBar" class="bar-exp"></div></div>
-        </div>
-      </div>
-
-      <div class="quest-box">
-        <div class="quest-title"><span>!</span> Misi Utama</div>
-        <div id="questDesc">Temui Sinta (Pemandu Akademi) atau Bot AI untuk menyelesaikan misi Koding & AI!</div>
-        <div id="questDist" class="quest-dist">▲ 123 m ke target terdekat</div>
-      </div>
-    </div>
-
-    <div class="title-banner">
-      <div class="main-t">THE WORLD OF CODING</div>
-      <div class="sub-t">SMK BINA MANDIRI</div>
-    </div>
-
-    <div class="hud-top-right">
-      <div class="top-pills">
-        <span>🪙 <strong id="coinText">0</strong></span>
-        <span>💎 <strong id="gemText">0</strong></span>
-        <button class="hud-icon-btn" id="musicBtnHud" onclick="toggleMusik()">♪ Off</button>
-        <button class="hud-icon-btn" onclick="kembaliKeMenuAwal()">Awal</button>
-      </div>
-      <div class="minimap-wrap">
-        <div class="minimap" title="Kerajaan Coding">
-          <div class="minimap-road"></div>
-          <div class="minimap-dot-npc" style="left: 36%; top: 58%;"></div>
-          <div class="minimap-dot-npc" style="left: 72%; top: 54%;"></div>
-          <div id="minimapPlayer" class="minimap-dot-player" style="left: 50%; top: 74%;"></div>
-        </div>
-        <div class="minimap-label">Kerajaan Coding</div>
-      </div>
-    </div>
-
-    <aside class="info-board">
-      <div class="info-board-title">📢 Informasi</div>
-      <ul class="info-list">
-        <li><span class="check-badge">✓</span><span>Selesaikan misi untuk mendapatkan XP!</span></li>
-        <li><span class="check-badge">✓</span><span>Pelajari Coding, AI dan Jaringan!</span></li>
-        <li><span class="check-badge">✓</span><span>Jadilah Programmer Handal SMK Bina Mandiri!</span></li>
-      </ul>
-    </aside>
-
-    <div class="dpad-ring">
-      <div></div>
-      <button class="dpad-btn" onmousedown="setDir('up',1)" onmouseup="setDir('up',0)" ontouchstart="setDir('up',1)" ontouchend="setDir('up',0)">▲</button>
-      <div></div>
-      <button class="dpad-btn" onmousedown="setDir('left',1)" onmouseup="setDir('left',0)" ontouchstart="setDir('left',1)" ontouchend="setDir('left',0)">◀</button>
-      <div class="dpad-center"></div>
-      <button class="dpad-btn" onmousedown="setDir('right',1)" onmouseup="setDir('right',0)" ontouchstart="setDir('right',1)" ontouchend="setDir('right',0)">▶</button>
-      <div></div>
-      <button class="dpad-btn" onmousedown="setDir('down',1)" onmouseup="setDir('down',0)" ontouchstart="setDir('down',1)" ontouchend="setDir('down',0)">▼</button>
-      <div></div>
-    </div>
-
-    <div id="sysLog" class="sys-log">Sistem : Selamat datang di The World of Coding - SMK Bina Mandiri!</div>
-
-    <div class="action-cluster">
-      <div class="bag-menu-col">
-        <button class="act-small" onclick="bukaPopup('tas')">🎒 Tas</button>
-        <button class="act-small" onclick="bukaPopup('menu')">⊞ Menu</button>
-      </div>
-      <button class="act-circle" id="runBtn" onclick="toggleLari()">🏃 Lari</button>
-      <button class="act-circle" onclick="lompat()">🦘 Lompat</button>
-      <button class="act-attack" onclick="aksiInteraksi()">⚔️ Serang</button>
-    </div>
-
-    <div id="popupOverlay" class="overlay-popup">
-      <div class="popup-card" id="popupCard"></div>
-    </div>
-  </main>
-
   <script>
-    /* ================= AUDIO ================= */
-    let audioCtx = null;
-    let musikAktif = false;
-    let loopTimer = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
-      }
-      if (audioCtx.state === "suspended") audioCtx.resume();
-    }
-
-    function bunyiKlik(freq = 580) {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.12);
-    }
-
-    function mulaiMusikLatar() {
-      hentikanMusikLatar();
-      initAudio();
-      musikAktif = true;
-      updateLabelMusik();
-      const nada = [261.63, 329.63, 392.0, 523.25];
-      let idx = 0;
-      loopTimer = setInterval(() => {
-        if (!musikAktif || !audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(nada[idx % nada.length], audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0008, audioCtx.currentTime + 0.35);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.35);
-        idx++;
-      }, 420);
-    }
-
-    function hentikanMusikLatar() {
-      musikAktif = false;
-      if (loopTimer) {
-        clearInterval(loopTimer);
-        loopTimer = null;
-      }
-      updateLabelMusik();
-    }
-
-    function toggleMusik() {
-      bunyiKlik();
-      if (musikAktif) hentikanMusikLatar();
-      else mulaiMusikLatar();
-    }
-
-    function updateLabelMusik() {
-      const btn = document.getElementById("musicBtnHud");
-      if (btn) btn.textContent = musikAktif ? "♪ On" : "♪ Off";
-    }
-
-    function mulaiGame(pakaiMusik) {
-      bunyiKlik(660);
-      if (pakaiMusik) mulaiMusikLatar();
-      else hentikanMusikLatar();
-      document.getElementById("startModal").classList.add("hidden");
-      document.getElementById("gameScreen").classList.add("active");
-    }
-
-    function kembaliKeMenuAwal() {
-      bunyiKlik(440);
-      document.getElementById("gameScreen").classList.remove("active");
-      document.getElementById("startModal").classList.remove("hidden");
-    }
-
-    /* ================= ASET TERPISAH (bg-akademi.png, ryu.png, sinta.png, bot-ai.png) ================= */
-    function loadAsset(src) {
-      const img = new Image();
-      img.ready = false;
-      img.onload = () => { img.ready = true; };
-      img.src = src;
-      return img;
-    }
-
-    const assets = {
-      bg: loadAsset("bg-akademi.png"),
-      ryu: loadAsset("ryu.png"),
-      sinta: loadAsset("sinta.png"),
-      botai: loadAsset("bot-ai.png")
-    };
-
-    /* ================= STATE GAME RPG ================= */
-    const state = {
-      x: 640,
-      y: 545,
-      zJump: 0,
-      vzJump: 0,
-      lari: false,
-      facing: 1,
-      walkPhase: 0,
-      attackTimer: 0,
-      dir: { up: 0, down: 0, left: 0, right: 0 },
-      hp: 100,
-      maxHp: 100,
-      exp: 0,
-      level: 1,
-      coins: 0,
-      gems: 0,
-      misiSelesai: 0,
-      inventory: ["Modul Koding Kelas X", "Buku Logika & AI"]
-    };
-
-    const npcs = [
+    /* ================= KURIKULUM BERTAHAP (LEVEL 1 -> LEVEL 5) ================= */
+    const LEVELS = [
       {
-        id: "sinta",
-        type: "sinta",
-        nama: "Sinta",
-        role: "Pemandu Akademi",
-        x: 455,
-        y: 440,
-        soal: {
-          judul: "Misi 1 — Urutan Algoritma (Koding Kelas X)",
-          tanya: "Sebelum model AI dilatih mengenali data gambar, langkah manakah yang paling tepat dilakukan terlebih dahulu?",
-          opsi: [
-            "Mengumpulkan dan membersihkan dataset berlabel",
-            "Menghapus semua data uji agar akurasi terlihat 100%",
-            "Mematikan validasi model sejak awal"
-          ],
-          benar: 0,
-          rewardExp: 40,
-          rewardCoin: 25
-        }
+        level: 1,
+        tahap: "Tahap 1 · Fondasi",
+        judul: "Algoritma & Variabel",
+        ringkasanSingkat: "Urutan langkah logis & menyimpan data dalam variabel.",
+        materiLengkap:
+          "Pada Level 1, kamu memulai petualangan dari dasar: menyusun algoritma (urutan langkah yang jelas) dan memahami variabel sebagai wadah bernama untuk menyimpan nilai data seperti teks, angka, atau status.",
+        poin: [
+          "Algoritma adalah urutan instruksi terstruktur untuk menyelesaikan masalah dari awal hingga akhir.",
+          "Variabel menyimpan data di memori agar bisa dibaca atau diubah selama program berjalan.",
+          "Nama variabel sebaiknya jelas dan menggambarkan isinya, misalnya skor atau nama_siswa."
+        ],
+        contohKode: `// Contoh variabel & urutan langkah sederhana
+let namaSiswa = "Ryu";
+let xp = 0;
+
+xp = xp + 25;
+console.log(namaSiswa + " mendapat XP: " + xp);`,
+        missions: [
+          {
+            id: "l1-m1",
+            judul: "Misi 1.1: Urutan Algoritma Sarapan & Koding",
+            deskripsi: "Tentukan urutan langkah yang paling logis sebelum menjalankan program.",
+            xp: 25,
+            coins: 15,
+            type: "choice",
+            pertanyaan: "Manakah urutan algoritma yang paling tepat untuk membuat program penjumlahan dua angka?",
+            opsi: [
+              "1) Ambil input angka A & B → 2) Hitung hasil = A + B → 3) Tampilkan hasil",
+              "1) Tampilkan hasil → 2) Hitung hasil = A + B → 3) Ambil input angka A & B",
+              "1) Hitung hasil = A + B → 2) Tampilkan hasil → 3) Hapus variabel"
+            ],
+            jawaban: 0,
+            penjelasan: "Benar! Program harus menerima input terlebih dahulu, memprosesnya, lalu menampilkan output."
+          },
+          {
+            id: "l1-m2",
+            judul: "Misi 1.2: Deklarasi Variabel XP",
+            deskripsi: "Tulis kode deklarasi variabel bernama xp dengan nilai 50.",
+            xp: 35,
+            coins: 20,
+            type: "code",
+            pertanyaan: "Ketik baris kode JavaScript untuk membuat variabel bernama xp dengan nilai 50 (contoh: let xp = 50;).",
+            hint: "Gunakan kata kunci let atau const, nama variabel xp, tanda =, dan angka 50.",
+            validator: (raw) => {
+              const clean = raw.replace(/\s+/g, "").toLowerCase();
+              return clean.includes("letxp=50") || clean.includes("constxp=50") || clean.includes("varxp=50");
+            },
+            penjelasan: "Mantap! Variabel xp berhasil dibuat dengan nilai 50."
+          }
+        ]
       },
       {
-        id: "botai",
-        type: "botai",
-        nama: "Bot AI",
-        role: "Asisten Kecerdasan Artifisial",
-        x: 910,
-        y: 420,
-        soal: {
-          judul: "Misi 2 — Logika Percabangan & Klasifikasi AI",
-          tanya: "Dalam program klasifikasi spam email, jika skor_spam >= 0.8 maka tandai 'Spam', jika tidak maka 'Kotak Masuk'. Konsep ini disebut...",
-          opsi: [
-            "Percabangan kondisi (If / Else)",
-            "Perulangan tak terbatas (Infinite Loop)",
-            "Kompresi audio MP3"
-          ],
-          benar: 0,
-          rewardExp: 60,
-          rewardCoin: 40
-        }
+        level: 2,
+        tahap: "Tahap 2 · Logika",
+        judul: "Percabangan & Perulangan",
+        ringkasanSingkat: "Keputusan if/else dan otomatisasi tugas berulang.",
+        materiLengkap:
+          "Naik ke Level 2! Program yang cerdas tidak hanya berjalan lurus—ia mampu membuat keputusan menggunakan percabangan (if / else) dan mengulang tugas secara efisien menggunakan perulangan (loop).",
+        poin: [
+          "Percabangan (if / else) menjalankan blok kode tertentu hanya jika kondisi bernilai benar (true).",
+          "Operator perbandingan seperti >=, <=, ===, dan && membantu menyusun syarat keputusan.",
+          "Perulangan (for / while) menghindari penulisan kode berulang saat memproses banyak data."
+        ],
+        contohKode: `let nilai = 85;
+
+if (nilai >= 75) {
+  console.log("Lulus Misi!");
+} else {
+  console.log("Ulangi Latihan.");
+}`,
+        missions: [
+          {
+            id: "l2-m1",
+            judul: "Misi 2.1: Gerbang Logika Kelulusan",
+            deskripsi: "Pilih kondisi percabangan yang tepat untuk syarat nilai minimal 75.",
+            xp: 40,
+            coins: 25,
+            type: "choice",
+            pertanyaan: "Jika syarat lulus adalah nilai minimal 75, kondisi manakah yang tepat?",
+            opsi: [
+              "if (nilai >= 75)",
+              "if (nilai > 100)",
+              "if (nilai === 0)"
+            ],
+            jawaban: 0,
+            penjelasan: "Tepat! Operator >= berarti 'lebih besar atau sama dengan' 75."
+          },
+          {
+            id: "l2-m2",
+            judul: "Misi 2.2: Menulis Kondisi IF",
+            deskripsi: "Tulis kondisi if sederhana untuk mengecek apakah skor >= 100.",
+            xp: 45,
+            coins: 25,
+            type: "code",
+            pertanyaan: "Lengkapi/tulis kondisi if untuk mengecek skor >= 100 (contoh: if (skor >= 100) { levelUp(); }).",
+            hint: "Pastikan ada kata kunci if, tanda kurung berisi skor >= 100, dan kurung kurawal { ... }.",
+            validator: (raw) => {
+              const clean = raw.replace(/\s+/g, "").toLowerCase();
+              return clean.includes("if(skor>=100){") || clean.includes("if(skor>=100)");
+            },
+            penjelasan: "Bagus! Logika pengecekan skor >= 100 sudah ditulis dengan benar."
+          }
+        ]
+      },
+      {
+        level: 3,
+        tahap: "Tahap 3 · Data & Fungsi",
+        judul: "Array, Objek & Fungsi",
+        ringkasanSingkat: "Mengelola daftar data terstruktur & membungkus kode jadi fungsi.",
+        materiLengkap:
+          "Di Level 3, materi semakin lengkap: kamu akan mengelompokkan banyak data ke dalam array dan objek, serta membungkus logika menjadi fungsi (function) agar kode rapi, mudah dibaca, dan bisa dipakai ulang.",
+        poin: [
+          "Array menyimpan daftar item berurutan yang diakses memakai indeks mulai dari 0.",
+          "Objek menyimpan pasangan kunci-nilai (key: value) untuk merepresentasikan entitas seperti misi atau siswa.",
+          "Fungsi menerima parameter input dan dapat mengembalikan hasil (return)."
+        ],
+        contohKode: `const daftarMateri = ["Algoritma", "Logika", "AI Dasar"];
+
+function hitungBonus(poinDasar) {
+  return poinDasar * 2;
+}`,
+        missions: [
+          {
+            id: "l3-m1",
+            judul: "Misi 3.1: Indeks Pertama pada Array",
+            deskripsi: "Kenali cara mengakses elemen pertama dari sebuah array.",
+            xp: 50,
+            coins: 30,
+            type: "choice",
+            pertanyaan: "Jika const bahasa = ['Python', 'JavaScript', 'HTML'], bagaimana cara mengambil 'Python'?",
+            opsi: [
+              "bahasa[0]",
+              "bahasa[1]",
+              "bahasa.first()"
+            ],
+            jawaban: 0,
+            penjelasan: "Benar! Indeks array di sebagian besar bahasa pemrograman dimulai dari 0."
+          },
+          {
+            id: "l3-m2",
+            judul: "Misi 3.2: Membuat Fungsi sapa()",
+            deskripsi: "Tulis deklarasi fungsi bernama sapa.",
+            xp: 55,
+            coins: 35,
+            type: "code",
+            pertanyaan: "Tulis deklarasi fungsi bernama sapa di JavaScript (contoh: function sapa() { return 'Halo'; }).",
+            hint: "Gunakan kata kunci function diikuti nama sapa() dan blok { ... }.",
+            validator: (raw) => {
+              const clean = raw.replace(/\s+/g, "").toLowerCase();
+              return clean.includes("functionsapa()");
+            },
+            penjelasan: "Keren! Fungsi sapa() berhasil didefinisikan."
+          }
+        ]
+      },
+      {
+        level: 4,
+        tahap: "Tahap 4 · Fondasi AI",
+        judul: "Data, Fitur & Pelatihan Model AI",
+        ringkasanSingkat: "Bagaimana AI belajar dari data, fitur, label, dan evaluasi.",
+        materiLengkap:
+          "Selamat datang di Level 4! Kecerdasan Artifisial (AI) belajar pola dari data historis. Kualitas data (dataset), pemilihan fitur (features), label target, serta pembagian data latih & uji sangat menentukan kinerja model.",
+        poin: [
+          "Dataset terdiri dari fitur (input/ciri) dan label (target/jawaban yang ingin diprediksi).",
+          "Data dibagi menjadi data latih (training set) dan data uji (test set) untuk menguji generalisasi.",
+          "Garbage in, garbage out: data yang kotor, bias, atau tidak relevan menghasilkan prediksi buruk."
+        ],
+        contohKode: `// Ilustrasi struktur data latih klasifikasi cuaca
+const dataLatih = [
+  { awanTebal: true, kelembapan: 90, label: "Hujan" },
+  { awanTebal: false, kelembapan: 45, label: "Cerah" }
+];`,
+        missions: [
+          {
+            id: "l4-m1",
+            judul: "Misi 4.1: Memisahkan Data Latih & Data Uji",
+            deskripsi: "Pahami alasan pembagian dataset sebelum mengevaluasi model AI.",
+            xp: 65,
+            coins: 40,
+            type: "choice",
+            pertanyaan: "Mengapa model AI perlu diuji menggunakan data uji yang tidak dipakai saat pelatihan?",
+            opsi: [
+              "Untuk mengetahui apakah model mampu mengenali pola baru, bukan sekadar menghafal data latih",
+              "Agar ukuran file model menjadi lebih kecil secara otomatis",
+              "Karena data latih tidak boleh memiliki label"
+            ],
+            jawaban: 0,
+            penjelasan: "Tepat! Menguji pada data baru membantu mendeteksi overfitting dan mengukur kemampuan generalisasi."
+          },
+          {
+            id: "l4-m2",
+            judul: "Misi 4.2: Menentukan Aturan Klasifikasi",
+            deskripsi: "Tulis logika klasifikasi sederhana berdasarkan ambang batas probabilitas.",
+            xp: 70,
+            coins: 45,
+            type: "code",
+            pertanyaan: "Tulis kondisi if untuk mengecek apakah probabilitas >= 0.8 (contoh: if (probabilitas >= 0.8) { hasil = 'Positif'; }).",
+            hint: "Gunakan variabel probabilitas dengan operator >= dan nilai 0.8 di dalam if (...).",
+            validator: (raw) => {
+              const clean = raw.replace(/\s+/g, "").toLowerCase();
+              return clean.includes("if(probabilitas>=0.8)");
+            },
+            penjelasan: "Sempurna! Aturan ambang batas probabilitas >= 0.8 sudah tepat."
+          }
+        ]
+      },
+      {
+        level: 5,
+        tahap: "Tahap 5 · Penerapan AI & Koding",
+        judul: "Prompt Engineering, Evaluasi & Etika AI",
+        ringkasanSingkat: "Merancang instruksi AI yang presisi, mengevaluasi hasil & etika.",
+        materiLengkap:
+          "Level puncak: Level 5! Di tahap ini kamu menggabungkan koding dan AI secara bertanggung jawab: merancang prompt yang jelas (peran, konteks, format output), memverifikasi akurasi/halusinasi AI, serta menjaga privasi dan etika data.",
+        poin: [
+          "Prompt yang efektif menyertakan konteks, tujuan jelas, batasan, dan format keluaran yang diharapkan.",
+          "Keluaran AI wajib diverifikasi (human-in-the-loop) karena model dapat menghasilkan informasi keliru.",
+          "Etika AI mencakup transparansi, keadilan/bebas bias, hak cipta, dan keamanan data pribadi."
+        ],
+        contohKode: `const instruksiAI = {
+  peran: "Tutor Koding Pemula",
+  tugas: "Jelaskan perulangan for dengan analogi sehari-hari",
+  format: "3 poin singkat + contoh kode"
+};`,
+        missions: [
+          {
+            id: "l5-m1",
+            judul: "Misi 5.1: Merancang Prompt Berkualitas",
+            deskripsi: "Pilih prompt yang paling jelas dan terstruktur untuk asisten koding.",
+            xp: 80,
+            coins: 50,
+            type: "choice",
+            pertanyaan: "Manakah prompt yang paling efektif untuk meminta bantuan debugging kode?",
+            opsi: [
+              "Berikan potongan kode, pesan error yang muncul, tujuan program, dan minta penjelasan langkah perbaikannya",
+              "Benerin kode saya dong cepetan",
+              "Buatkan semua aplikasi tanpa menjelaskan bagian mana yang salah"
+            ],
+            jawaban: 0,
+            penjelasan: "Luar biasa! Konteks, error, dan tujuan yang jelas membantu AI memberi solusi akurat dan edukatif."
+          },
+          {
+            id: "l5-m2",
+            judul: "Misi 5.2: Prinsip Etika & Verifikasi AI",
+            deskripsi: "Identifikasi praktik paling aman saat menggunakan AI dalam proyek koding.",
+            xp: 90,
+            coins: 60,
+            type: "choice",
+            pertanyaan: "Apa tindakan terbaik ketika AI menghasilkan kode atau penjelasan yang terlihat meyakinkan?",
+            opsi: [
+              "Menguji langsung kode tersebut, memeriksa logika/keamanannya, dan memastikan tidak membocorkan data rahasia",
+              "Langsung menyalin ke sistem produksi tanpa pengujian sama sekali",
+              "Menghapus komentar dan pengujian agar cepat selesai"
+            ],
+            jawaban: 0,
+            penjelasan: "Tepat sekali! Verifikasi, pengujian, dan keamanan data adalah kunci penggunaan AI yang profesional."
+          }
+        ]
       }
     ];
 
-    const keys = {};
-    window.addEventListener("keydown", (e) => {
-      keys[e.key.toLowerCase()] = true;
-      if (e.key === " ") {
-        e.preventDefault();
-        lompat();
-      }
-      if (e.key.toLowerCase() === "f" || e.key === "Enter") {
-        aksiInteraksi();
-      }
-    });
-    window.addEventListener("keyup", (e) => {
-      keys[e.key.toLowerCase()] = false;
-    });
+    /* ================= STATE & PERSISTENCE ================= */
+    const STORAGE_KEY = "petualangan_koding_ai_v1";
 
-    function setDir(d, val) {
-      state.dir[d] = val;
+    function defaultState() {
+      return {
+        currentLevel: 1,
+        unlockedLevel: 1,
+        xp: 0,
+        coins: 0,
+        completedMissions: [],
+        selectedMissionId: "l1-m1"
+      };
     }
 
-    function toggleLari() {
-      bunyiKlik(620);
-      state.lari = !state.lari;
-      document.getElementById("runBtn").style.borderColor = state.lari ? "#facc15" : "#7dd3fc";
-      setLog(state.lari ? "Mode Lari aktif!" : "Mode Jalan normal.");
-    }
-
-    function lompat() {
-      if (state.zJump === 0) {
-        bunyiKlik(740);
-        state.vzJump = 9.5;
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        return { ...defaultState(), ...parsed };
+      } catch {
+        return defaultState();
       }
     }
 
-    function setLog(msg) {
-      document.getElementById("sysLog").textContent = "Sistem : " + msg;
+    let state = loadState();
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function updateHud() {
-      document.getElementById("lvText").textContent = "Lv. " + state.level;
-      document.getElementById("hpText").textContent = state.hp + " / " + state.maxHp;
-      document.getElementById("expText").textContent = state.exp + " / 100";
-      document.getElementById("coinText").textContent = state.coins;
-      document.getElementById("gemText").textContent = state.gems;
-      document.getElementById("hpBar").style.width = Math.max(0, (state.hp / state.maxHp) * 100) + "%";
-      document.getElementById("expBar").style.width = Math.min(100, state.exp) + "%";
-
-      const px = Math.max(14, Math.min(86, (state.x / 1280) * 100));
-      const py = Math.max(14, Math.min(86, (state.y / 720) * 100));
-      const dot = document.getElementById("minimapPlayer");
-      dot.style.left = px + "%";
-      dot.style.top = py + "%";
-
-      const minDist = Math.min(...npcs.map((n) => Math.hypot(n.x - state.x, n.y - state.y)));
-      document.getElementById("questDist").textContent =
-        minDist < 125 ? "▲ Target sudah dekat! Tekan Serang" : `▲ ${Math.round(minDist * 0.35)} m ke target terdekat`;
-    }
-
-    function aksiInteraksi() {
-      bunyiKlik(680);
-      state.attackTimer = 18;
-      const dekat = npcs.find((n) => Math.hypot(n.x - state.x, n.y - state.y) < 125);
-      if (!dekat) {
-        setLog("Ryu mengayunkan pedang kode! Dekati Sinta atau Bot AI untuk mengambil misi.");
-        return;
+    function resetProgress() {
+      if (confirm("Reset seluruh progres level, XP, dan koin ke awal?")) {
+        state = defaultState();
+        saveState();
+        renderAll();
       }
-      bukaSoal(dekat);
     }
 
-    function bukaSoal(npc) {
-      const s = npc.soal;
-      const overlay = document.getElementById("popupOverlay");
-      const card = document.getElementById("popupCard");
-
-      card.innerHTML = `
-        <h3>${s.judul}</h3>
-        <p><strong>${npc.nama} (${npc.role}):</strong> ${s.tanya}</p>
-        ${s.opsi
-          .map(
-            (teks, idx) =>
-              `<button class="choice-btn" onclick="jawabSoal('${npc.id}', ${idx})">${teks}</button>`
-          )
-          .join("")}
-        <button class="choice-btn" style="text-align:center; background:#0f172a;" onclick="tutupPopup()">Tutup</button>
-      `;
-      overlay.classList.add("show");
+    function getLevelObj(lvlNum) {
+      return LEVELS.find((l) => l.level === lvlNum) || LEVELS[0];
     }
 
-    function jawabSoal(npcId, pilihanIdx) {
-      const npc = npcs.find((n) => n.id === npcId);
-      if (!npc) return;
-
-      if (pilihanIdx === npc.soal.benar) {
-        bunyiKlik(880);
-        state.exp += npc.soal.rewardExp;
-        state.coins += npc.soal.rewardCoin;
-        state.misiSelesai += 1;
-        if (state.exp >= 100) {
-          state.exp -= 100;
-          state.level += 1;
-          state.gems += 1;
-          state.hp = state.maxHp;
-          setLog("Selamat! Ryu naik ke Level " + state.level + " dan mendapat 1 Kristal!");
-        } else {
-          setLog(`Misi berhasil! +${npc.soal.rewardExp} EXP dan +${npc.soal.rewardCoin} Koin.`);
-        }
-        document.getElementById("questDesc").textContent =
-          `Misi selesai: ${state.misiSelesai}. Lanjutkan eksplorasi Akademi Pemrograman SMK Bina Mandiri!`;
-      } else {
-        bunyiKlik(240);
-        state.hp = Math.max(10, state.hp - 20);
-        setLog("Jawaban kurang tepat! HP Ryu berkurang 20. Coba perhatikan konsepnya lagi.");
-      }
-
-      updateHud();
-      tutupPopup();
+    function isLevelCompleted(levelObj) {
+      return levelObj.missions.every((m) => state.completedMissions.includes(m.id));
     }
 
-    function bukaPopup(tipe) {
-      bunyiKlik(600);
-      const overlay = document.getElementById("popupOverlay");
-      const card = document.getElementById("popupCard");
+    function getTotalMissionsCount() {
+      return LEVELS.reduce((acc, l) => acc + l.missions.length, 0);
+    }
 
-      if (tipe === "tas") {
-        card.innerHTML = `
-          <h3>🎒 Tas Petualang Ryu</h3>
-          <p>Perlengkapan & catatan belajar Koding dan Kecerdasan Artifisial Kelas X:</p>
-          <ul style="font-size:13px; line-height:1.6; color:#e2e8f0;">
-            ${state.inventory.map((item) => `<li>${item}</li>`).join("")}
-            <li>Koin: <strong>${state.coins}</strong> · Kristal: <strong>${state.gems}</strong></li>
-          </ul>
-          <button class="choice-btn" style="text-align:center; background:#0f172a;" onclick="tutupPopup()">Tutup</button>
+    /* ================= RENDER UI ================= */
+    function renderHud() {
+      const activeLvlObj = getLevelObj(state.currentLevel);
+      document.getElementById("hudLevel").textContent = `Level ${activeLvlObj.level} · ${activeLvlObj.judul}`;
+      document.getElementById("hudCoins").textContent = `${state.coins} Koin`;
+
+      const xpPerTier = 100;
+      const xpInTier = state.xp % xpPerTier;
+      document.getElementById("hudXpText").textContent = `${state.xp} XP`;
+      document.getElementById("hudXpBar").style.width = `${(xpInTier / xpPerTier) * 100}%`;
+
+      const totalDone = state.completedMissions.length;
+      const totalAll = getTotalMissionsCount();
+      document.getElementById("overallProgressText").textContent = `${totalDone} / ${totalAll} Misi Selesai`;
+    }
+
+    function renderLevelsGrid() {
+      const grid = document.getElementById("levelsGrid");
+      grid.innerHTML = "";
+
+      for (const lvl of LEVELS) {
+        const locked = lvl.level > state.unlockedLevel;
+        const doneCount = lvl.missions.filter((m) => state.completedMissions.includes(m.id)).length;
+        const completed = doneCount === lvl.missions.length;
+        const isCurrent = lvl.level === state.currentLevel;
+
+        const node = document.createElement("div");
+        node.className = [
+          "level-node",
+          isCurrent ? "active" : "",
+          completed ? "completed" : "",
+          locked ? "locked" : ""
+        ].filter(Boolean).join(" ");
+
+        node.innerHTML = `
+          <span class="level-badge">${locked ? "🔒 Terkunci" : completed ? "✓ Selesai" : lvl.tahap}</span>
+          <h3>Level ${lvl.level}: ${lvl.judul}</h3>
+          <p>${lvl.ringkasanSingkat}</p>
+          <div class="level-progress-mini">Misi: ${doneCount}/${lvl.missions.length}</div>
         `;
-      } else {
-        card.innerHTML = `
-          <h3>⊞ Menu Akademi</h3>
-          <p>Pengaturan cepat & panduan kontrol:</p>
-          <p style="font-size:12.5px;">• Gerak: Tombol Panah / WASD atau D-Pad kiri bawah<br>• Interaksi / Misi: Tombol <strong>Serang</strong> atau tekan <strong>F</strong></p>
-          <button class="choice-btn" onclick="toggleMusik(); updateHud();">🔊 Toggle Musik Latar</button>
-          <button class="choice-btn" onclick="tutupPopup(); kembaliKeMenuAwal();">↩ Kembali ke Layar Pembuka</button>
-          <button class="choice-btn" style="text-align:center; background:#0f172a;" onclick="tutupPopup()">Tutup</button>
+
+        if (!locked) {
+          node.onclick = () => {
+            state.currentLevel = lvl.level;
+            if (!lvl.missions.some((m) => m.id === state.selectedMissionId)) {
+              state.selectedMissionId = lvl.missions[0].id;
+            }
+            saveState();
+            renderAll();
+          };
+        }
+
+        grid.appendChild(node);
+      }
+    }
+
+    function renderMateri() {
+      const lvl = getLevelObj(state.currentLevel);
+      document.getElementById("materiTag").textContent = `${lvl.tahap} · Level ${lvl.level}`;
+      document.getElementById("materiTitle").textContent = lvl.judul;
+      document.getElementById("materiDesc").textContent = lvl.materiLengkap;
+
+      const ul = document.getElementById("materiPoints");
+      ul.innerHTML = lvl.poin.map((pt) => `<li>${pt}</li>`).join("");
+
+      document.getElementById("materiCode").textContent = lvl.contohKode;
+    }
+
+    function renderMissionsAndChallenge() {
+      const lvl = getLevelObj(state.currentLevel);
+      document.getElementById("missionPanelTitle").textContent = `Misi Level ${lvl.level}: ${lvl.judul}`;
+
+      const listEl = document.getElementById("missionsList");
+      listEl.innerHTML = "";
+
+      if (!lvl.missions.some((m) => m.id === state.selectedMissionId)) {
+        state.selectedMissionId = lvl.missions[0].id;
+      }
+
+      for (const m of lvl.missions) {
+        const isDone = state.completedMissions.includes(m.id);
+        const isSelected = m.id === state.selectedMissionId;
+
+        const item = document.createElement("div");
+        item.className = `mission-item ${isDone ? "done" : ""} ${isSelected ? "selected" : ""}`;
+        item.innerHTML = `
+          <div class="mission-meta">
+            <h4>${isDone ? "✅ " : "🎯 "}${m.judul}</h4>
+            <p>${m.deskripsi}</p>
+            <span class="reward-tag">+${m.xp} XP · +${m.coins} Koin</span>
+          </div>
+          <button class="btn ${isDone ? "btn-ghost" : "btn-primary"}" onclick="selectMission('${m.id}')">
+            ${isDone ? "Ulangi" : "Kerjakan"}
+          </button>
         `;
-      }
-      overlay.classList.add("show");
-    }
-
-    function tutupPopup() {
-      document.getElementById("popupOverlay").classList.remove("show");
-    }
-
-    /* ================= LOOP & RENDER DUNIA RPG ================= */
-    const canvas = document.getElementById("worldCanvas");
-    const ctx = canvas.getContext("2d");
-    let animTick = 0;
-
-    function updateWorld() {
-      animTick += 0.06;
-      if (state.attackTimer > 0) state.attackTimer--;
-
-      const popupOpen = document.getElementById("popupOverlay").classList.contains("show");
-      if (!popupOpen) {
-        let vx = 0;
-        let vy = 0;
-        if (keys["arrowleft"] || keys["a"] || state.dir.left) vx -= 1;
-        if (keys["arrowright"] || keys["d"] || state.dir.right) vx += 1;
-        if (keys["arrowup"] || keys["w"] || state.dir.up) vy -= 1;
-        if (keys["arrowdown"] || keys["s"] || state.dir.down) vy += 1;
-
-        // Hadapkan Ryu sesuai arah gerak kiri/kanan
-        if (vx < 0) state.facing = -1;
-        if (vx > 0) state.facing = 1;
-
-        const moving = vx !== 0 || vy !== 0;
-        const speed = state.lari ? 5.6 : 3.2;
-        if (vx !== 0 && vy !== 0) {
-          vx *= Math.SQRT1_2;
-          vy *= Math.SQRT1_2;
-        }
-        state.x = Math.max(120, Math.min(1010, state.x + vx * speed));
-        state.y = Math.max(365, Math.min(615, state.y + vy * speed));
-
-        if (moving) state.walkPhase += state.lari ? 0.28 : 0.18;
-        else state.walkPhase = 0;
-
-        if (state.zJump > 0 || state.vzJump > 0) {
-          state.zJump += state.vzJump;
-          state.vzJump -= 0.55;
-          if (state.zJump <= 0) {
-            state.zJump = 0;
-            state.vzJump = 0;
-          }
-        }
-      }
-      updateHud();
-    }
-
-    function drawQuestBadge(x, y) {
-      const bob = Math.sin(animTick * 1.5) * 4;
-      ctx.save();
-      ctx.translate(x, y + bob);
-      ctx.fillStyle = "#facc15";
-      ctx.beginPath();
-      ctx.arc(0, 0, 14, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#78350f";
-      ctx.lineWidth = 2.2;
-      ctx.stroke();
-
-      ctx.fillStyle = "#0f172a";
-      ctx.font = "bold 17px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("!", 0, 6);
-      ctx.restore();
-    }
-
-    function drawSinta(npc) {
-      const bob = Math.sin(animTick) * 2.5;
-      ctx.save();
-      ctx.translate(npc.x, npc.y + bob);
-
-      ctx.fillStyle = "rgba(15, 23, 42, 0.38)";
-      ctx.beginPath();
-      ctx.ellipse(0, 48, 26, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (assets.sinta.ready) {
-        ctx.drawImage(assets.sinta, -50, -72, 100, 118);
+        listEl.appendChild(item);
       }
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 13px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("Sinta", 0, 62);
-      ctx.fillStyle = "#bae6fd";
-      ctx.font = "11px Segoe UI";
-      ctx.fillText("Pemandu Akademi", 0, 76);
+      const activeMission = lvl.missions.find((m) => m.id === state.selectedMissionId) || lvl.missions[0];
+      renderActiveMissionForm(activeMission);
 
-      ctx.restore();
-      drawQuestBadge(npc.x, npc.y - 78);
-    }
-
-    function drawBotAI(npc) {
-      const floatY = Math.sin(animTick * 1.2) * 5;
-      ctx.save();
-      ctx.translate(npc.x, npc.y + floatY);
-
-      ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
-      ctx.beginPath();
-      ctx.ellipse(0, 48 - floatY, 26, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (assets.botai.ready) {
-        ctx.drawImage(assets.botai, -48, -62, 96, 104);
-      }
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 13px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("Bot AI", 0, 62 - floatY);
-      ctx.restore();
-
-      drawQuestBadge(npc.x, npc.y - 72 + floatY);
-    }
-
-    function drawRyu() {
-      // Skala kedalaman perspektif jalan (lebih kecil di atas/jauh, lebih besar di bawah/dekat)
-      const depthScale = 0.84 + ((state.y - 365) / (615 - 365)) * 0.24;
-      const walkBounce = Math.abs(Math.sin(state.walkPhase)) * 3.5;
-      const walkTilt = Math.sin(state.walkPhase) * 0.04;
-      const py = state.y - state.zJump - walkBounce;
-
-      ctx.save();
-      ctx.fillStyle = "rgba(15, 23, 42, 0.42)";
-      ctx.beginPath();
-      ctx.ellipse(state.x, state.y + 48, 28 * depthScale, 9 * depthScale, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.translate(state.x, py);
-      ctx.scale(state.facing * depthScale, depthScale);
-      ctx.rotate(walkTilt);
-
-      if (assets.ryu.ready) {
-        ctx.drawImage(assets.ryu, -54, -74, 108, 124);
-      }
-
-      if (state.attackTimer > 0) {
-        ctx.save();
-        ctx.translate(22, -6);
-        ctx.rotate(-0.7 + (18 - state.attackTimer) * 0.14);
-        ctx.strokeStyle = "#38bdf8";
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(42, -24);
-        ctx.stroke();
-
-        ctx.strokeStyle = "#fef08a";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(14, -8, 30, -0.9, 0.5);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      ctx.restore();
-
-      ctx.fillStyle = "#fde047";
-      ctx.font = "bold 12px Segoe UI";
-      ctx.textAlign = "center";
-      ctx.fillText("Ryu", state.x, state.y + 64);
-    }
-
-    function drawWorld() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (assets.bg.ready) {
-        ctx.drawImage(assets.bg, 0, 0, canvas.width, canvas.height);
-      }
-
-      const entities = [
-        ...npcs.map((n) => ({ y: n.y, draw: () => (n.type === "sinta" ? drawSinta(n) : drawBotAI(n)) })),
-        { y: state.y, draw: drawRyu }
-      ].sort((a, b) => a.y - b.y);
-
-      for (const ent of entities) {
-        ent.draw();
+      const banner = document.getElementById("nextLevelBanner");
+      const nextBtn = document.getElementById("btnGoNextLevel");
+      if (isLevelCompleted(lvl) && lvl.level < LEVELS.length) {
+        banner.classList.add("show");
+        nextBtn.textContent = `Lanjut ke Level ${lvl.level + 1} →`;
+      } else {
+        banner.classList.remove("show");
       }
     }
 
-    function gameLoop() {
-      updateWorld();
-      drawWorld();
-      requestAnimationFrame(gameLoop);
+    function selectMission(missionId) {
+      state.selectedMissionId = missionId;
+      saveState();
+      renderMissionsAndChallenge();
+      const fb = document.getElementById("feedbackBox");
+      fb.className = "feedback-box";
+      fb.textContent = "";
     }
 
-    gameLoop();
+    function renderActiveMissionForm(mission) {
+      document.getElementById("challengeTitle").textContent = mission.judul;
+      document.getElementById("challengePrompt").textContent = mission.pertanyaan;
+
+      const ws = document.getElementById("challengeWorkspace");
+      ws.innerHTML = "";
+
+      if (mission.type === "choice") {
+        mission.opsi.forEach((optText, idx) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.textContent = optText;
+          btn.onclick = () => submitChoice(mission, idx);
+          ws.appendChild(btn);
+        });
+      } else if (mission.type === "code") {
+        const ta = document.createElement("textarea");
+        ta.className = "code-editor";
+        ta.id = "missionCodeInput";
+        ta.placeholder = mission.hint || "Tulis kode Anda di sini...";
+        ws.appendChild(ta);
+
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.gap = "8px";
+        row.style.flexWrap = "wrap";
+
+        const checkBtn = document.createElement("button");
+        checkBtn.className = "btn btn-gold";
+        checkBtn.textContent = "▶ Periksa Jawaban";
+        checkBtn.onclick = () => submitCode(mission);
+
+        const hintBtn = document.createElement("button");
+        hintBtn.className = "btn btn-ghost";
+        hintBtn.textContent = "💡 Petunjuk";
+        hintBtn.onclick = () => showFeedback("ok", `Petunjuk: ${mission.hint}`);
+
+        row.appendChild(checkBtn);
+        row.appendChild(hintBtn);
+        ws.appendChild(row);
+      }
+    }
+
+    function showFeedback(kind, message) {
+      const fb = document.getElementById("feedbackBox");
+      fb.className = `feedback-box show ${kind}`;
+      fb.textContent = message;
+    }
+
+    function completeMission(mission) {
+      const firstTime = !state.completedMissions.includes(mission.id);
+      if (firstTime) {
+        state.completedMissions.push(mission.id);
+        state.xp += mission.xp;
+        state.coins += mission.coins;
+      }
+
+      const currentLvlObj = getLevelObj(state.currentLevel);
+      if (isLevelCompleted(currentLvlObj) && state.currentLevel < LEVELS.length) {
+        state.unlockedLevel = Math.max(state.unlockedLevel, state.currentLevel + 1);
+      }
+
+      saveState();
+      renderHud();
+      renderLevelsGrid();
+      renderMissionsAndChallenge();
+
+      const bonusNote = firstTime
+        ? ` (+${mission.xp} XP & +${mission.coins} Koin)`
+        : " (Misi sudah pernah diselesaikan sebelumnya)";
+      showFeedback("ok", `${mission.penjelasan}${bonusNote}`);
+    }
+
+    function submitChoice(mission, idx) {
+      if (idx === mission.jawaban) {
+        completeMission(mission);
+      } else {
+        showFeedback("err", "Belum tepat! Baca kembali materi di sebelah kiri lalu coba pilihan lain.");
+      }
+    }
+
+    function submitCode(mission) {
+      const inputEl = document.getElementById("missionCodeInput");
+      const val = inputEl ? inputEl.value : "";
+      if (mission.validator(val)) {
+        completeMission(mission);
+      } else {
+        showFeedback("err", "Kode belum sesuai kriteria misi. Klik '💡 Petunjuk' bila perlu bantuan.");
+      }
+    }
+
+    function goToNextLevel() {
+      const nextNum = Math.min(LEVELS.length, state.currentLevel + 1);
+      if (nextNum <= state.unlockedLevel) {
+        state.currentLevel = nextNum;
+        const nextObj = getLevelObj(nextNum);
+        state.selectedMissionId = nextObj.missions[0].id;
+        saveState();
+        renderAll();
+        const fb = document.getElementById("feedbackBox");
+        fb.className = "feedback-box";
+        fb.textContent = "";
+      }
+    }
+
+    function renderAll() {
+      renderHud();
+      renderLevelsGrid();
+      renderMateri();
+      renderMissionsAndChallenge();
+    }
+
+    renderAll();
   </script>
 </body>
 </html>
