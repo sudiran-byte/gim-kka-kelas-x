@@ -44,36 +44,80 @@
     .sparkle.left { left: 12px; }
     .sparkle.right { right: 12px; }
 
-    .mascot-wrap {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
-      padding: 4px;
-      background: linear-gradient(145deg, #fde68a, #d4a843, #38bdf8);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      animation: maskotGerak 2.6s ease-in-out infinite;
+    /* Wadah karakter tanpa bingkai lingkaran */
+    .mascot-stage {
+      width: 170px;
+      height: 170px;
+      margin: 0 auto 14px;
+      position: relative;
+      filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+      animation: napasBadan 2.8s ease-in-out infinite;
     }
 
-    .mascot-wrap img {
+    .mascot-part {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      border-radius: 50%;
-      background: #ffffff;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
     }
 
-    @keyframes maskotGerak {
+    /* Badan dasar */
+    .part-body {
+      z-index: 1;
+    }
+
+    /* Area kepala (bagian atas karakter) */
+    .part-head {
+      z-index: 2;
+      clip-path: polygon(18% 0%, 82% 0%, 84% 52%, 16% 52%);
+      transform-origin: 50% 48%;
+      animation: gerakKepala 2.6s ease-in-out infinite;
+    }
+
+    /* Area tangan (sisi kiri layar pada gambar maskot) */
+    .part-hand {
+      z-index: 3;
+      clip-path: polygon(15% 42%, 44% 42%, 44% 72%, 15% 72%);
+      transform-origin: 36% 66%;
+      animation: lambaiTangan 1.5s ease-in-out infinite;
+    }
+
+    @keyframes napasBadan {
       0%, 100% {
-        transform: translateY(0px) rotate(-2deg) scale(1);
+        transform: translateY(0px) scaleY(1);
       }
       50% {
-        transform: translateY(-8px) rotate(2deg) scale(1.03);
+        transform: translateY(-3px) scaleY(1.015);
+      }
+    }
+
+    @keyframes gerakKepala {
+      0%, 100% {
+        transform: rotate(0deg) translateY(0px);
+      }
+      30% {
+        transform: rotate(-5deg) translateY(-1px);
+      }
+      70% {
+        transform: rotate(5deg) translateY(1px);
+      }
+    }
+
+    @keyframes lambaiTangan {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      25% {
+        transform: rotate(-11deg);
+      }
+      50% {
+        transform: rotate(6deg);
+      }
+      75% {
+        transform: rotate(-9deg);
       }
     }
 
@@ -175,8 +219,10 @@
     <span class="sparkle left">✦</span>
     <span class="sparkle right">✦</span>
 
-    <div class="mascot-wrap">
-      <img src="maskot.png" alt="Maskot Koding dan AI" />
+    <div class="mascot-stage" aria-label="Maskot Koding dan AI bergerak">
+      <img src="maskot.png" alt="Badan Maskot" class="mascot-part part-body" />
+      <img src="maskot.png" alt="" aria-hidden="true" class="mascot-part part-head" />
+      <img src="maskot.png" alt="" aria-hidden="true" class="mascot-part part-hand" />
     </div>
 
     <h1 id="modalTitle" class="modal-title">Mau main dengan musik?</h1>
