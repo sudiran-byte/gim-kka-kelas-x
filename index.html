@@ -3,364 +3,285 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laboratorium AI & Algoritma - Kelas X</title>
+  <title>Petualangan Koding & AI - Kelas X</title>
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
     body {
       margin: 0;
-      background: #0b1120;
-      color: #f8fafc;
       min-height: 100vh;
+      color: #f8fafc;
+      background: radial-gradient(circle at 50% 35%, #27436b 0%, #16263d 55%, #0e1828 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 12px;
-    }
-
-    /* Peringatan orientasi portrait di layar kecil */
-    .rotate-alert {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(11, 17, 32, 0.96);
-      z-index: 50;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
-      gap: 8px;
-    }
-    @media (max-width: 700px) and (orientation: portrait) {
-      .rotate-alert { display: flex; }
-    }
-
-    .app {
-      width: 100%;
-      max-width: 900px;
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 14px;
       padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      overflow: hidden;
     }
 
-    header {
+    .audio-modal {
+      width: 100%;
+      max-width: 470px;
+      background: linear-gradient(180deg, #1b2847 0%, #121c33 100%);
+      border: 1.5px solid #d4a843;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 223, 130, 0.2);
+      border-radius: 16px;
+      padding: 28px 24px 26px;
+      text-align: center;
+      position: relative;
+    }
+
+    .sparkle {
+      position: absolute;
+      top: 10px;
+      color: #facc15;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .sparkle.left { left: 12px; }
+    .sparkle.right { right: 12px; }
+
+    .mascot-wrap {
+      width: 156px;
+      height: 156px;
+      margin: 0 auto 14px;
       display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mascot-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 14px;
+    }
+
+    .modal-title {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .modal-desc {
+      margin: 0 auto 22px;
+      max-width: 390px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
       flex-wrap: wrap;
+    }
+
+    .btn-music {
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: 1px solid #fde68a;
+      background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+    }
+
+    .btn-music:hover {
+      filter: brightness(1.05);
+    }
+
+    .btn-mute {
+      padding: 11px 20px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #23304d;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-mute:hover {
+      background: #2d3d61;
+    }
+
+    .game-screen {
+      display: none;
+      width: 100%;
+      max-width: 860px;
+      background: rgba(18, 28, 51, 0.92);
+      border: 1px solid #3b527a;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .game-screen.active {
+      display: block;
+    }
+
+    .audio-modal.hidden {
+      display: none;
+    }
+
+    .top-bar {
+      display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: 10px;
-      background: #1e293b;
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      margin-bottom: 16px;
     }
 
-    .status-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .badge {
-      background: #0f172a;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-    }
-
-    .stage {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 14px;
-    }
-
-    @media (max-width: 680px) {
-      .stage { grid-template-columns: 1fr; }
-    }
-
-    .panel {
-      background: #1e293b;
-      border-radius: 10px;
-      padding: 14px;
-    }
-
-    .panel h3 {
-      margin: 0 0 8px;
-      font-size: 15px;
-      color: #93c5fd;
-    }
-
-    .feedback {
-      background: #0f172a;
-      border-left: 4px solid #38bdf8;
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    footer {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .cat-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .cat-btn {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #e2e8f0;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .cat-btn.active {
-      background: #0284c7;
-      border-color: #38bdf8;
-      color: #fff;
-    }
-
-    .cmd-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .cmd-btn {
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: none;
-      background: #2563eb;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .cmd-btn:hover { background: #1d4ed8; }
-
-    .btn-sm {
-      padding: 6px 10px;
+    .small-btn {
+      padding: 7px 12px;
       border-radius: 8px;
       border: 1px solid #64748b;
-      background: transparent;
+      background: #1e293b;
       color: #f8fafc;
       cursor: pointer;
       font-size: 13px;
     }
-
-    /* Modal Prolog */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.85);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      z-index: 40;
-    }
-    .modal-backdrop.hidden { display: none; }
-    .modal-card {
-      max-width: 520px;
-      width: 100%;
-      background: #1e293b;
-      border: 1px solid #475569;
-      border-radius: 14px;
-      padding: 20px;
-    }
-    .modal-card h2 { margin-top: 0; }
-    .primary-btn {
-      margin-top: 12px;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      background: #16a34a;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-  <!-- Peringatan mode landscape -->
-  <div class="rotate-alert" role="alert" aria-live="assertive">
-    <div style="font-size: 32px;">📱</div>
-    <b>Putar HP ke mode landscape</b>
-    <span>Gim ini lebih nyaman dimainkan secara mendatar. Matikan kunci rotasi layar jika layar tidak berputar.</span>
-  </div>
+  <div id="startModal" class="audio-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <span class="sparkle left">✦</span>
+    <span class="sparkle right">✦</span>
 
-  <!-- Dialog Prolog -->
-  <div id="prologModal" class="modal-backdrop" role="dialog" aria-label="Prolog">
-    <div class="modal-card">
-      <h2>Prolog: Pipeline AI Kelas X</h2>
-      <p>
-        Selamat datang di Lab Koding & Kecerdasan Artifisial. Tugas Anda adalah mengolah
-        <strong>Data Mentah</strong> menjadi <strong>Model Klasifikasi Siap Pakai</strong>
-        mengikuti alur algoritma yang benar.
-      </p>
-      <p>
-        Pilih kategori perintah di bagian bawah, lalu jalankan perintah yang tepat. Salah langkah akan
-        mengurangi <strong>Nyawa</strong>.
-      </p>
-      <button class="primary-btn" onclick="tutupProlog()">Mulai Misi</button>
+    <div class="mascot-wrap">
+      <img src="maskot.png" alt="Maskot Koding dan AI" />
+    </div>
+
+    <h1 id="modalTitle" class="modal-title">Mau main dengan musik?</h1>
+    <p class="modal-desc">
+      Musik latar bisa dimatikan kapan saja. Efek suara (tombol, langkah, notifikasi)
+      tetap menyala dan bisa diatur lewat menu di dalam game.
+    </p>
+
+    <div class="btn-row">
+      <button class="btn-music" onclick="mulaiGame(true)">🔊 Dengan musik</button>
+      <button class="btn-mute" onclick="mulaiGame(false)">🔇 Tanpa musik</button>
     </div>
   </div>
 
-  <main class="app">
-    <header>
-      <strong>MISI: Alur Data & Klasifikasi AI</strong>
-      <div class="status-group">
-        <span id="livesBadge" class="badge" aria-label="Nyawa">Nyawa: ❤️❤️❤️</span>
-        <span id="carriedBadge" class="badge" aria-label="Data yang dibawa">Data dibawa: Kosong</span>
-        <button class="btn-sm" onclick="bukaProlog()">Prolog</button>
-        <button class="btn-sm" onclick="resetGame()">Ulangi</button>
+  <main id="gameScreen" class="game-screen">
+    <div class="top-bar">
+      <strong>Lab Koding & Kecerdasan Artifisial - Kelas X</strong>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span id="musicStatus" style="font-size:13px; color:#cbd5e1;">Musik: Off</span>
+        <button class="small-btn" onclick="toggleMusik()">Toggle Musik</button>
+        <button class="small-btn" onclick="kembaliKeMenuAwal()">Menu Awal</button>
       </div>
-    </header>
-
-    <section class="stage">
-      <div class="panel">
-        <h3>Area Simulasi Proses</h3>
-        <p id="stageDesc">Tahap 1/3: Ambil dataset mentah sebelum melakukan pembersihan.</p>
-        <div id="feedbackBox" class="feedback">Silakan pilih kategori perintah di bawah.</div>
-      </div>
-
-      <div class="panel">
-        <h3>Status Pipeline</h3>
-        <p><strong>Tahap Saat Ini:</strong> <span id="stepText">1 dari 3</span></p>
-        <p><strong>Kondisi Data:</strong> <span id="dataCondition">Belum ada data di memori</span></p>
-      </div>
-    </section>
-
-    <footer>
-      <nav class="cat-tabs" aria-label="Kategori perintah">
-        <button class="cat-btn active" data-cat="data" onclick="pilihKategori('data')">1. Data & Input</button>
-        <button class="cat-btn" data-cat="proses" onclick="pilihKategori('proses')">2. Preprocessing</button>
-        <button class="cat-btn" data-cat="model" onclick="pilihKategori('model')">3. Model AI</button>
-      </nav>
-      <div id="cmdList" class="cmd-list"></div>
-    </footer>
+    </div>
+    <p>
+      Tampilan pembuka sudah siap. Di area ini kita bisa melanjutkan misi interaktif Koding & AI
+      (misalnya menyusun urutan algoritma, percabangan kondisi, atau klasifikasi data).
+    </p>
   </main>
 
   <script>
-    const KATEGORI_PERINTAH = {
-      data: [
-        { id: "AMBIL_DATASET", label: "Ambil Dataset Mentah" },
-        { id: "BUANG_SEMUA", label: "Kosongkan Memori" }
-      ],
-      proses: [
-        { id: "BERSIHKAN_DATA", label: "Bersihkan Noise & Data Kosong" },
-        { id: "PILIH_FITUR", label: "Ekstrak Fitur Utama" }
-      ],
-      model: [
-        { id: "LATIH_MODEL", label: "Latih Model Klasifikasi" },
-        { id: "UJI_AKURASI", label: "Uji Akurasi Prediksi" }
-      ]
-    };
+    let audioCtx = null;
+    let musikAktif = false;
+    let loopTimer = null;
 
-    const TARGET_URUTAN = ["AMBIL_DATASET", "BERSIHKAN_DATA", "LATIH_MODEL"];
-
-    let kategoriAktif = "data";
-    let langkah = 0;
-    let nyawa = 3;
-    let dataDibawa = "Kosong";
-    let selesai = false;
-
-    function tutupProlog() {
-      document.getElementById("prologModal").classList.add("hidden");
-    }
-
-    function bukaProlog() {
-      document.getElementById("prologModal").classList.remove("hidden");
-    }
-
-    function pilihKategori(cat) {
-      kategoriAktif = cat;
-      document.querySelectorAll(".cat-btn").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.cat === cat);
-      });
-      renderPerintah();
-    }
-
-    function renderPerintah() {
-      const container = document.getElementById("cmdList");
-      container.innerHTML = "";
-      KATEGORI_PERINTAH[kategoriAktif].forEach((cmd) => {
-        const btn = document.createElement("button");
-        btn.className = "cmd-btn";
-        btn.textContent = cmd.label;
-        btn.onclick = () => jalankanPerintah(cmd.id);
-        container.appendChild(btn);
-      });
-    }
-
-    function updateStatus(pesan, kondisiData) {
-      document.getElementById("livesBadge").textContent = "Nyawa: " + ("❤️".repeat(nyawa) || "Habis");
-      document.getElementById("carriedBadge").textContent = "Data dibawa: " + dataDibawa;
-      document.getElementById("stepText").textContent = `${Math.min(langkah + 1, 3)} dari 3`;
-      document.getElementById("dataCondition").textContent = kondisiData;
-      document.getElementById("feedbackBox").textContent = pesan;
-    }
-
-    function jalankanPerintah(cmdId) {
-      if (selesai) {
-        updateStatus("Misi sudah berakhir. Klik 'Ulangi' untuk bermain kembali.", dataDibawa);
-        return;
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
       }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
 
-      const target = TARGET_URUTAN[langkah];
-      if (cmdId === target) {
-        langkah++;
-        if (langkah === 1) {
-          dataDibawa = "Dataset Mentah";
-          updateStatus("Bagus! Dataset mentah masuk ke memori. Lanjut bersihkan data.", "Dataset Mentah (ada noise)");
-        } else if (langkah === 2) {
-          dataDibawa = "Data Bersih";
-          updateStatus("Tepat! Data sudah dibersihkan. Sekarang latih model klasifikasi.", "Data Bersih siap dilatih");
-        } else if (langkah === 3) {
-          dataDibawa = "Model Terlatih";
-          selesai = true;
-          updateStatus("Hebat! Pipeline AI berhasil dijalankan dari awal hingga model terlatih.", "Model AI siap digunakan");
-        }
+    function bunyiKlik() {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.12);
+    }
+
+    function mulaiMusikLatar() {
+      hentikanMusikLatar();
+      initAudio();
+      musikAktif = true;
+      updateLabelMusik();
+
+      const nada = [261.63, 329.63, 392.0, 523.25];
+      let idx = 0;
+
+      loopTimer = setInterval(() => {
+        if (!musikAktif || !audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(nada[idx % nada.length], audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0008, audioCtx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+        idx++;
+      }, 420);
+    }
+
+    function hentikanMusikLatar() {
+      musikAktif = false;
+      if (loopTimer) {
+        clearInterval(loopTimer);
+        loopTimer = null;
+      }
+      updateLabelMusik();
+    }
+
+    function toggleMusik() {
+      bunyiKlik();
+      if (musikAktif) {
+        hentikanMusikLatar();
       } else {
-        nyawa--;
-        if (nyawa <= 0) {
-          nyawa = 0;
-          selesai = true;
-          updateStatus("Nyawa habis! Periksa kembali urutan algoritma lalu klik 'Ulangi'.", "Gagal / Reset diperlukan");
-        } else {
-          updateStatus("Langkah belum sesuai urutan alur AI. Nyawa berkurang 1.", dataDibawa);
-        }
+        mulaiMusikLatar();
       }
     }
 
-    function resetGame() {
-      langkah = 0;
-      nyawa = 3;
-      dataDibawa = "Kosong";
-      selesai = false;
-      pilihKategori("data");
-      updateStatus("Permainan diulang. Mulai dari kategori Data & Input.", "Belum ada data di memori");
+    function updateLabelMusik() {
+      const el = document.getElementById("musicStatus");
+      if (el) el.textContent = "Musik: " + (musikAktif ? "On" : "Off");
     }
 
-    renderPerintah();
-    updateStatus("Silakan pilih kategori perintah di bawah.", "Belum ada data di memori");
+    function mulaiGame(pakaiMusik) {
+      bunyiKlik();
+      if (pakaiMusik) {
+        mulaiMusikLatar();
+      } else {
+        hentikanMusikLatar();
+      }
+      document.getElementById("startModal").classList.add("hidden");
+      document.getElementById("gameScreen").classList.add("active");
+    }
+
+    function kembaliKeMenuAwal() {
+      bunyiKlik();
+      document.getElementById("gameScreen").classList.remove("active");
+      document.getElementById("startModal").classList.remove("hidden");
+    }
   </script>
 </body>
 </html>
