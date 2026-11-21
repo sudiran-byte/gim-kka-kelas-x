@@ -45,19 +45,36 @@
     .sparkle.right { right: 12px; }
 
     .mascot-wrap {
-      width: 156px;
-      height: 156px;
-      margin: 0 auto 14px;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(145deg, #fde68a, #d4a843, #38bdf8);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      animation: maskotGerak 2.6s ease-in-out infinite;
     }
 
     .mascot-wrap img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      border-radius: 14px;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    @keyframes maskotGerak {
+      0%, 100% {
+        transform: translateY(0px) rotate(-2deg) scale(1);
+      }
+      50% {
+        transform: translateY(-8px) rotate(2deg) scale(1.03);
+      }
     }
 
     .modal-title {
