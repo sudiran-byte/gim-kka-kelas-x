@@ -2,24 +2,27 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>The World of Coding - SMK Bina Mandiri</title>
   <style>
     * {
       box-sizing: border-box;
       font-family: "Segoe UI", Arial, sans-serif;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
       color: #f8fafc;
       background: radial-gradient(circle at 50% 35%, #27436b 0%, #16263d 55%, #0e1828 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 12px;
       overflow: hidden;
     }
 
@@ -138,16 +141,15 @@
     /* ================= LAYAR GAME RPG ================= */
     .game-screen {
       display: none;
-      width: 100%;
-      max-width: 1120px;
-      aspect-ratio: 16 / 9;
-      max-height: 94vh;
-      position: relative;
-      border-radius: 14px;
+      width: 100vw;
+      height: 100dvh;
+      max-width: 100vw;
+      max-height: 100dvh;
+      position: fixed;
+      inset: 0;
       overflow: hidden;
-      border: 2px solid #38bdf8;
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.7);
       background: #0b192c;
+      z-index: 10;
     }
 
     .game-screen.active {
@@ -163,51 +165,51 @@
     /* HUD Kiri Atas */
     .hud-top-left {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      left: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      z-index: 10;
-      max-width: 290px;
+      gap: 6px;
+      z-index: 12;
+      max-width: 260px;
     }
 
     .player-card {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: rgba(12, 23, 42, 0.85);
       border: 1.5px solid #60a5fa;
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 6px 9px;
     }
 
     .avatar-badge {
-      width: 46px;
-      height: 46px;
+      width: 40px;
+      height: 40px;
       border-radius: 8px;
       background: linear-gradient(135deg, #38bdf8, #1d4ed8);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 13px;
       border: 1.5px solid #fde047;
       flex-shrink: 0;
     }
 
     .stat-lines {
       flex: 1;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .bar-track {
-      width: 150px;
-      height: 8px;
+      width: 125px;
+      height: 7px;
       background: rgba(30, 41, 59, 0.9);
       border-radius: 99px;
       overflow: hidden;
-      margin-top: 3px;
+      margin-top: 2px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
@@ -229,9 +231,9 @@
       background: rgba(15, 23, 42, 0.85);
       border-left: 3px solid #facc15;
       border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 12px;
-      line-height: 1.4;
+      padding: 6px 9px;
+      font-size: 11px;
+      line-height: 1.35;
     }
 
     .quest-title {
@@ -243,27 +245,27 @@
     /* Banner Tengah Atas */
     .title-banner {
       position: absolute;
-      top: 12px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       background: linear-gradient(90deg, rgba(15, 23, 42, 0.15), rgba(14, 116, 144, 0.9), rgba(15, 23, 42, 0.15));
       border-top: 1.5px solid #38bdf8;
       border-bottom: 1.5px solid #38bdf8;
-      padding: 6px 26px;
+      padding: 5px 18px;
       text-align: center;
-      z-index: 10;
+      z-index: 12;
       white-space: nowrap;
     }
 
     .title-banner .main-t {
-      font-size: 14px;
+      font-size: 12.5px;
       font-weight: 800;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
       color: #fef08a;
     }
 
     .title-banner .sub-t {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: #e0f2fe;
     }
@@ -271,24 +273,26 @@
     /* HUD Kanan Atas */
     .hud-top-right {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 10px;
+      right: 10px;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 8px;
-      z-index: 10;
+      gap: 6px;
+      z-index: 12;
     }
 
     .top-pills {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
       background: rgba(12, 23, 42, 0.85);
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 99px;
       border: 1px solid rgba(148, 163, 184, 0.35);
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .hud-icon-btn {
@@ -296,14 +300,14 @@
       color: #f8fafc;
       border: 1px solid #64748b;
       border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 11px;
+      padding: 3px 7px;
+      font-size: 10.5px;
       cursor: pointer;
     }
 
     .minimap {
-      width: 92px;
-      height: 92px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
       background: radial-gradient(circle, #1e3a5f, #0f172a);
       border: 2px solid #facc15;
@@ -313,8 +317,8 @@
     }
 
     .minimap-dot-player {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #facc15;
       position: absolute;
@@ -322,8 +326,8 @@
     }
 
     .minimap-dot-npc {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #38bdf8;
       position: absolute;
@@ -333,49 +337,49 @@
     /* Papan Informasi */
     .info-board {
       position: absolute;
-      right: 14px;
-      top: 43%;
+      right: 10px;
+      top: 46%;
       transform: translateY(-50%);
-      width: 210px;
-      background: rgba(69, 39, 16, 0.9);
-      border: 2px solid #d97706;
+      width: 185px;
+      background: rgba(69, 39, 16, 0.88);
+      border: 1.5px solid #d97706;
       border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 11.5px;
-      z-index: 9;
+      padding: 8px 10px;
+      font-size: 10.5px;
+      z-index: 10;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
     }
 
     .info-board-title {
       font-weight: 800;
       color: #fde68a;
-      margin-bottom: 6px;
-      font-size: 13px;
+      margin-bottom: 4px;
+      font-size: 11.5px;
     }
 
     .info-board ul {
       margin: 0;
-      padding-left: 16px;
-      line-height: 1.45;
+      padding-left: 14px;
+      line-height: 1.35;
       color: #fef3c7;
     }
 
     /* Kontrol Bawah */
     .dpad {
       position: absolute;
-      bottom: 14px;
-      left: 14px;
-      width: 114px;
-      height: 114px;
+      bottom: 12px;
+      left: 12px;
+      width: 108px;
+      height: 108px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 4px;
-      z-index: 12;
+      z-index: 14;
     }
 
     .dpad-btn {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid #38bdf8;
       border-radius: 8px;
       color: #e0f2fe;
@@ -398,71 +402,95 @@
 
     .sys-log {
       position: absolute;
-      bottom: 16px;
+      bottom: 14px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(380px, 44%);
+      width: min(360px, 42%);
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 7px 12px;
-      font-size: 12px;
+      padding: 6px 10px;
+      font-size: 11px;
       color: #fde047;
       text-align: center;
-      z-index: 11;
+      z-index: 12;
     }
 
     .action-cluster {
       position: absolute;
-      bottom: 14px;
-      right: 14px;
+      bottom: 12px;
+      right: 12px;
       display: flex;
       align-items: flex-end;
-      gap: 8px;
-      z-index: 12;
+      gap: 6px;
+      z-index: 14;
     }
 
     .bag-menu-col {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-right: 4px;
+      gap: 5px;
+      margin-right: 2px;
     }
 
     .act-small {
-      padding: 6px 12px;
-      border-radius: 16px;
+      padding: 5px 10px;
+      border-radius: 14px;
       border: 1.5px solid #f59e0b;
       background: rgba(30, 41, 59, 0.9);
       color: #fef3c7;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .act-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 2px solid #38bdf8;
-      background: rgba(15, 23, 42, 0.85);
-      color: #f8fafc;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
     }
 
+    .act-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #38bdf8;
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     .act-attack {
-      width: 68px;
-      height: 68px;
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
       border: 2px solid #facc15;
       background: radial-gradient(circle, #2563eb, #1e3a8a);
       color: #ffffff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Penyesuaian layar kecil / HP */
+    @media (max-width: 640px) {
+      .audio-modal {
+        margin: 12px;
+        padding: 20px 16px;
+      }
+      .mascot-stage {
+        width: 175px;
+        height: 175px;
+      }
+      .title-banner {
+        top: 58px;
+        padding: 4px 12px;
+      }
+      .info-board {
+        display: none;
+      }
+      .sys-log {
+        bottom: 126px;
+        width: calc(100% - 24px);
+        max-width: none;
+      }
     }
 
     /* Popup Misi / Tas / Menu */
@@ -471,7 +499,7 @@
       position: absolute;
       inset: 0;
       background: rgba(2, 6, 23, 0.78);
-      z-index: 20;
+      z-index: 25;
       align-items: center;
       justify-content: center;
       padding: 16px;
@@ -562,7 +590,7 @@
       </div>
       <div class="quest-box">
         <div class="quest-title">! Misi Utama</div>
-        <div id="questDesc">Temui Sinta atau Robot AI untuk memulai misi Koding & Kecerdasan Artifisial Kelas X.</div>
+        <div id="questDesc">Temui Sinta atau Bot AI untuk memulai misi Koding & Kecerdasan Artifisial Kelas X.</div>
       </div>
     </div>
 
@@ -576,6 +604,7 @@
         <span>🪙 <strong id="coinText">0</strong></span>
         <span>💎 <strong id="gemText">0</strong></span>
         <button class="hud-icon-btn" id="musicBtnHud" onclick="toggleMusik()">♪ Off</button>
+        <button class="hud-icon-btn" onclick="toggleFullscreen()">⛶ Layar</button>
         <button class="hud-icon-btn" onclick="kembaliKeMenuAwal()">Awal</button>
       </div>
       <div class="minimap" title="Kerajaan Coding">
@@ -618,13 +647,27 @@
       <button class="act-attack" onclick="aksiInteraksi()">⚔️ Serang / Misi</button>
     </div>
 
-    <!-- Popup Misi / Tas / Menu -->
     <div id="popupOverlay" class="overlay-popup">
       <div class="popup-card" id="popupCard"></div>
     </div>
   </main>
 
   <script>
+    /* ================= FULLSCREEN ================= */
+    function toggleFullscreen() {
+      bunyiKlik(640);
+      const target = document.getElementById("gameScreen") || document.documentElement;
+      if (!document.fullscreenElement) {
+        if (target.requestFullscreen) {
+          target.requestFullscreen().catch(() => {
+            setLog("Gunakan rotasi layar atau menu browser HP untuk mode layar penuh.");
+          });
+        }
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
     /* ================= AUDIO ================= */
     let audioCtx = null;
     let musikAktif = false;
@@ -716,7 +759,7 @@
       zJump: 0,
       vzJump: 0,
       lari: false,
-      facing: 1, // 1 kanan, -1 kiri
+      facing: 1,
       walkPhase: 0,
       attackTimer: 0,
       dir: { up: 0, down: 0, left: 0, right: 0 },
@@ -906,6 +949,7 @@
           <h3>⊞ Menu Akademi</h3>
           <p>Pengaturan cepat & panduan kontrol:</p>
           <p style="font-size:12.5px;">• Gerak: Tombol Panah / WASD atau D-Pad kiri bawah<br>• Interaksi / Misi: Tombol <strong>Serang / Misi</strong> atau tekan <strong>F</strong></p>
+          <button class="choice-btn" onclick="toggleFullscreen()">⛶ Mode Layar Penuh</button>
           <button class="choice-btn" onclick="toggleMusik(); updateHud();">🔊 Toggle Musik Latar</button>
           <button class="choice-btn" onclick="tutupPopup(); kembaliKeMenuAwal();">↩ Kembali ke Layar Pembuka</button>
           <button class="choice-btn" style="text-align:center; background:#0f172a;" onclick="tutupPopup()">Tutup</button>
@@ -990,13 +1034,11 @@
       ctx.save();
       ctx.translate(npc.x, npc.y + bob);
 
-      // Bayangan
       ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
       ctx.beginPath();
       ctx.ellipse(0, 28, 20, 7, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Rok seragam biru tua
       ctx.fillStyle = "#1e3a8a";
       ctx.beginPath();
       ctx.moveTo(-12, 4);
@@ -1006,14 +1048,12 @@
       ctx.closePath();
       ctx.fill();
 
-      // Kemeja & rompi pemandu
       ctx.fillStyle = "#f8fafc";
       ctx.fillRect(-10, -10, 20, 16);
       ctx.strokeStyle = "#facc15";
       ctx.lineWidth = 1.5;
       ctx.strokeRect(-10, -10, 20, 16);
 
-      // Kepala & rambut gelap panjang
       ctx.fillStyle = "#fde68a";
       ctx.beginPath();
       ctx.arc(0, -22, 12, 0, Math.PI * 2);
@@ -1026,14 +1066,12 @@
       ctx.fillRect(-14, -24, 5, 22);
       ctx.fillRect(9, -24, 5, 22);
 
-      // Mata
       ctx.fillStyle = "#0f172a";
       ctx.beginPath();
       ctx.arc(-4, -21, 1.8, 0, Math.PI * 2);
       ctx.arc(4, -21, 1.8, 0, Math.PI * 2);
       ctx.fill();
 
-      // Label nama
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 12px Segoe UI";
       ctx.textAlign = "center";
@@ -1049,13 +1087,11 @@
       ctx.save();
       ctx.translate(npc.x, npc.y + floatY);
 
-      // Bayangan
       ctx.fillStyle = "rgba(15, 23, 42, 0.35)";
       ctx.beginPath();
       ctx.ellipse(0, 28 - floatY, 22, 7, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Badan robot putih & biru neon
       ctx.fillStyle = "#e2e8f0";
       ctx.beginPath();
       ctx.roundRect(-14, -6, 28, 24, 7);
@@ -1064,13 +1100,11 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Lencana </>
       ctx.fillStyle = "#0284c7";
       ctx.font = "bold 10px monospace";
       ctx.textAlign = "center";
       ctx.fillText("</>", 0, 9);
 
-      // Tangan melambai
       ctx.save();
       ctx.translate(-16, -2);
       ctx.rotate(-0.6 + wave);
@@ -1080,7 +1114,6 @@
       ctx.fill();
       ctx.restore();
 
-      // Kepala robot
       ctx.fillStyle = "#f1f5f9";
       ctx.beginPath();
       ctx.roundRect(-16, -34, 32, 24, 9);
@@ -1088,7 +1121,6 @@
       ctx.strokeStyle = "#38bdf8";
       ctx.stroke();
 
-      // Visor & mata cyan
       ctx.fillStyle = "#0f172a";
       ctx.beginPath();
       ctx.roundRect(-12, -29, 24, 14, 5);
@@ -1113,7 +1145,6 @@
       const py = state.y - state.zJump;
 
       ctx.save();
-      // Bayangan di lantai
       ctx.fillStyle = "rgba(15, 23, 42, 0.42)";
       ctx.beginPath();
       ctx.ellipse(state.x, state.y + 28, 22, 8, 0, 0, Math.PI * 2);
@@ -1122,12 +1153,10 @@
       ctx.translate(state.x, py);
       ctx.scale(state.facing, 1);
 
-      // Kaki kiri & kanan (animasi jalan)
       ctx.fillStyle = "#1e293b";
       ctx.fillRect(-10, 12 + step * 0.6, 8, 14 - step * 0.4);
       ctx.fillRect(2, 12 - step * 0.6, 8, 14 + step * 0.4);
 
-      // Jaket SMK Bina Mandiri (hitam + biru neon)
       ctx.fillStyle = "#0f172a";
       ctx.beginPath();
       ctx.roundRect(-15, -8, 30, 24, 6);
@@ -1141,7 +1170,6 @@
       ctx.textAlign = "center";
       ctx.fillText("SBM", 0, 8);
 
-      // Kepala & rambut perak
       ctx.fillStyle = "#fde68a";
       ctx.beginPath();
       ctx.arc(0, -21, 12.5, 0, Math.PI * 2);
@@ -1151,7 +1179,6 @@
       ctx.beginPath();
       ctx.arc(0, -24, 13.5, Math.PI * 0.85, Math.PI * 2.15);
       ctx.fill();
-      // Jambul perak
       ctx.beginPath();
       ctx.moveTo(-6, -34);
       ctx.lineTo(2, -42);
@@ -1159,13 +1186,11 @@
       ctx.closePath();
       ctx.fill();
 
-      // Mata
       ctx.fillStyle = "#0284c7";
       ctx.beginPath();
       ctx.arc(5, -20, 2.2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Efek ayunan pedang kode saat Serang / Misi
       if (state.attackTimer > 0) {
         ctx.save();
         ctx.translate(16, -2);
@@ -1196,7 +1221,6 @@
     function drawWorld() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Langit & pegunungan
       const sky = ctx.createLinearGradient(0, 0, 0, 270);
       sky.addColorStop(0, "#1d4ed8");
       sky.addColorStop(0.55, "#60a5fa");
@@ -1204,7 +1228,6 @@
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, canvas.width, 270);
 
-      // Pulau melayang & air terjun
       ctx.fillStyle = "#166534";
       ctx.beginPath();
       ctx.ellipse(170, 125, 78, 22, 0, 0, Math.PI * 2);
@@ -1217,7 +1240,6 @@
       ctx.ellipse(930, 115, 86, 24, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Kastil Akademi Pemrograman
       ctx.fillStyle = "#1e3a8a";
       ctx.fillRect(435, 95, 250, 145);
       ctx.fillStyle = "#38bdf8";
@@ -1235,7 +1257,6 @@
       ctx.textAlign = "center";
       ctx.fillText("AKADEMI PEMROGRAMAN", 560, 91);
 
-      // Jalan & area latar
       ctx.fillStyle = "#334155";
       ctx.fillRect(0, 240, canvas.width, 390);
       ctx.fillStyle = "#cbd5e1";
@@ -1247,7 +1268,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Gambar NPC sesuai kedalaman Y
       const entities = [
         ...npcs.map((n) => ({ y: n.y, draw: () => (n.type === "sinta" ? drawSinta(n) : drawBotAI(n)) })),
         { y: state.y, draw: drawRyu }
