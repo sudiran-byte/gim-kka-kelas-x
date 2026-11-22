@@ -1,1118 +1,1870 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Petualangan Koding & AI — SMK Bina Mandiri</title>
-  <style>
-    :root {
-      --bg-dark: #091120;
-      --bg-card: #111e36;
-      --bg-card-2: #162746;
-      --accent: #38bdf8;
-      --accent-2: #22c55e;
-      --gold: #facc15;
-      --danger: #f87171;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --border: rgba(56, 189, 248, 0.25);
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-      background: radial-gradient(circle at top right, #172d54 0%, var(--bg-dark) 60%);
-      color: var(--text);
-    }
-
-    .app-shell {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 18px 16px 40px;
-    }
-
-    /* ================= HEADER & PLAYER STATS ================= */
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      background: rgba(17, 30, 54, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 18px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-      margin-bottom: 18px;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 20px;
-      color: var(--gold);
-      letter-spacing: 0.4px;
-    }
-
-    .brand p {
-      margin: 3px 0 0;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-
-    .stats-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .stat-pill {
-      background: rgba(9, 17, 32, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 12.5px;
-      min-width: 115px;
-    }
-
-    .stat-pill strong {
-      display: block;
-      font-size: 15px;
-      color: #ffffff;
-      margin-top: 2px;
-    }
-
-    .xp-wrap {
-      min-width: 170px;
-    }
-
-    .xp-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11.5px;
-      color: #cbd5e1;
-      margin-bottom: 5px;
-    }
-
-    .xp-track {
-      height: 9px;
-      background: #070e1a;
-      border-radius: 99px;
-      overflow: hidden;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-    }
-
-    .xp-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #0284c7, #38bdf8, #4ade80);
-      transition: width 0.35s ease;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #38bdf8, #0284c7);
-      color: #061326;
-    }
-
-    .btn-gold {
-      background: linear-gradient(180deg, #fde047, #eab308);
-      color: #1e293b;
-    }
-
-    .btn-success {
-      background: linear-gradient(180deg, #4ade80, #16a34a);
-      color: #052e16;
-    }
-
-    .btn-ghost {
-      background: rgba(30, 41, 59, 0.85);
-      color: #e2e8f0;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-
-    /* ================= LEVEL ROADMAP ================= */
-    .level-map-card {
-      background: rgba(17, 30, 54, 0.85);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      font-size: 15.5px;
-      color: #e0f2fe;
-    }
-
-    .section-heading span {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .levels-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
-      gap: 12px;
-    }
-
-    .level-node {
-      background: var(--bg-card-2);
-      border: 1.5px solid rgba(148, 163, 184, 0.22);
-      border-radius: 13px;
-      padding: 12px 13px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .level-node:hover:not(.locked) {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .level-node.active {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
-    }
-
-    .level-node.completed {
-      border-color: rgba(74, 222, 128, 0.65);
-      background: linear-gradient(180deg, rgba(22, 101, 52, 0.28), var(--bg-card-2));
-    }
-
-    .level-node.locked {
-      opacity: 0.55;
-      cursor: not-allowed;
-      background: rgba(11, 19, 36, 0.7);
-    }
-
-    .level-badge {
-      display: inline-block;
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 99px;
-      background: rgba(56, 189, 248, 0.16);
-      color: #7dd3fc;
-      margin-bottom: 6px;
-    }
-
-    .level-node.completed .level-badge {
-      background: rgba(74, 222, 128, 0.2);
-      color: #86efac;
-    }
-
-    .level-node.locked .level-badge {
-      background: rgba(148, 163, 184, 0.15);
-      color: #94a3b8;
-    }
-
-    .level-node h3 {
-      margin: 0 0 4px;
-      font-size: 14px;
-      color: #ffffff;
-    }
-
-    .level-node p {
-      margin: 0;
-      font-size: 11.5px;
-      color: var(--muted);
-      line-height: 1.38;
-    }
-
-    .level-progress-mini {
-      margin-top: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gold);
-    }
-
-    /* ================= MAIN STAGE (MATERI & MISI) ================= */
-    .stage-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 1.25fr;
-      gap: 18px;
-    }
-
-    @media (max-width: 860px) {
-      .stage-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .panel {
-      background: rgba(17, 30, 54, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
-    }
-
-    .panel-tag {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-
-    .panel h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      color: #ffffff;
-    }
-
-    .materi-summary {
-      font-size: 13.5px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      margin: 0 0 14px;
-    }
-
-    .concept-box {
-      background: rgba(9, 17, 32, 0.85);
-      border-left: 3.5px solid var(--accent);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-    }
-
-    .concept-box h4 {
-      margin: 0 0 6px;
-      font-size: 13px;
-      color: #7dd3fc;
-    }
-
-    .concept-box ul {
-      margin: 0;
-      padding-left: 18px;
-      font-size: 12.5px;
-      line-height: 1.55;
-      color: #e2e8f0;
-    }
-
-    pre.code-sample {
-      margin: 0;
-      background: #060c18;
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 10px;
-      padding: 12px;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 12px;
-      line-height: 1.5;
-      color: #bae6fd;
-      overflow-x: auto;
-    }
-
-    /* ================= MISI LIST & INTERACTION ================= */
-    .mission-item {
-      background: rgba(9, 17, 32, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .mission-item.done {
-      border-color: rgba(74, 222, 128, 0.5);
-      background: rgba(20, 83, 45, 0.22);
-    }
-
-    .mission-item.selected {
-      border-color: var(--gold);
-    }
-
-    .mission-meta h4 {
-      margin: 0 0 3px;
-      font-size: 13.5px;
-      color: #ffffff;
-    }
-
-    .mission-meta p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .reward-tag {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gold);
-      margin-top: 4px;
-      display: inline-block;
-    }
-
-    .active-challenge {
-      margin-top: 14px;
-      background: rgba(9, 17, 32, 0.92);
-      border: 1.5px solid rgba(56, 189, 248, 0.45);
-      border-radius: 14px;
-      padding: 15px;
-    }
-
-    .challenge-title {
-      font-size: 14.5px;
-      font-weight: 800;
-      color: var(--gold);
-      margin: 0 0 6px;
-    }
-
-    .challenge-prompt {
-      font-size: 13.5px;
-      line-height: 1.55;
-      color: #f1f5f9;
-      margin: 0 0 12px;
-    }
-
-    .option-btn {
-      width: 100%;
-      text-align: left;
-      background: #14233f;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      color: #f8fafc;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .option-btn:hover {
-      border-color: var(--accent);
-      background: #1b3057;
-    }
-
-    textarea.code-editor {
-      width: 100%;
-      min-height: 105px;
-      background: #050a14;
-      color: #86efac;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 12.5px;
-      line-height: 1.5;
-      margin-bottom: 10px;
-      resize: vertical;
-    }
-
-    .feedback-box {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 12.5px;
-      line-height: 1.45;
-      display: none;
-    }
-
-    .feedback-box.show {
-      display: block;
-    }
-
-    .feedback-box.ok {
-      background: rgba(22, 163, 74, 0.2);
-      border: 1px solid #4ade80;
-      color: #bbf7d0;
-    }
-
-    .feedback-box.err {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid #f87171;
-      color: #fecaca;
-    }
-
-    .next-level-banner {
-      margin-top: 14px;
-      padding: 13px 15px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(22, 163, 74, 0.22), rgba(2, 132, 199, 0.22));
-      border: 1px solid #4ade80;
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .next-level-banner.show {
-      display: flex;
-    }
-  </style>
-</head>
-<body>
-  <div class="app-shell">
-    <!-- TOPBAR STATUS -->
-    <header class="topbar">
-      <div class="brand">
-        <h1>🚀 Petualangan Koding & AI</h1>
-        <p>Belajar bertahap dari Level 1 hingga Level 5 — Selesaikan misi untuk membuka level & materi lebih lengkap</p>
-      </div>
-
-      <div class="stats-bar">
-        <div class="stat-pill">
-          <span>Level Saat Ini</span>
-          <strong id="hudLevel">Level 1</strong>
-        </div>
-        <div class="stat-pill">
-          <span>Koin Misi</span>
-          <strong id="hudCoins">0</strong>
-        </div>
-        <div class="stat-pill xp-wrap">
-          <div class="xp-label">
-            <span>Total XP</span>
-            <span id="hudXpText">0 / 100 XP</span>
-          </div>
-          <div class="xp-track">
-            <div id="hudXpBar" class="xp-fill"></div>
-          </div>
-        </div>
-        <button class="btn btn-ghost" onclick="resetProgress()">↻ Reset</button>
-      </div>
-    </header>
-
-    <!-- PETA LEVEL BERTAHAP -->
-    <section class="level-map-card">
-      <div class="section-heading">
-        <h2>🗺️ Peta Tahapan Belajar</h2>
-        <span id="overallProgressText">0 / 10 Misi Selesai</span>
-      </div>
-      <div id="levelsGrid" class="levels-grid"></div>
-    </section>
-
-    <!-- KONTEN MATERI & MISI LEVEL AKTIF -->
-    <main class="stage-grid">
-      <!-- PANEL KIRI: MATERI BERTAHAP -->
-      <section class="panel">
-        <span id="materiTag" class="panel-tag">Tahap 1 · Dasar</span>
-        <h2 id="materiTitle">Memuat materi...</h2>
-        <p id="materiDesc" class="materi-summary"></p>
-
-        <div class="concept-box">
-          <h4>📌 Poin Materi Inti</h4>
-          <ul id="materiPoints"></ul>
-        </div>
-
-        <div class="concept-box" style="border-left-color: var(--gold); margin-bottom: 0;">
-          <h4 style="color: #fde047;">💻 Contoh Kode / Pola Logika</h4>
-          <pre id="materiCode" class="code-sample"></pre>
-        </div>
-      </section>
-
-      <!-- PANEL KANAN: DAFTAR MISI & RUANG PENYELESAIAN -->
-      <section class="panel">
-        <span class="panel-tag">Tugas & Misi Level</span>
-        <h2 id="missionPanelTitle">Selesaikan Misi untuk Naik Tahap</h2>
-        <div id="missionsList"></div>
-
-        <div id="challengeBox" class="active-challenge">
-          <div id="challengeTitle" class="challenge-title">Pilih misi di atas untuk memulai</div>
-          <p id="challengePrompt" class="challenge-prompt">Setiap misi yang berhasil diselesaikan memberi XP dan koin untuk membuka level berikutnya.</p>
-          <div id="challengeWorkspace"></div>
-          <div id="feedbackBox" class="feedback-box"></div>
-        </div>
-
-        <div id="nextLevelBanner" class="next-level-banner">
-          <div>
-            <strong style="color:#86efac;">🎉 Semua misi di level ini selesai!</strong>
-            <div style="font-size:12px; color:#e2e8f0;">Tahap berikutnya dengan materi yang lebih lengkap sudah terbuka.</div>
-          </div>
-          <button id="btnGoNextLevel" class="btn btn-success" onclick="goToNextLevel()">Lanjut ke Level Berikutnya →</button>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    /* ================= KURIKULUM BERTAHAP (LEVEL 1 -> LEVEL 5) ================= */
-    const LEVELS = [
-      {
-        level: 1,
-        tahap: "Tahap 1 · Fondasi",
-        judul: "Algoritma & Variabel",
-        ringkasanSingkat: "Urutan langkah logis & menyimpan data dalam variabel.",
-        materiLengkap:
-          "Pada Level 1, kamu memulai petualangan dari dasar: menyusun algoritma (urutan langkah yang jelas) dan memahami variabel sebagai wadah bernama untuk menyimpan nilai data seperti teks, angka, atau status.",
-        poin: [
-          "Algoritma adalah urutan instruksi terstruktur untuk menyelesaikan masalah dari awal hingga akhir.",
-          "Variabel menyimpan data di memori agar bisa dibaca atau diubah selama program berjalan.",
-          "Nama variabel sebaiknya jelas dan menggambarkan isinya, misalnya skor atau nama_siswa."
-        ],
-        contohKode: `// Contoh variabel & urutan langkah sederhana
-let namaSiswa = "Ryu";
-let xp = 0;
-
-xp = xp + 25;
-console.log(namaSiswa + " mendapat XP: " + xp);`,
-        missions: [
-          {
-            id: "l1-m1",
-            judul: "Misi 1.1: Urutan Algoritma Sarapan & Koding",
-            deskripsi: "Tentukan urutan langkah yang paling logis sebelum menjalankan program.",
-            xp: 25,
-            coins: 15,
-            type: "choice",
-            pertanyaan: "Manakah urutan algoritma yang paling tepat untuk membuat program penjumlahan dua angka?",
-            opsi: [
-              "1) Ambil input angka A & B → 2) Hitung hasil = A + B → 3) Tampilkan hasil",
-              "1) Tampilkan hasil → 2) Hitung hasil = A + B → 3) Ambil input angka A & B",
-              "1) Hitung hasil = A + B → 2) Tampilkan hasil → 3) Hapus variabel"
-            ],
-            jawaban: 0,
-            penjelasan: "Benar! Program harus menerima input terlebih dahulu, memprosesnya, lalu menampilkan output."
-          },
-          {
-            id: "l1-m2",
-            judul: "Misi 1.2: Deklarasi Variabel XP",
-            deskripsi: "Tulis kode deklarasi variabel bernama xp dengan nilai 50.",
-            xp: 35,
-            coins: 20,
-            type: "code",
-            pertanyaan: "Ketik baris kode JavaScript untuk membuat variabel bernama xp dengan nilai 50 (contoh: let xp = 50;).",
-            hint: "Gunakan kata kunci let atau const, nama variabel xp, tanda =, dan angka 50.",
-            validator: (raw) => {
-              const clean = raw.replace(/\s+/g, "").toLowerCase();
-              return clean.includes("letxp=50") || clean.includes("constxp=50") || clean.includes("varxp=50");
-            },
-            penjelasan: "Mantap! Variabel xp berhasil dibuat dengan nilai 50."
-          }
-        ]
-      },
-      {
-        level: 2,
-        tahap: "Tahap 2 · Logika",
-        judul: "Percabangan & Perulangan",
-        ringkasanSingkat: "Keputusan if/else dan otomatisasi tugas berulang.",
-        materiLengkap:
-          "Naik ke Level 2! Program yang cerdas tidak hanya berjalan lurus—ia mampu membuat keputusan menggunakan percabangan (if / else) dan mengulang tugas secara efisien menggunakan perulangan (loop).",
-        poin: [
-          "Percabangan (if / else) menjalankan blok kode tertentu hanya jika kondisi bernilai benar (true).",
-          "Operator perbandingan seperti >=, <=, ===, dan && membantu menyusun syarat keputusan.",
-          "Perulangan (for / while) menghindari penulisan kode berulang saat memproses banyak data."
-        ],
-        contohKode: `let nilai = 85;
-
-if (nilai >= 75) {
-  console.log("Lulus Misi!");
-} else {
-  console.log("Ulangi Latihan.");
-}`,
-        missions: [
-          {
-            id: "l2-m1",
-            judul: "Misi 2.1: Gerbang Logika Kelulusan",
-            deskripsi: "Pilih kondisi percabangan yang tepat untuk syarat nilai minimal 75.",
-            xp: 40,
-            coins: 25,
-            type: "choice",
-            pertanyaan: "Jika syarat lulus adalah nilai minimal 75, kondisi manakah yang tepat?",
-            opsi: [
-              "if (nilai >= 75)",
-              "if (nilai > 100)",
-              "if (nilai === 0)"
-            ],
-            jawaban: 0,
-            penjelasan: "Tepat! Operator >= berarti 'lebih besar atau sama dengan' 75."
-          },
-          {
-            id: "l2-m2",
-            judul: "Misi 2.2: Menulis Kondisi IF",
-            deskripsi: "Tulis kondisi if sederhana untuk mengecek apakah skor >= 100.",
-            xp: 45,
-            coins: 25,
-            type: "code",
-            pertanyaan: "Lengkapi/tulis kondisi if untuk mengecek skor >= 100 (contoh: if (skor >= 100) { levelUp(); }).",
-            hint: "Pastikan ada kata kunci if, tanda kurung berisi skor >= 100, dan kurung kurawal { ... }.",
-            validator: (raw) => {
-              const clean = raw.replace(/\s+/g, "").toLowerCase();
-              return clean.includes("if(skor>=100){") || clean.includes("if(skor>=100)");
-            },
-            penjelasan: "Bagus! Logika pengecekan skor >= 100 sudah ditulis dengan benar."
-          }
-        ]
-      },
-      {
-        level: 3,
-        tahap: "Tahap 3 · Data & Fungsi",
-        judul: "Array, Objek & Fungsi",
-        ringkasanSingkat: "Mengelola daftar data terstruktur & membungkus kode jadi fungsi.",
-        materiLengkap:
-          "Di Level 3, materi semakin lengkap: kamu akan mengelompokkan banyak data ke dalam array dan objek, serta membungkus logika menjadi fungsi (function) agar kode rapi, mudah dibaca, dan bisa dipakai ulang.",
-        poin: [
-          "Array menyimpan daftar item berurutan yang diakses memakai indeks mulai dari 0.",
-          "Objek menyimpan pasangan kunci-nilai (key: value) untuk merepresentasikan entitas seperti misi atau siswa.",
-          "Fungsi menerima parameter input dan dapat mengembalikan hasil (return)."
-        ],
-        contohKode: `const daftarMateri = ["Algoritma", "Logika", "AI Dasar"];
-
-function hitungBonus(poinDasar) {
-  return poinDasar * 2;
-}`,
-        missions: [
-          {
-            id: "l3-m1",
-            judul: "Misi 3.1: Indeks Pertama pada Array",
-            deskripsi: "Kenali cara mengakses elemen pertama dari sebuah array.",
-            xp: 50,
-            coins: 30,
-            type: "choice",
-            pertanyaan: "Jika const bahasa = ['Python', 'JavaScript', 'HTML'], bagaimana cara mengambil 'Python'?",
-            opsi: [
-              "bahasa[0]",
-              "bahasa[1]",
-              "bahasa.first()"
-            ],
-            jawaban: 0,
-            penjelasan: "Benar! Indeks array di sebagian besar bahasa pemrograman dimulai dari 0."
-          },
-          {
-            id: "l3-m2",
-            judul: "Misi 3.2: Membuat Fungsi sapa()",
-            deskripsi: "Tulis deklarasi fungsi bernama sapa.",
-            xp: 55,
-            coins: 35,
-            type: "code",
-            pertanyaan: "Tulis deklarasi fungsi bernama sapa di JavaScript (contoh: function sapa() { return 'Halo'; }).",
-            hint: "Gunakan kata kunci function diikuti nama sapa() dan blok { ... }.",
-            validator: (raw) => {
-              const clean = raw.replace(/\s+/g, "").toLowerCase();
-              return clean.includes("functionsapa()");
-            },
-            penjelasan: "Keren! Fungsi sapa() berhasil didefinisikan."
-          }
-        ]
-      },
-      {
-        level: 4,
-        tahap: "Tahap 4 · Fondasi AI",
-        judul: "Data, Fitur & Pelatihan Model AI",
-        ringkasanSingkat: "Bagaimana AI belajar dari data, fitur, label, dan evaluasi.",
-        materiLengkap:
-          "Selamat datang di Level 4! Kecerdasan Artifisial (AI) belajar pola dari data historis. Kualitas data (dataset), pemilihan fitur (features), label target, serta pembagian data latih & uji sangat menentukan kinerja model.",
-        poin: [
-          "Dataset terdiri dari fitur (input/ciri) dan label (target/jawaban yang ingin diprediksi).",
-          "Data dibagi menjadi data latih (training set) dan data uji (test set) untuk menguji generalisasi.",
-          "Garbage in, garbage out: data yang kotor, bias, atau tidak relevan menghasilkan prediksi buruk."
-        ],
-        contohKode: `// Ilustrasi struktur data latih klasifikasi cuaca
-const dataLatih = [
-  { awanTebal: true, kelembapan: 90, label: "Hujan" },
-  { awanTebal: false, kelembapan: 45, label: "Cerah" }
-];`,
-        missions: [
-          {
-            id: "l4-m1",
-            judul: "Misi 4.1: Memisahkan Data Latih & Data Uji",
-            deskripsi: "Pahami alasan pembagian dataset sebelum mengevaluasi model AI.",
-            xp: 65,
-            coins: 40,
-            type: "choice",
-            pertanyaan: "Mengapa model AI perlu diuji menggunakan data uji yang tidak dipakai saat pelatihan?",
-            opsi: [
-              "Untuk mengetahui apakah model mampu mengenali pola baru, bukan sekadar menghafal data latih",
-              "Agar ukuran file model menjadi lebih kecil secara otomatis",
-              "Karena data latih tidak boleh memiliki label"
-            ],
-            jawaban: 0,
-            penjelasan: "Tepat! Menguji pada data baru membantu mendeteksi overfitting dan mengukur kemampuan generalisasi."
-          },
-          {
-            id: "l4-m2",
-            judul: "Misi 4.2: Menentukan Aturan Klasifikasi",
-            deskripsi: "Tulis logika klasifikasi sederhana berdasarkan ambang batas probabilitas.",
-            xp: 70,
-            coins: 45,
-            type: "code",
-            pertanyaan: "Tulis kondisi if untuk mengecek apakah probabilitas >= 0.8 (contoh: if (probabilitas >= 0.8) { hasil = 'Positif'; }).",
-            hint: "Gunakan variabel probabilitas dengan operator >= dan nilai 0.8 di dalam if (...).",
-            validator: (raw) => {
-              const clean = raw.replace(/\s+/g, "").toLowerCase();
-              return clean.includes("if(probabilitas>=0.8)");
-            },
-            penjelasan: "Sempurna! Aturan ambang batas probabilitas >= 0.8 sudah tepat."
-          }
-        ]
-      },
-      {
-        level: 5,
-        tahap: "Tahap 5 · Penerapan AI & Koding",
-        judul: "Prompt Engineering, Evaluasi & Etika AI",
-        ringkasanSingkat: "Merancang instruksi AI yang presisi, mengevaluasi hasil & etika.",
-        materiLengkap:
-          "Level puncak: Level 5! Di tahap ini kamu menggabungkan koding dan AI secara bertanggung jawab: merancang prompt yang jelas (peran, konteks, format output), memverifikasi akurasi/halusinasi AI, serta menjaga privasi dan etika data.",
-        poin: [
-          "Prompt yang efektif menyertakan konteks, tujuan jelas, batasan, dan format keluaran yang diharapkan.",
-          "Keluaran AI wajib diverifikasi (human-in-the-loop) karena model dapat menghasilkan informasi keliru.",
-          "Etika AI mencakup transparansi, keadilan/bebas bias, hak cipta, dan keamanan data pribadi."
-        ],
-        contohKode: `const instruksiAI = {
-  peran: "Tutor Koding Pemula",
-  tugas: "Jelaskan perulangan for dengan analogi sehari-hari",
-  format: "3 poin singkat + contoh kode"
-};`,
-        missions: [
-          {
-            id: "l5-m1",
-            judul: "Misi 5.1: Merancang Prompt Berkualitas",
-            deskripsi: "Pilih prompt yang paling jelas dan terstruktur untuk asisten koding.",
-            xp: 80,
-            coins: 50,
-            type: "choice",
-            pertanyaan: "Manakah prompt yang paling efektif untuk meminta bantuan debugging kode?",
-            opsi: [
-              "Berikan potongan kode, pesan error yang muncul, tujuan program, dan minta penjelasan langkah perbaikannya",
-              "Benerin kode saya dong cepetan",
-              "Buatkan semua aplikasi tanpa menjelaskan bagian mana yang salah"
-            ],
-            jawaban: 0,
-            penjelasan: "Luar biasa! Konteks, error, dan tujuan yang jelas membantu AI memberi solusi akurat dan edukatif."
-          },
-          {
-            id: "l5-m2",
-            judul: "Misi 5.2: Prinsip Etika & Verifikasi AI",
-            deskripsi: "Identifikasi praktik paling aman saat menggunakan AI dalam proyek koding.",
-            xp: 90,
-            coins: 60,
-            type: "choice",
-            pertanyaan: "Apa tindakan terbaik ketika AI menghasilkan kode atau penjelasan yang terlihat meyakinkan?",
-            opsi: [
-              "Menguji langsung kode tersebut, memeriksa logika/keamanannya, dan memastikan tidak membocorkan data rahasia",
-              "Langsung menyalin ke sistem produksi tanpa pengujian sama sekali",
-              "Menghapus komentar dan pengujian agar cepat selesai"
-            ],
-            jawaban: 0,
-            penjelasan: "Tepat sekali! Verifikasi, pengujian, dan keamanan data adalah kunci penggunaan AI yang profesional."
-          }
-        ]
-      }
-    ];
-
-    /* ================= STATE & PERSISTENCE ================= */
-    const STORAGE_KEY = "petualangan_koding_ai_v1";
-
-    function defaultState() {
-      return {
-        currentLevel: 1,
-        unlockedLevel: 1,
-        xp: 0,
-        coins: 0,
-        completedMissions: [],
-        selectedMissionId: "l1-m1"
-      };
-    }
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return defaultState();
-        const parsed = JSON.parse(raw);
-        return { ...defaultState(), ...parsed };
-      } catch {
-        return defaultState();
-      }
-    }
-
-    let state = loadState();
-
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function resetProgress() {
-      if (confirm("Reset seluruh progres level, XP, dan koin ke awal?")) {
-        state = defaultState();
-        saveState();
-        renderAll();
-      }
-    }
-
-    function getLevelObj(lvlNum) {
-      return LEVELS.find((l) => l.level === lvlNum) || LEVELS[0];
-    }
-
-    function isLevelCompleted(levelObj) {
-      return levelObj.missions.every((m) => state.completedMissions.includes(m.id));
-    }
-
-    function getTotalMissionsCount() {
-      return LEVELS.reduce((acc, l) => acc + l.missions.length, 0);
-    }
-
-    /* ================= RENDER UI ================= */
-    function renderHud() {
-      const activeLvlObj = getLevelObj(state.currentLevel);
-      document.getElementById("hudLevel").textContent = `Level ${activeLvlObj.level} · ${activeLvlObj.judul}`;
-      document.getElementById("hudCoins").textContent = `${state.coins} Koin`;
-
-      const xpPerTier = 100;
-      const xpInTier = state.xp % xpPerTier;
-      document.getElementById("hudXpText").textContent = `${state.xp} XP`;
-      document.getElementById("hudXpBar").style.width = `${(xpInTier / xpPerTier) * 100}%`;
-
-      const totalDone = state.completedMissions.length;
-      const totalAll = getTotalMissionsCount();
-      document.getElementById("overallProgressText").textContent = `${totalDone} / ${totalAll} Misi Selesai`;
-    }
-
-    function renderLevelsGrid() {
-      const grid = document.getElementById("levelsGrid");
-      grid.innerHTML = "";
-
-      for (const lvl of LEVELS) {
-        const locked = lvl.level > state.unlockedLevel;
-        const doneCount = lvl.missions.filter((m) => state.completedMissions.includes(m.id)).length;
-        const completed = doneCount === lvl.missions.length;
-        const isCurrent = lvl.level === state.currentLevel;
-
-        const node = document.createElement("div");
-        node.className = [
-          "level-node",
-          isCurrent ? "active" : "",
-          completed ? "completed" : "",
-          locked ? "locked" : ""
-        ].filter(Boolean).join(" ");
-
-        node.innerHTML = `
-          <span class="level-badge">${locked ? "🔒 Terkunci" : completed ? "✓ Selesai" : lvl.tahap}</span>
-          <h3>Level ${lvl.level}: ${lvl.judul}</h3>
-          <p>${lvl.ringkasanSingkat}</p>
-          <div class="level-progress-mini">Misi: ${doneCount}/${lvl.missions.length}</div>
-        `;
-
-        if (!locked) {
-          node.onclick = () => {
-            state.currentLevel = lvl.level;
-            if (!lvl.missions.some((m) => m.id === state.selectedMissionId)) {
-              state.selectedMissionId = lvl.missions[0].id;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CyberTurbo KKA: Balap Berpikir Komputasional & Dekomposisi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Orbitron & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            dark: '#090d16',
+                            panel: '#111827',
+                            cyan: '#00f3ff',
+                            pink: '#ff007f',
+                            purple: '#9d4edd',
+                            yellow: '#ffbe0b',
+                            green: '#00f5d4'
+                        }
+                    }
+                }
             }
-            saveState();
-            renderAll();
-          };
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Cyberpunk Glows */
+        body {
+            background-color: #090d16;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            user-select: none;
         }
 
-        grid.appendChild(node);
-      }
-    }
+        .font-cyber {
+            font-family: 'Orbitron', sans-serif;
+        }
 
-    function renderMateri() {
-      const lvl = getLevelObj(state.currentLevel);
-      document.getElementById("materiTag").textContent = `${lvl.tahap} · Level ${lvl.level}`;
-      document.getElementById("materiTitle").textContent = lvl.judul;
-      document.getElementById("materiDesc").textContent = lvl.materiLengkap;
+        /* Glassmorphism Card */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 243, 255, 0.05);
+        }
 
-      const ul = document.getElementById("materiPoints");
-      ul.innerHTML = lvl.poin.map((pt) => `<li>${pt}</li>`).join("");
+        .glass-panel-pink {
+            background: rgba(17, 24, 39, 0.82);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 0, 127, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 0, 127, 0.08);
+        }
 
-      document.getElementById("materiCode").textContent = lvl.contohKode;
-    }
+        /* Neon Buttons */
+        .btn-cyber {
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+        }
+        .btn-cyber:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 243, 255, 0.6);
+        }
+        .btn-cyber:active:not(:disabled) {
+            transform: translateY(1px) scale(0.98);
+        }
 
-    function renderMissionsAndChallenge() {
-      const lvl = getLevelObj(state.currentLevel);
-      document.getElementById("missionPanelTitle").textContent = `Misi Level ${lvl.level}: ${lvl.judul}`;
+        .btn-option {
+            transition: all 0.15s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-option:hover:not(:disabled) {
+            border-color: #00f3ff;
+            background: rgba(0, 243, 255, 0.15);
+            transform: translateX(4px);
+        }
+        .btn-option:active:not(:disabled) {
+            transform: scale(0.98);
+        }
 
-      const listEl = document.getElementById("missionsList");
-      listEl.innerHTML = "";
+        /* Animated Background Grid */
+        .cyber-bg {
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 243, 255, 0.15) 0%, transparent 40%),
+                linear-gradient(to right, rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
 
-      if (!lvl.missions.some((m) => m.id === state.selectedMissionId)) {
-        state.selectedMissionId = lvl.missions[0].id;
-      }
+        /* Shake animation on wrong answer */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
 
-      for (const m of lvl.missions) {
-        const isDone = state.completedMissions.includes(m.id);
-        const isSelected = m.id === state.selectedMissionId;
+        /* Pulse glow */
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.8)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.9)); }
+        }
+        .glow-logo {
+            animation: pulseGlow 3s infinite;
+        }
 
-        const item = document.createElement("div");
-        item.className = `mission-item ${isDone ? "done" : ""} ${isSelected ? "selected" : ""}`;
-        item.innerHTML = `
-          <div class="mission-meta">
-            <h4>${isDone ? "✅ " : "🎯 "}${m.judul}</h4>
-            <p>${m.deskripsi}</p>
-            <span class="reward-tag">+${m.xp} XP · +${m.coins} Koin</span>
-          </div>
-          <button class="btn ${isDone ? "btn-ghost" : "btn-primary"}" onclick="selectMission('${m.id}')">
-            ${isDone ? "Ulangi" : "Kerjakan"}
-          </button>
-        `;
-        listEl.appendChild(item);
-      }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f3ff;
+        }
 
-      const activeMission = lvl.missions.find((m) => m.id === state.selectedMissionId) || lvl.missions[0];
-      renderActiveMissionForm(activeMission);
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="cyber-bg min-h-screen flex flex-col justify-between">
 
-      const banner = document.getElementById("nextLevelBanner");
-      const nextBtn = document.getElementById("btnGoNextLevel");
-      if (isLevelCompleted(lvl) && lvl.level < LEVELS.length) {
-        banner.classList.add("show");
-        nextBtn.textContent = `Lanjut ke Level ${lvl.level + 1} →`;
-      } else {
-        banner.classList.remove("show");
-      }
-    }
+    <!-- Top Navigation / Audio & Quick Info Bar -->
+    <header class="w-full px-4 py-2.5 flex items-center justify-between border-b border-cyan-500/20 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                <i class="fa-solid fa-car-burst text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-cyber font-black text-sm sm:text-lg tracking-wider bg-gradient-to-r from-cyan-400 via-white to-pink-500 bg-clip-text text-transparent">
+                    CYBERTURBO KKA
+                </h1>
+                <p class="text-[10px] sm:text-xs text-slate-400 font-medium">SMK Kelas X • Berpikir Komputasional & Dekomposisi</p>
+            </div>
+        </div>
 
-    function selectMission(missionId) {
-      state.selectedMissionId = missionId;
-      saveState();
-      renderMissionsAndChallenge();
-      const fb = document.getElementById("feedbackBox");
-      fb.className = "feedback-box";
-      fb.textContent = "";
-    }
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Tombol Materi Singkat -->
+            <button onclick="toggleModal('modal-materi', true)" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-cyan-500/30 text-xs sm:text-sm font-semibold text-cyan-300 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-book-open"></i>
+                <span class="hidden sm:inline">Ringkasan Materi</span>
+            </button>
 
-    function renderActiveMissionForm(mission) {
-      document.getElementById("challengeTitle").textContent = mission.judul;
-      document.getElementById("challengePrompt").textContent = mission.pertanyaan;
+            <!-- Tombol Leaderboard -->
+            <button onclick="openLeaderboard()" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-amber-500/30 text-xs sm:text-sm font-semibold text-amber-300 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-trophy"></i>
+                <span class="hidden sm:inline">Peringkat</span>
+            </button>
 
-      const ws = document.getElementById("challengeWorkspace");
-      ws.innerHTML = "";
+            <!-- Tombol Audio Mute/Unmute -->
+            <button id="btn-audio" onclick="toggleAudio()" title="Suara & Musik" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/50 text-cyan-300 flex items-center justify-center transition">
+                <i id="icon-audio" class="fa-solid fa-volume-high"></i>
+            </button>
+        </div>
+    </header>
 
-      if (mission.type === "choice") {
-        mission.opsi.forEach((optText, idx) => {
-          const btn = document.createElement("button");
-          btn.className = "option-btn";
-          btn.textContent = optText;
-          btn.onclick = () => submitChoice(mission, idx);
-          ws.appendChild(btn);
-        });
-      } else if (mission.type === "code") {
-        const ta = document.createElement("textarea");
-        ta.className = "code-editor";
-        ta.id = "missionCodeInput";
-        ta.placeholder = mission.hint || "Tulis kode Anda di sini...";
-        ws.appendChild(ta);
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 w-full max-w-7xl mx-auto p-3 sm:p-5 flex flex-col justify-center">
 
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.gap = "8px";
-        row.style.flexWrap = "wrap";
+        <!-- ========================================================= -->
+        <!-- SCREEN 1: HALAMAN LOGIN & PENGATURAN BALAPAN              -->
+        <!-- ========================================================= -->
+        <section id="screen-login" class="w-full max-w-4xl mx-auto my-auto">
+            <div class="text-center mb-5 sm:mb-7">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 mb-2">
+                    <i class="fa-solid fa-microchip mr-1"></i> Modul Koding & Kecerdasan Artifisial (KKA)
+                </span>
+                <h2 class="font-cyber text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white glow-logo">
+                    ARENA BALAP <span class="text-cyan-400">DEKOMPOSISI</span>
+                </h2>
+                <p class="text-slate-300 text-xs sm:text-base mt-2 max-w-2xl mx-auto">
+                    Pecahkan masalah kompleks menjadi bagian kecil, aktifkan <span class="text-cyan-400 font-bold">Nitro Turbo</span>, dan jadilah pembalap tercepat di sirkuit SMK!
+                </p>
+            </div>
 
-        const checkBtn = document.createElement("button");
-        checkBtn.className = "btn btn-gold";
-        checkBtn.textContent = "▶ Periksa Jawaban";
-        checkBtn.onclick = () => submitCode(mission);
+            <div class="glass-panel rounded-3xl p-5 sm:p-8 shadow-2xl">
+                <form id="login-form" onsubmit="startGameSetup(event)" class="space-y-6">
+                    
+                    <!-- Pilihan Mode Permainan -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2.5">
+                            <i class="fa-solid fa-gamepad mr-1.5"></i> 1. Pilih Mode Balapan
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Mode Solo vs AI -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="gameMode" value="solo" class="peer sr-only" checked onchange="handleModeChange()">
+                                <div class="p-4 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-cyan-400 peer-checked:bg-cyan-950/40 transition flex items-center gap-3.5">
+                                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl shrink-0">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-white text-sm sm:text-base">Solo Race vs AI Bot</div>
+                                        <div class="text-xs text-slate-400">Balapan individu melawan pembalap AI cerdas</div>
+                                    </div>
+                                </div>
+                            </label>
 
-        const hintBtn = document.createElement("button");
-        hintBtn.className = "btn btn-ghost";
-        hintBtn.textContent = "💡 Petunjuk";
-        hintBtn.onclick = () => showFeedback("ok", `Petunjuk: ${mission.hint}`);
+                            <!-- Mode Multiplayer 2 Pemain (Layar Terbagi / IFP) -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="gameMode" value="multi" class="peer sr-only" onchange="handleModeChange()">
+                                <div class="p-4 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-pink-500 peer-checked:bg-pink-950/40 transition flex items-center gap-3.5">
+                                    <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-2xl shrink-0">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-white text-sm sm:text-base">Duel 2 Pemain (Split Screen)</div>
+                                        <div class="text-xs text-slate-400">Cocok untuk Tablet, Laptop & Papan Interaktif (IFP)</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
 
-        row.appendChild(checkBtn);
-        row.appendChild(hintBtn);
-        ws.appendChild(row);
-      }
-    }
+                    <!-- Identitas Siswa -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Player 1 -->
+                        <div class="p-4 rounded-2xl bg-slate-900/80 border border-cyan-500/30 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-extrabold uppercase tracking-wider text-cyan-400">
+                                    <i class="fa-solid fa-helmet-safety mr-1"></i> Pembalap 1 (Utama)
+                                </span>
+                                <!-- Pilih Warna Mobil P1 -->
+                                <div class="flex items-center gap-1.5" id="p1-color-picker">
+                                    <button type="button" onclick="selectCarColor(1, '#00f3ff', this)" class="w-5 h-5 rounded-full bg-[#00f3ff] ring-2 ring-white scale-110 transition" title="Cyan Neon"></button>
+                                    <button type="button" onclick="selectCarColor(1, '#00f5d4', this)" class="w-5 h-5 rounded-full bg-[#00f5d4] opacity-70 hover:opacity-100 transition" title="Emerald Cyber"></button>
+                                    <button type="button" onclick="selectCarColor(1, '#ffbe0b', this)" class="w-5 h-5 rounded-full bg-[#ffbe0b] opacity-70 hover:opacity-100 transition" title="Solar Gold"></button>
+                                    <button type="button" onclick="selectCarColor(1, '#a855f7', this)" class="w-5 h-5 rounded-full bg-[#a855f7] opacity-70 hover:opacity-100 transition" title="Hyper Violet"></button>
+                                </div>
+                            </div>
 
-    function showFeedback(kind, message) {
-      const fb = document.getElementById("feedbackBox");
-      fb.className = `feedback-box show ${kind}`;
-      fb.textContent = message;
-    }
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Nama Lengkap Siswa *</label>
+                                <input type="text" id="p1-name" required maxlength="24" placeholder="Contoh: Ahmad Rizki" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
+                            </div>
 
-    function completeMission(mission) {
-      const firstTime = !state.completedMissions.includes(mission.id);
-      if (firstTime) {
-        state.completedMissions.push(mission.id);
-        state.xp += mission.xp;
-        state.coins += mission.coins;
-      }
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Kelas SMK *</label>
+                                <div class="flex gap-2">
+                                    <select id="p1-class-select" onchange="syncClassInput(1)" class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
+                                        <option value="X RPL 1">X RPL 1</option>
+                                        <option value="X RPL 2">X RPL 2</option>
+                                        <option value="X TKJ 1">X TKJ 1</option>
+                                        <option value="X TKJ 2">X TKJ 2</option>
+                                        <option value="X DKV 1">X DKV 1</option>
+                                        <option value="X AKL 1">X AKL 1</option>
+                                        <option value="X TKR 1">X TKR 1</option>
+                                        <option value="MANUAL">Ketik Manual...</option>
+                                    </select>
+                                    <input type="text" id="p1-class" value="X RPL 1" required maxlength="18" placeholder="Ketik Kelas..."
+                                        class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
+                                </div>
+                            </div>
+                        </div>
 
-      const currentLvlObj = getLevelObj(state.currentLevel);
-      if (isLevelCompleted(currentLvlObj) && state.currentLevel < LEVELS.length) {
-        state.unlockedLevel = Math.max(state.unlockedLevel, state.currentLevel + 1);
-      }
+                        <!-- Player 2 / AI Info -->
+                        <div id="p2-setup-box" class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3 opacity-60 pointer-events-none transition-all">
+                            <div class="flex items-center justify-between">
+                                <span id="p2-box-title" class="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                                    <i class="fa-solid fa-robot mr-1"></i> Lawan: CyberBot AI
+                                </span>
+                                <!-- Pilih Warna Mobil P2 -->
+                                <div class="flex items-center gap-1.5" id="p2-color-picker">
+                                    <button type="button" onclick="selectCarColor(2, '#ff007f', this)" class="w-5 h-5 rounded-full bg-[#ff007f] ring-2 ring-white scale-110 transition" title="Neon Pink"></button>
+                                    <button type="button" onclick="selectCarColor(2, '#ff5400', this)" class="w-5 h-5 rounded-full bg-[#ff5400] opacity-70 hover:opacity-100 transition" title="Blaze Orange"></button>
+                                    <button type="button" onclick="selectCarColor(2, '#3b82f6', this)" class="w-5 h-5 rounded-full bg-[#3b82f6] opacity-70 hover:opacity-100 transition" title="Cobalt Blue"></button>
+                                    <button type="button" onclick="selectCarColor(2, '#ef4444', this)" class="w-5 h-5 rounded-full bg-[#ef4444] opacity-70 hover:opacity-100 transition" title="Crimson Red"></button>
+                                </div>
+                            </div>
 
-      saveState();
-      renderHud();
-      renderLevelsGrid();
-      renderMissionsAndChallenge();
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Nama Pembalap 2</label>
+                                <input type="text" id="p2-name" value="CyberBot AI" maxlength="24" placeholder="Nama Siswa 2" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
+                            </div>
 
-      const bonusNote = firstTime
-        ? ` (+${mission.xp} XP & +${mission.coins} Koin)`
-        : " (Misi sudah pernah diselesaikan sebelumnya)";
-      showFeedback("ok", `${mission.penjelasan}${bonusNote}`);
-    }
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Kelas Pembalap 2</label>
+                                <div class="flex gap-2">
+                                    <select id="p2-class-select" onchange="syncClassInput(2)" class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
+                                        <option value="X RPL 1">X RPL 1</option>
+                                        <option value="X RPL 2">X RPL 2</option>
+                                        <option value="X TKJ 1">X TKJ 1</option>
+                                        <option value="X TKJ 2">X TKJ 2</option>
+                                        <option value="X DKV 1">X DKV 1</option>
+                                        <option value="X AKL 1">X AKL 1</option>
+                                        <option value="MANUAL">Ketik Manual...</option>
+                                    </select>
+                                    <input type="text" id="p2-class" value="AI SYSTEM" maxlength="18" placeholder="Kelas P2..."
+                                        class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    function submitChoice(mission, idx) {
-      if (idx === mission.jawaban) {
-        completeMission(mission);
-      } else {
-        showFeedback("err", "Belum tepat! Baca kembali materi di sebelah kiri lalu coba pilihan lain.");
-      }
-    }
+                    <!-- Tingkat Kesulitan -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2.5">
+                            <i class="fa-solid fa-gauge-high mr-1.5"></i> 2. Pilih Tingkat Kesulitan Materi & Kecepatan
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <!-- Level 1 -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="difficulty" value="easy" class="peer sr-only" checked>
+                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-emerald-400 peer-checked:bg-emerald-950/40 transition text-center sm:text-left">
+                                    <div class="flex items-center justify-center sm:justify-between mb-1">
+                                        <span class="font-cyber font-bold text-emerald-400 text-sm">LEVEL 1: PEMULA</span>
+                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Dasar</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Konsep 4 Pilar Berpikir Komputasional & Definisi Dekomposisi.</p>
+                                </div>
+                            </label>
 
-    function submitCode(mission) {
-      const inputEl = document.getElementById("missionCodeInput");
-      const val = inputEl ? inputEl.value : "";
-      if (mission.validator(val)) {
-        completeMission(mission);
-      } else {
-        showFeedback("err", "Kode belum sesuai kriteria misi. Klik '💡 Petunjuk' bila perlu bantuan.");
-      }
-    }
+                            <!-- Level 2 -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="difficulty" value="medium" class="peer sr-only">
+                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-amber-400 peer-checked:bg-amber-950/40 transition text-center sm:text-left">
+                                    <div class="flex items-center justify-center sm:justify-between mb-1">
+                                        <span class="font-cyber font-bold text-amber-400 text-sm">LEVEL 2: MENENGAH</span>
+                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">Aplikasi</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Studi kasus dekomposisi masalah sehari-hari & alur kerja SMK.</p>
+                                </div>
+                            </label>
 
-    function goToNextLevel() {
-      const nextNum = Math.min(LEVELS.length, state.currentLevel + 1);
-      if (nextNum <= state.unlockedLevel) {
-        state.currentLevel = nextNum;
-        const nextObj = getLevelObj(nextNum);
-        state.selectedMissionId = nextObj.missions[0].id;
-        saveState();
-        renderAll();
-        const fb = document.getElementById("feedbackBox");
-        fb.className = "feedback-box";
-        fb.textContent = "";
-      }
-    }
+                            <!-- Level 3 -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="difficulty" value="hard" class="peer sr-only">
+                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-rose-500 peer-checked:bg-rose-950/40 transition text-center sm:text-left">
+                                    <div class="flex items-center justify-center sm:justify-between mb-1">
+                                        <span class="font-cyber font-bold text-rose-400 text-sm">LEVEL 3: EXPERT</span>
+                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">HOTS KKA</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Dekomposisi sistem AI, perancangan aplikasi & debugging logika.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
 
-    function renderAll() {
-      renderHud();
-      renderLevelsGrid();
-      renderMateri();
-      renderMissionsAndChallenge();
-    }
+                    <!-- Tombol Start -->
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-cyber font-black text-base sm:text-xl tracking-wider uppercase btn-cyber flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-flag-checkered text-xl"></i>
+                            <span>MULAI BALAPAN SEKARANG</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
 
-    renderAll();
-  </script>
+        <!-- ========================================================= -->
+        <!-- SCREEN 2: ARENA BALAPAN & KUIS INTERAKTIF                 -->
+        <!-- ========================================================= -->
+        <section id="screen-game" class="hidden w-full flex-col gap-3 sm:gap-4">
+            
+            <!-- HUD Status Atas -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 items-center">
+                <!-- Info Player 1 -->
+                <div class="glass-panel rounded-2xl p-2.5 sm:p-3 flex items-center justify-between border-l-4 border-l-cyan-400">
+                    <div class="truncate pr-2">
+                        <div class="flex items-center gap-1.5">
+                            <span id="hud-p1-badge" class="w-3 h-3 rounded-full bg-cyan-400 inline-block shrink-0"></span>
+                            <span id="hud-p1-name" class="font-bold text-xs sm:text-sm text-white truncate">Siswa 1</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400" id="hud-p1-class">X RPL 1</div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-cyber font-black text-sm sm:text-lg text-cyan-400"><span id="hud-p1-score">0</span> <span class="text-[10px]">PTS</span></div>
+                        <div id="hud-p1-streak" class="text-[10px] font-bold text-amber-400">Streak: 0x</div>
+                    </div>
+                </div>
+
+                <!-- Timer & Level Badge (Tengah pada Desktop) -->
+                <div class="col-span-2 sm:col-span-1 order-first sm:order-none glass-panel rounded-2xl p-2 sm:p-2.5 flex items-center justify-between sm:justify-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span id="hud-level-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-xs">
+                            LEVEL 1
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 font-cyber font-bold text-base sm:text-xl text-white">
+                        <i class="fa-solid fa-stopwatch text-cyan-400"></i>
+                        <span id="hud-timer">00:00</span>
+                    </div>
+                    <button onclick="confirmQuitGame()" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 text-xs font-bold transition" title="Keluar Balapan">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+
+                <!-- Info Player 2 / AI -->
+                <div class="glass-panel-pink rounded-2xl p-2.5 sm:p-3 flex items-center justify-between border-r-4 border-r-pink-500">
+                    <div class="truncate pr-2">
+                        <div class="flex items-center gap-1.5">
+                            <span id="hud-p2-badge" class="w-3 h-3 rounded-full bg-pink-500 inline-block shrink-0"></span>
+                            <span id="hud-p2-name" class="font-bold text-xs sm:text-sm text-white truncate">CyberBot AI</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400" id="hud-p2-class">AI SYSTEM</div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-cyber font-black text-sm sm:text-lg text-pink-400"><span id="hud-p2-score">0</span> <span class="text-[10px]">PTS</span></div>
+                        <div id="hud-p2-streak" class="text-[10px] font-bold text-amber-400">Jarak: 0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANVAS LINTASAN BALAP FUTURISTIK -->
+            <div class="relative w-full h-44 sm:h-56 md:h-64 rounded-3xl overflow-hidden border-2 border-cyan-500/40 shadow-2xl bg-slate-950" id="canvas-wrapper">
+                <canvas id="raceCanvas"></canvas>
+
+                <!-- Countdown Overlay (3, 2, 1, GO!) -->
+                <div id="countdown-overlay" class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm flex flex-col items-center justify-center z-20">
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-widest text-cyan-300 mb-1">Bersiap di Garis Start</div>
+                    <div id="countdown-text" class="font-cyber font-black text-6xl sm:text-8xl text-white drop-shadow-[0_0_25px_rgba(0,243,255,0.9)]">
+                        3
+                    </div>
+                </div>
+            </div>
+
+            <!-- AREA SOAL & KONTROL JAWABAN (Adaptif Solo vs Split-Screen 2 Pemain) -->
+            <div id="quiz-arena" class="w-full">
+                <!-- Diisi secara dinamis oleh JavaScript sesuai mode Solo atau Multiplayer -->
+            </div>
+
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- SCREEN 3: HASIL BALAPAN & PEMBAHASAN MATERI               -->
+        <!-- ========================================================= -->
+        <section id="screen-result" class="hidden w-full max-w-4xl mx-auto my-auto">
+            <div class="glass-panel rounded-3xl p-5 sm:p-8 text-center relative overflow-hidden">
+                <!-- Trophy / Winner Banner -->
+                <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 text-slate-950 text-3xl sm:text-4xl shadow-lg shadow-amber-500/40 mb-3">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                
+                <div class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1">Balapan Selesai!</div>
+                <h2 id="result-winner-title" class="font-cyber text-2xl sm:text-4xl font-black text-white mb-2">
+                    JUARA 1: AHMAD RIZKI!
+                </h2>
+                <p id="result-subtitle" class="text-slate-300 text-xs sm:text-sm mb-6">
+                    Luar biasa! Kamu berhasil menerapkan Dekomposisi Masalah dengan sangat cepat.
+                </p>
+
+                <!-- Statistik Kartu Pembalap -->
+                <div id="result-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-left">
+                    <!-- Diisi via JS -->
+                </div>
+
+                <!-- Review Soal yang Salah (Edukatif) -->
+                <div id="review-section" class="hidden text-left mb-6">
+                    <h3 class="font-cyber font-bold text-sm sm:text-base text-amber-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> Evaluasi & Pembahasan Materi (Jawaban Kurang Tepat)
+                    </h3>
+                    <div id="review-list" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                        <!-- List pembahasan soal salah -->
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="restartSameSettings()" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-cyber font-bold text-sm sm:text-base btn-cyber flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Balapan Lagi
+                    </button>
+                    <button onclick="backToMenu()" class="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-cyber font-bold text-sm sm:text-base transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Ganti Pemain / Level
+                    </button>
+                    <button onclick="openLeaderboard()" class="px-6 py-3.5 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 font-cyber font-bold text-sm sm:text-base transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-ranking-star"></i> Papan Peringkat
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-2.5 px-4 text-center text-[11px] sm:text-xs text-slate-500 border-t border-slate-800/80">
+        Media Pembelajaran Interaktif Koding & Kecerdasan Artifisial (KKA) SMK Kelas X • Kurikulum Merdeka
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 1: RINGKASAN MATERI BERPIKIR KOMPUTASIONAL          -->
+    <!-- ========================================================= -->
+    <div id="modal-materi" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-cyan-500/20 flex items-center justify-between">
+                <h3 class="font-cyber font-bold text-base sm:text-lg text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-brain"></i> Ringkasan Materi KKA Kelas X
+                </h3>
+                <button onclick="toggleModal('modal-materi', false)" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-500/30 text-slate-300 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                <div class="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-500/30">
+                    <h4 class="font-bold text-cyan-300 text-sm sm:text-base mb-1">Apa itu Berpikir Komputasional?</h4>
+                    <p>Cara berpikir sistematis dan logis untuk memecahkan masalah kompleks agar solusinya dapat dijalankan secara efektif oleh manusia maupun komputer/AI.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-purple-500/30">
+                        <div class="font-bold text-purple-400 mb-1">1. Dekomposisi (Decomposition)</div>
+                        <p class="text-slate-300 text-xs">Memecah masalah besar atau sistem yang rumit menjadi sub-masalah kecil yang lebih sederhana dan mudah dikelola. <br><em class="text-cyan-300">Contoh: Membuat aplikasi kasir dipecah menjadi modul login, input barang, hitung total, dan cetak struk.</em></p>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-pink-500/30">
+                        <div class="font-bold text-pink-400 mb-1">2. Pengenalan Pola (Pattern Recognition)</div>
+                        <p class="text-slate-300 text-xs">Mencari kesamaan, tren, atau keteraturan dari bagian-bagian masalah untuk memprediksi solusi.</p>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-amber-500/30">
+                        <div class="font-bold text-amber-400 mb-1">3. Abstraksi (Abstraction)</div>
+                        <p class="text-slate-300 text-xs">Menyaring informasi yang penting dan mengabaikan detail yang tidak relevan dengan fokus penyelesaian masalah.</p>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-emerald-500/30">
+                        <div class="font-bold text-emerald-400 mb-1">4. Algoritma (Algorithm)</div>
+                        <p class="text-slate-300 text-xs">Menyusun langkah-langkah instruksi yang logis, berurutan, dan jelas untuk menyelesaikan masalah.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-800 text-right">
+                <button onclick="toggleModal('modal-materi', false)" class="px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs sm:text-sm">
+                    Siap Balapan!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 2: PAPAN PERINGKAT (LEADERBOARD)                    -->
+    <!-- ========================================================= -->
+    <div id="modal-leaderboard" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-amber-500/30 flex items-center justify-between">
+                <h3 class="font-cyber font-bold text-base sm:text-lg text-amber-400 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy"></i> Papan Peringkat Pembalap SMK
+                </h3>
+                <button onclick="toggleModal('modal-leaderboard', false)" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-500/30 text-slate-300 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-5 overflow-y-auto flex-1">
+                <div id="leaderboard-content" class="space-y-2">
+                    <!-- Diisi via JS -->
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-800 flex justify-between items-center">
+                <button onclick="clearLeaderboard()" class="text-xs text-rose-400 hover:underline">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Reset Peringkat
+                </button>
+                <button onclick="toggleModal('modal-leaderboard', false)" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 3: KONFIRMASI KELUAR (PENGGANTI CONFIRM())          -->
+    <!-- ========================================================= -->
+    <div id="modal-quit" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-sm w-full p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl mx-auto mb-3">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="font-cyber font-bold text-lg text-white mb-2">Hentikan Balapan?</h3>
+            <p class="text-xs sm:text-sm text-slate-300 mb-5">Progres balapan saat ini tidak akan disimpan ke papan peringkat.</p>
+            <div class="flex gap-3">
+                <button onclick="toggleModal('modal-quit', false)" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm">Lanjut Main</button>
+                <button onclick="executeQuitGame()" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT: AUDIO ENGINE, BANK SOAL, GAME & CANVAS        -->
+    <!-- ========================================================= -->
+    <script>
+        /**
+         * 1. WEB AUDIO API SYNTHESIZER (Efek Suara & Musik Latar Tanpa File Eksternal)
+         */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.isMuted = false;
+                this.bgmInterval = null;
+                this.bgmStep = 0;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                const icon = document.getElementById('icon-audio');
+                if (this.isMuted) {
+                    icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+                    this.stopBGM();
+                } else {
+                    icon.className = 'fa-solid fa-volume-high';
+                    if (gameState.isPlaying) this.startBGM();
+                }
+            }
+
+            playTone(freq, type, duration, vol = 0.15, slideFreq = null) {
+                if (this.isMuted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                if (slideFreq) {
+                    osc.frequency.exponentialRampToValueAtTime(slideFreq, now + duration);
+                }
+
+                gain.gain.setValueAtTime(vol, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duration);
+            }
+
+            // Suara Countdown (3, 2, 1)
+            playCountdownBeep(isGo = false) {
+                if (isGo) {
+                    this.playTone(880, 'sawtooth', 0.45, 0.2, 1174.66);
+                } else {
+                    this.playTone(440, 'square', 0.2, 0.15);
+                }
+            }
+
+            // Suara Turbo Boost (Jawaban Benar)
+            playTurbo() {
+                this.playTone(220, 'sawtooth', 0.35, 0.18, 880);
+                setTimeout(() => this.playTone(587.33, 'triangle', 0.25, 0.15, 1174.66), 80);
+            }
+
+            // Suara Decit Ban / Salah
+            playSlip() {
+                this.playTone(180, 'sawtooth', 0.35, 0.2, 95);
+                setTimeout(() => this.playTone(140, 'square', 0.25, 0.15, 80), 100);
+            }
+
+            // Suara Kemenangan
+            playWin() {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((n, idx) => {
+                    setTimeout(() => this.playTone(n, 'triangle', 0.3, 0.2), idx * 120);
+                });
+            }
+
+            // Musik Latar Synthwave Ringan
+            startBGM() {
+                if (this.isMuted || this.bgmInterval) return;
+                this.init();
+                const bassLine = [110, 110, 130.81, 146.83, 110, 110, 164.81, 146.83];
+                this.bgmInterval = setInterval(() => {
+                    if (this.isMuted || !gameState.isPlaying) return;
+                    const freq = bassLine[this.bgmStep % bassLine.length];
+                    this.playTone(freq, 'triangle', 0.18, 0.05);
+                    this.bgmStep++;
+                }, 260);
+            }
+
+            stopBGM() {
+                if (this.bgmInterval) {
+                    clearInterval(this.bgmInterval);
+                    this.bgmInterval = null;
+                }
+            }
+        }
+
+        const sfx = new SoundEngine();
+        function toggleAudio() { sfx.toggleMute(); }
+
+        /**
+         * 2. BANK SOAL BERPIKIR KOMPUTASIONAL & DEKOMPOSISI MASALAH (SMK KELAS X)
+         */
+        const QUESTION_BANK = {
+            easy: [
+                {
+                    q: "Apa yang dimaksud dengan Dekomposisi dalam Berpikir Komputasional?",
+                    options: [
+                        "Memecah masalah besar dan kompleks menjadi bagian-bagian kecil yang lebih mudah dikelola",
+                        "Menghapus seluruh kode program yang mengalami error",
+                        "Menghafal semua bahasa pemrograman tingkat tinggi",
+                        "Menggabungkan banyak masalah menjadi satu masalah raksasa"
+                    ],
+                    correct: 0,
+                    explanation: "Dekomposisi adalah proses memecah masalah kompleks menjadi sub-masalah yang lebih kecil dan sederhana agar mudah diselesaikan."
+                },
+                {
+                    q: "Berikut ini yang BUKAN termasuk 4 pilar utama Berpikir Komputasional adalah...",
+                    options: [
+                        "Dekomposisi (Decomposition)",
+                        "Pengenalan Pola (Pattern Recognition)",
+                        "Kompilasi Hardware (Hardware Assembly)",
+                        "Algoritma (Algorithm)"
+                    ],
+                    correct: 2,
+                    explanation: "4 pilar Berpikir Komputasional adalah Dekomposisi, Pengenalan Pola, Abstraksi, dan Algoritma."
+                },
+                {
+                    q: "Tujuan utama melakukan dekomposisi sebelum membuat program komputer adalah...",
+                    options: [
+                        "Membuat ukuran file aplikasi menjadi sangat besar",
+                        "Memudahkan analisis, pembagian tugas tim, dan pencarian kesalahan (debugging)",
+                        "Menghindari penggunaan algoritma dalam koding",
+                        "Agar komputer bekerja lebih lambat"
+                    ],
+                    correct: 1,
+                    explanation: "Dengan memecah masalah menjadi modul kecil, tim developer lebih mudah mengerjakan dan menguji setiap bagian."
+                },
+                {
+                    q: "Pilar berpikir komputasional yang berfokus menyaring informasi penting dan mengabaikan detail tidak relevan disebut...",
+                    options: [
+                        "Abstraksi",
+                        "Dekomposisi",
+                        "Iterasi",
+                        "Enkripsi"
+                    ],
+                    correct: 0,
+                    explanation: "Abstraksi menyaring detail yang tidak penting sehingga kita fokus pada inti permasalahan."
+                },
+                {
+                    q: "Urutan langkah-langkah logis dan sistematis untuk menyelesaikan suatu masalah disebut...",
+                    options: [
+                        "Algoritma",
+                        "Deklarasi",
+                        "Abstraksi",
+                        "Topologi"
+                    ],
+                    correct: 0,
+                    explanation: "Algoritma adalah serangkaian instruksi terurut yang jelas untuk mencapai solusi."
+                },
+                {
+                    q: "Ketika melihat ciri-ciri persamaan antara masalah baru dengan masalah yang pernah diselesaikan sebelumnya, kita menerapkan pilar...",
+                    options: [
+                        "Pengenalan Pola (Pattern Recognition)",
+                        "Dekomposisi Masalah",
+                        "Overclocking",
+                        "Abstraksi Data"
+                    ],
+                    correct: 0,
+                    explanation: "Pengenalan Pola membantu kita menemukan kesamaan atau tren untuk memprediksi solusi."
+                },
+                {
+                    q: "Manakah contoh penerapan dekomposisi dalam kehidupan sehari-hari di sekolah?",
+                    options: [
+                        "Membagi kepanitiaan Pentas Seni menjadi seksi acara, konsumsi, perlengkapan, dan dokumentasi",
+                        "Mengerjakan seluruh tugas kelompok sendirian tanpa rencana",
+                        "Membeli komputer baru dengan spesifikasi tertinggi",
+                        "Menghapus catatan pelajaran yang sulit"
+                    ],
+                    correct: 0,
+                    explanation: "Membagi kepanitiaan besar menjadi seksi-seksi kecil dengan tugas spesifik adalah wujud nyata dekomposisi."
+                },
+                {
+                    q: "Dalam pembuatan game balap mobil, memecah komponen game menjadi: desain lintasan, kontrol mobil, sistem skor, dan efek suara adalah contoh dari...",
+                    options: [
+                        "Dekomposisi",
+                        "Abstraksi",
+                        "Pengenalan Pola",
+                        "Debugging"
+                    ],
+                    correct: 0,
+                    explanation: "Memecah sistem game yang kompleks menjadi fitur-fitur kecil merupakan proses dekomposisi."
+                }
+            ],
+            medium: [
+                {
+                    q: "Siswa jurusan RPL diminta membuat 'Aplikasi E-Voting Ketua OSIS'. Manakah hasil dekomposisi modul yang paling tepat?",
+                    options: [
+                        "Modul Login Pemilih, Modul Daftar Kandidat, Modul Pemilihan Suara, Modul Hitung Cepat",
+                        "Modul Warna Tombol, Modul Ukuran Font, Modul Kabel LAN, Modul Listrik",
+                        "Membeli server mahal, menyewa gedung, mencetak spanduk",
+                        "Langsung mengetik kode HTML tanpa mengetahui alur pemilih"
+                    ],
+                    correct: 0,
+                    explanation: "Dekomposisi perangkat lunak membagi sistem berdasarkan fungsi utama: autentikasi, data kandidat, voting, dan rekapitulasi."
+                },
+                {
+                    q: "Sepeda motor injeksi di bengkel TKR SMK tiba-tiba mogok. Mekanik memecah pengecekan menjadi: (1) Sistem bahan bakar, (2) Sistem pengapian, (3) Kompresi mesin. Langkah ini menerapkan...",
+                    options: [
+                        "Dekomposisi untuk isolasi masalah",
+                        "Abstraksi komponen bodi motor",
+                        "Pengenalan pola warna cat motor",
+                        "Algoritma pencucian motor"
+                    ],
+                    correct: 0,
+                    explanation: "Mekanik memecah sistem kendaraan menjadi subsistem utama untuk melokalisasi sumber kerusakan secara sistematis."
+                },
+                {
+                    q: "Dalam dekomposisi masalah, apa kriteria sub-masalah yang baik?",
+                    options: [
+                        "Memiliki tujuan spesifik, mandiri, dan lebih mudah dipecahkan daripada masalah induknya",
+                        "Lebih rumit daripada masalah utamanya",
+                        "Tidak memiliki hubungan sama sekali dengan tujuan akhir",
+                        "Hanya bisa dikerjakan oleh kecerdasan artifisial"
+                    ],
+                    correct: 0,
+                    explanation: "Sub-masalah hasil dekomposisi harus lebih sederhana, jelas batasannya, dan jika digabungkan kembali menyelesaikan masalah utama."
+                },
+                {
+                    q: "Sebuah toko roti mengalami antrean panjang setiap pagi. Pemilik toko memecah masalah menjadi: proses pemesanan, proses pembayaran, dan proses pengemasan. Tahap selanjutnya setelah dekomposisi adalah...",
+                    options: [
+                        "Menganalisis pola hambatan dan merancang algoritma pelayanan yang lebih cepat di tiap bagian",
+                        "Menutup toko secara permanen",
+                        "Menggabungkan kasir dan dapur di satu meja sempit",
+                        "Mengabaikan keluhan pelanggan"
+                    ],
+                    correct: 0,
+                    explanation: "Setelah masalah didekomposisi menjadi 3 bagian, kita dapat menganalisis pola dan menyusun algoritma perbaikan di masing-masing bagian."
+                },
+                {
+                    q: "Tim TKJ SMK bertugas membangun jaringan Wi-Fi untuk 3 lantai gedung sekolah. Bagaimana bentuk dekomposisi pekerjaan yang benar?",
+                    options: [
+                        "Survei kebutuhan & topologi, instalasi kabel backbone, konfigurasi router & access point, pengujian koneksi",
+                        "Langsung memasang access point tanpa menghitung luas ruangan dan bandwidth",
+                        "Membeli ratusan kabel UTP tanpa konektor RJ45",
+                        "Mengatur password Wi-Fi sebelum router dibeli"
+                    ],
+                    correct: 0,
+                    explanation: "Proyek jaringan dipecah menjadi tahapan logis: perencanaan/survei, instalasi fisik, konfigurasi sistem, dan pengujian (testing)."
+                },
+                {
+                    q: "Dalam pemrograman terstruktur, hasil dekomposisi masalah biasanya diimplementasikan dalam bentuk...",
+                    options: [
+                        "Fungsi (Function), Prosedur (Procedure), atau Class/Modul terpisah",
+                        "Satu baris kode panjang tanpa spasi",
+                        "Komentar kode yang dinonaktifkan",
+                        "Nama variabel acak seperti x1, x2, x3"
+                    ],
+                    correct: 0,
+                    explanation: "Fungsi dan prosedur memungkinkan programmer memecah kode besar menjadi blok-blok kecil yang dapat digunakan ulang."
+                },
+                {
+                    q: "Manakah pasangan yang PALING TEPAT antara masalah dan hasil dekomposisinya?",
+                    options: [
+                        "Membuat Nasi Goreng -> Menyiapkan bahan, memanaskan wajan, menumis bumbu, memasak nasi",
+                        "Membuat Website -> Membeli mouse, menyalakan kipas, tidur siang",
+                        "Perbaikan Jaringan -> Menghapus browser, mengganti wallpaper",
+                        "Belajar Koding -> Membeli tas baru, memakai sepatu"
+                    ],
+                    correct: 0,
+                    explanation: "Membuat nasi goreng dipecah menjadi sub-proses persiapan bahan hingga tahap pemasakan."
+                }
+            ],
+            hard: [
+                {
+                    q: "Sebuah SMK ingin mengembangkan 'Sistem Presensi Siswa Berbasis Pengenalan Wajah (Face Recognition AI)'. Manakah struktur dekomposisi sistem AI yang paling akurat?",
+                    options: [
+                        "(1) Akuisisi citra kamera -> (2) Deteksi & ekstraksi fitur wajah -> (3) Pencocokan dengan database siswa -> (4) Pencatatan waktu & notifikasi",
+                        "(1) Membeli kamera mahal -> (2) Menghias gerbang sekolah -> (3) Mencetak kartu pelajar kertas",
+                        "(1) Mengubah foto menjadi suara -> (2) Menghapus data siswa terlambat -> (3) Restart komputer",
+                        "(1) Input NISN manual -> (2) Tanda tangan di buku -> (3) Rekap akhir semester"
+                    ],
+                    correct: 0,
+                    explanation: "Pipeline sistem Face Recognition AI terdekomposisi menjadi input citra, ekstraksi fitur (embedding), klasifikasi/pencocokan, dan output log presensi."
+                },
+                {
+                    q: "Saat melakukan debugging pada aplikasi kasir SMK, ditemukan bug: 'Total bayar salah HANYA ketika pelanggan menggunakan voucher diskon > 50%'. Melalui prinsip dekomposisi, modul mana yang harus diperiksa terlebih dahulu?",
+                    options: [
+                        "Modul/Fungsi kalkulasi diskon dan validasi batas maksimum potongan harga",
+                        "Modul koneksi printer thermal dan desain logo struk",
+                        "Modul login admin dan pengaturan tema warna aplikasi",
+                        "Sistem operasi komputer dan kabel monitor"
+                    ],
+                    correct: 0,
+                    explanation: "Dekomposisi membantu mempersempit ruang pencarian bug langsung ke fungsi perhitungan diskon tanpa membongkar modul lain."
+                },
+                {
+                    q: "Dalam pengembangan Chatbot AI untuk layanan informasi PPDB SMK, mengapa dekomposisi ke dalam 'Intent' (maksud pengguna) dan 'Entity' (kata kunci spesifik) sangat krusial?",
+                    options: [
+                        "Agar model AI dapat mengklasifikasikan tujuan pertanyaan dan mengekstrak informasi penting secara terstruktur",
+                        "Agar ukuran layar HP pengguna otomatis membesar",
+                        "Supaya chatbot tidak memerlukan dataset pelatihan sama sekali",
+                        "Untuk membatasi jumlah pendaftar sekolah"
+                    ],
+                    correct: 0,
+                    explanation: "Memecah bahasa alami menjadi Intent (tujuan, misal: tanya_jadwal) dan Entity (jurusan: RPL) memudahkan AI merespons akurat."
+                },
+                {
+                    q: "Perhatikan kasus: 'Aplikasi E-Commerce mengalami crash saat ribuan siswa mengakses flash sale secara bersamaan'. Jika masalah didekomposisi dari sisi arsitektur sistem, komponen kritis apa saja yang harus diaudit?",
+                    options: [
+                        "Manajemen antrean request (Load Balancer), konkurensi database stok barang, dan mekanisme caching",
+                        "Warna tombol beli, jenis font judul produk, dan foto profil admin",
+                        "Resolusi layar laptop programmer dan merek keyboard",
+                        "Jumlah folder di desktop komputer kasir"
+                    ],
+                    correct: 0,
+                    explanation: "Masalah skalabilitas traffic tinggi didekomposisi ke komponen jaringan (load balancer), database (race condition stok), dan cache."
+                },
+                {
+                    q: "Dalam melatih model Machine Learning untuk mendeteksi kerusakan komponen elektronika (PCB) secara otomatis, urutan dekomposisi tahapan yang benar adalah...",
+                    options: [
+                        "Pengumpulan & pelabelan dataset gambar PCB -> Preprocessing citra -> Pelatihan model (Training) -> Evaluasi akurasi",
+                        "Evaluasi model -> Menghapus dataset -> Menjual aplikasi -> Mengambil foto",
+                        "Membuat tampilan antarmuka -> Mengabaikan data rusak -> Deploy tanpa pengujian",
+                        "Mengubah gambar menjadi teks -> Mencetak ke kertas -> Memindai ulang"
+                    ],
+                    correct: 0,
+                    explanation: "Alur kerja AI/ML selalu dipecah menjadi akuisisi/labeling data, preprocessing, training, dan evaluasi/validasi."
+                },
+                {
+                    q: "Seorang siswa memecah masalah 'Menghitung Rata-Rata Nilai Rapor 36 Siswa' menjadi sub-masalah: (A) Input nilai per siswa, (B) Validasi rentang nilai 0-100, (C) Akumulasi total, (D) Pembagian dengan jumlah siswa. Jika sub-masalah (B) dihilangkan, risiko logika apa yang muncul?",
+                    options: [
+                        "Input tidak valid (misal nilai 950 atau -20) akan ikut terhitung sehingga merusak akurasi rata-rata",
+                        "Program tidak bisa dijalankan sama sekali oleh prosesor",
+                        "Jumlah siswa otomatis berubah menjadi 100",
+                        "Komputer akan mengalami overheat"
+                    ],
+                    correct: 0,
+                    explanation: "Sub-masalah validasi data (data validation) menjaga integritas input agar algoritma perhitungan menghasilkan output yang valid."
+                }
+            ]
+        };
+
+        /**
+         * 3. STATE MANAJEMEN PERMAINAN
+         */
+        const gameState = {
+            mode: 'solo', // 'solo' | 'multi'
+            difficulty: 'easy', // 'easy' | 'medium' | 'hard'
+            isPlaying: false,
+            isCountdown: false,
+            startTime: 0,
+            elapsedSeconds: 0,
+            timerInterval: null,
+            aiInterval: null,
+            roadOffset: 0,
+            particles: [],
+            players: [
+                {
+                    id: 1,
+                    name: 'Siswa 1',
+                    className: 'X RPL 1',
+                    color: '#00f3ff',
+                    progress: 0, // 0 to 100 (%)
+                    score: 0,
+                    streak: 0,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    turboTimer: 0,
+                    slipTimer: 0,
+                    currentQIndex: 0,
+                    questions: [],
+                    isLocked: false
+                },
+                {
+                    id: 2,
+                    name: 'CyberBot AI',
+                    className: 'AI SYSTEM',
+                    color: '#ff007f',
+                    progress: 0,
+                    score: 0,
+                    streak: 0,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    turboTimer: 0,
+                    slipTimer: 0,
+                    currentQIndex: 0,
+                    questions: [],
+                    isLocked: false
+                }
+            ],
+            wrongReviews: [] // Menyimpan soal salah untuk evaluasi akhir
+        };
+
+        /**
+         * 4. PENGATURAN LOGIN & UI FORM
+         */
+        function handleModeChange() {
+            const mode = document.querySelector('input[name="gameMode"]:checked').value;
+            const p2Box = document.getElementById('p2-setup-box');
+            const p2Title = document.getElementById('p2-box-title');
+            const p2Name = document.getElementById('p2-name');
+            const p2Class = document.getElementById('p2-class');
+
+            if (mode === 'multi') {
+                p2Box.classList.remove('opacity-60', 'pointer-events-none', 'border-slate-800');
+                p2Box.classList.add('border-pink-500/40', 'bg-slate-900/80');
+                p2Title.innerHTML = '<i class="fa-solid fa-helmet-safety mr-1 text-pink-400"></i> Pembalap 2 (Layar Sentuh / Split)';
+                p2Title.classList.replace('text-slate-400', 'text-pink-400');
+                if (p2Name.value === 'CyberBot AI') p2Name.value = '';
+                p2Name.required = true;
+                if (p2Class.value === 'AI SYSTEM') p2Class.value = 'X RPL 1';
+            } else {
+                p2Box.classList.add('opacity-60', 'pointer-events-none', 'border-slate-800');
+                p2Box.classList.remove('border-pink-500/40', 'bg-slate-900/80');
+                p2Title.innerHTML = '<i class="fa-solid fa-robot mr-1"></i> Lawan: CyberBot AI';
+                p2Title.classList.replace('text-pink-400', 'text-slate-400');
+                p2Name.value = 'CyberBot AI';
+                p2Name.required = false;
+                p2Class.value = 'AI SYSTEM';
+            }
+        }
+
+        function syncClassInput(playerNum) {
+            const selectEl = document.getElementById(`p${playerNum}-class-select`);
+            const inputEl = document.getElementById(`p${playerNum}-class`);
+            if (selectEl.value === 'MANUAL') {
+                inputEl.value = '';
+                inputEl.focus();
+            } else {
+                inputEl.value = selectEl.value;
+            }
+        }
+
+        function selectCarColor(playerNum, hexColor, btnEl) {
+            gameState.players[playerNum - 1].color = hexColor;
+            const container = document.getElementById(`p${playerNum}-color-picker`);
+            container.querySelectorAll('button').forEach(b => {
+                b.classList.remove('ring-2', 'ring-white', 'scale-110');
+                b.classList.add('opacity-70');
+            });
+            btnEl.classList.remove('opacity-70');
+            btnEl.classList.add('ring-2', 'ring-white', 'scale-110');
+        }
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function startGameSetup(e) {
+            if (e) e.preventDefault();
+            sfx.init();
+
+            const mode = document.querySelector('input[name="gameMode"]:checked').value;
+            const diff = document.querySelector('input[name="difficulty"]:checked').value;
+
+            const p1Name = document.getElementById('p1-name').value.trim() || 'Pembalap 1';
+            const p1Class = document.getElementById('p1-class').value.trim() || 'X SMK';
+
+            let p2Name = 'CyberBot AI';
+            let p2Class = diff === 'easy' ? 'AI PEMULA' : (diff === 'medium' ? 'AI MENENGAH' : 'AI EXPERT');
+
+            if (mode === 'multi') {
+                p2Name = document.getElementById('p2-name').value.trim() || 'Pembalap 2';
+                p2Class = document.getElementById('p2-class').value.trim() || 'X SMK';
+            }
+
+            gameState.mode = mode;
+            gameState.difficulty = diff;
+            gameState.wrongReviews = [];
+
+            // Reset Player 1
+            Object.assign(gameState.players[0], {
+                name: p1Name,
+                className: p1Class,
+                progress: 0,
+                score: 0,
+                streak: 0,
+                correctCount: 0,
+                wrongCount: 0,
+                turboTimer: 0,
+                slipTimer: 0,
+                currentQIndex: 0,
+                questions: shuffleArray(QUESTION_BANK[diff]),
+                isLocked: false
+            });
+
+            // Reset Player 2 / AI
+            Object.assign(gameState.players[1], {
+                name: p2Name,
+                className: p2Class,
+                progress: 0,
+                score: 0,
+                streak: 0,
+                correctCount: 0,
+                wrongCount: 0,
+                turboTimer: 0,
+                slipTimer: 0,
+                currentQIndex: 0,
+                questions: shuffleArray(QUESTION_BANK[diff]),
+                isLocked: false
+            });
+
+            // Update HUD
+            document.getElementById('hud-p1-name').textContent = p1Name;
+            document.getElementById('hud-p1-class').textContent = p1Class;
+            document.getElementById('hud-p1-badge').style.backgroundColor = gameState.players[0].color;
+
+            document.getElementById('hud-p2-name').textContent = p2Name;
+            document.getElementById('hud-p2-class').textContent = p2Class;
+            document.getElementById('hud-p2-badge').style.backgroundColor = gameState.players[1].color;
+
+            const lvlBadge = document.getElementById('hud-level-badge');
+            if (diff === 'easy') {
+                lvlBadge.textContent = 'LEVEL 1: PEMULA';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-xs';
+            } else if (diff === 'medium') {
+                lvlBadge.textContent = 'LEVEL 2: MENENGAH';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-cyber font-bold text-xs';
+            } else {
+                lvlBadge.textContent = 'LEVEL 3: EXPERT';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 font-cyber font-bold text-xs';
+            }
+
+            updateHUD();
+            buildQuizUI();
+
+            // Pindah Layar ke Arena Balap
+            switchScreen('screen-game');
+            resizeCanvas();
+            startCountdown();
+        }
+
+        /**
+         * 5. COUNTDOWN & LOOP PERMAINAN
+         */
+        function startCountdown() {
+            gameState.isPlaying = false;
+            gameState.isCountdown = true;
+            const overlay = document.getElementById('countdown-overlay');
+            const textEl = document.getElementById('countdown-text');
+            overlay.classList.remove('hidden');
+
+            let count = 3;
+            textEl.textContent = count;
+            textEl.className = 'font-cyber font-black text-6xl sm:text-8xl text-cyan-400 drop-shadow-[0_0_25px_rgba(0,243,255,0.9)]';
+            sfx.playCountdownBeep(false);
+
+            const cdInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    textEl.textContent = count;
+                    sfx.playCountdownBeep(false);
+                } else if (count === 0) {
+                    textEl.textContent = 'GAS!';
+                    textEl.className = 'font-cyber font-black text-6xl sm:text-8xl text-emerald-400 drop-shadow-[0_0_30px_rgba(0,245,212,1)]';
+                    sfx.playCountdownBeep(true);
+                } else {
+                    clearInterval(cdInterval);
+                    overlay.classList.add('hidden');
+                    gameState.isCountdown = false;
+                    beginRace();
+                }
+            }, 750);
+        }
+
+        function beginRace() {
+            gameState.isPlaying = true;
+            gameState.startTime = Date.now();
+            gameState.elapsedSeconds = 0;
+            sfx.startBGM();
+
+            // Render soal pertama
+            renderQuestionForPlayer(1);
+            if (gameState.mode === 'multi') {
+                renderQuestionForPlayer(2);
+            }
+
+            // Timer Balapan
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.isPlaying) return;
+                gameState.elapsedSeconds = Math.floor((Date.now() - gameState.startTime) / 1000);
+                const mins = String(Math.floor(gameState.elapsedSeconds / 60)).padStart(2, '0');
+                const secs = String(gameState.elapsedSeconds % 60).padStart(2, '0');
+                document.getElementById('hud-timer').textContent = `${mins}:${secs}`;
+            }, 500);
+
+            // AI Bot Behavior jika Mode Solo
+            clearInterval(gameState.aiInterval);
+            if (gameState.mode === 'solo') {
+                const aiSpeedMap = { easy: 1.35, medium: 2.15, hard: 3.1 };
+                const aiStep = aiSpeedMap[gameState.difficulty];
+
+                gameState.aiInterval = setInterval(() => {
+                    if (!gameState.isPlaying) return;
+                    const ai = gameState.players[1];
+                    // AI melaju stabil dengan sedikit variasi acak
+                    const boostChance = Math.random();
+                    if (boostChance > 0.85) {
+                        ai.turboTimer = 25;
+                        ai.progress += aiStep * 1.6;
+                        ai.score += 50;
+                        spawnParticles(2, ai.color, 8);
+                    } else {
+                        ai.progress += aiStep;
+                    }
+
+                    if (ai.progress >= 100) {
+                        ai.progress = 100;
+                        finishRace(ai);
+                    }
+                    updateHUD();
+                }, 900);
+            }
+        }
+
+        /**
+         * 6. RENDER UI SOAL & LOGIKA JAWABAN (SOLO & SPLIT-SCREEN MULTIPLAYER)
+         */
+        function buildQuizUI() {
+            const arena = document.getElementById('quiz-arena');
+            if (gameState.mode === 'solo') {
+                arena.innerHTML = `
+                    <div id="p1-card" class="glass-panel rounded-3xl p-4 sm:p-6 border-t-4 border-t-cyan-400 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs">
+                                <i class="fa-solid fa-bolt mr-1"></i> Tantangan Berpikir Komputasional #<span id="p1-q-num">1</span>
+                            </span>
+                            <span id="p1-feedback-badge" class="text-xs font-bold px-3 py-1 rounded-full hidden"></span>
+                        </div>
+                        <h3 id="p1-q-text" class="text-base sm:text-xl font-bold text-white leading-snug mb-4">
+                            Menunggu aba-aba start...
+                        </h3>
+                        <div id="p1-options" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3">
+                            <!-- Tombol Opsi -->
+                        </div>
+                        <div id="p1-edu-tip" class="hidden mt-3 p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-xs sm:text-sm text-rose-200"></div>
+                    </div>
+                `;
+            } else {
+                // Split Screen 2 Pemain (Side-by-side di Tablet/Laptop/IFP, Stacked rapi di HP)
+                arena.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                        <!-- Panel Pemain 1 -->
+                        <div id="p1-card" class="glass-panel rounded-3xl p-3.5 sm:p-5 border-t-4 border-t-cyan-400">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs">
+                                    P1: ${gameState.players[0].name} • Soal #<span id="p1-q-num">1</span>
+                                </span>
+                                <span id="p1-feedback-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full hidden"></span>
+                            </div>
+                            <h3 id="p1-q-text" class="text-sm sm:text-base font-bold text-white leading-snug mb-3 min-h-[3rem]">
+                                Bersiap...
+                            </h3>
+                            <div id="p1-options" class="grid grid-cols-1 gap-2"></div>
+                            <div id="p1-edu-tip" class="hidden mt-2 p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200"></div>
+                        </div>
+
+                        <!-- Panel Pemain 2 -->
+                        <div id="p2-card" class="glass-panel-pink rounded-3xl p-3.5 sm:p-5 border-t-4 border-t-pink-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-bold text-xs">
+                                    P2: ${gameState.players[1].name} • Soal #<span id="p2-q-num">1</span>
+                                </span>
+                                <span id="p2-feedback-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full hidden"></span>
+                            </div>
+                            <h3 id="p2-q-text" class="text-sm sm:text-base font-bold text-white leading-snug mb-3 min-h-[3rem]">
+                                Bersiap...
+                            </h3>
+                            <div id="p2-options" class="grid grid-cols-1 gap-2"></div>
+                            <div id="p2-edu-tip" class="hidden mt-2 p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderQuestionForPlayer(playerNum) {
+            const p = gameState.players[playerNum - 1];
+            if (p.currentQIndex >= p.questions.length) {
+                // Acak ulang soal jika habis sebelum garis finis
+                p.questions = shuffleArray(QUESTION_BANK[gameState.difficulty]);
+                p.currentQIndex = 0;
+            }
+
+            const qObj = p.questions[p.currentQIndex];
+            // Acak urutan opsi jawaban sambil menjaga indeks jawaban benar
+            const indexedOptions = qObj.options.map((text, idx) => ({
+                text,
+                isCorrect: idx === qObj.correct
+            }));
+            const shuffledOptions = shuffleArray(indexedOptions);
+
+            document.getElementById(`p${playerNum}-q-num`).textContent = p.correctCount + p.wrongCount + 1;
+            document.getElementById(`p${playerNum}-q-text`).textContent = qObj.q;
+
+            const tipEl = document.getElementById(`p${playerNum}-edu-tip`);
+            tipEl.classList.add('hidden');
+
+            const optionsContainer = document.getElementById(`p${playerNum}-options`);
+            optionsContainer.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            shuffledOptions.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-option w-full text-left p-3 sm:p-3.5 rounded-2xl bg-slate-900/90 text-slate-100 text-xs sm:text-sm font-semibold flex items-start gap-3 cursor-pointer';
+                btn.innerHTML = `
+                    <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-cyber font-bold text-xs text-cyan-400 shrink-0 mt-0.5">
+                        ${letters[i]}
+                    </span>
+                    <span class="flex-1 leading-snug">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(playerNum, opt.isCorrect, btn, qObj);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(playerNum, isCorrect, clickedBtn, qObj) {
+            if (!gameState.isPlaying) return;
+            const p = gameState.players[playerNum - 1];
+            if (p.isLocked) return;
+
+            p.isLocked = true;
+            const cardEl = document.getElementById(`p${playerNum}-card`);
+            const badgeEl = document.getElementById(`p${playerNum}-feedback-badge`);
+            const tipEl = document.getElementById(`p${playerNum}-edu-tip`);
+            const allBtns = document.getElementById(`p${playerNum}-options`).querySelectorAll('button');
+
+            allBtns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                // JAWABAN BENAR -> TURBO BOOST!
+                sfx.playTurbo();
+                clickedBtn.classList.remove('bg-slate-900/90');
+                clickedBtn.classList.add('bg-emerald-600/40', 'border-emerald-400', 'text-white');
+
+                p.correctCount++;
+                p.streak++;
+                const streakBonus = Math.min(p.streak * 25, 150);
+                p.score += (100 + streakBonus);
+
+                // Dorongan jarak (sekitar 6-7 soal benar untuk mencapai 100%)
+                const boostStep = gameState.difficulty === 'easy' ? 16.5 : (gameState.difficulty === 'medium' ? 15 : 14.5);
+                p.progress = Math.min(100, p.progress + boostStep + (p.streak > 2 ? 2 : 0));
+                p.turboTimer = 45; // frame efek api turbo
+                spawnParticles(playerNum, p.color, 22);
+
+                badgeEl.textContent = `TURBO BOOST! +${100 + streakBonus}`;
+                badgeEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/50';
+                badgeEl.classList.remove('hidden');
+
+                updateHUD();
+
+                if (p.progress >= 100) {
+                    setTimeout(() => finishRace(p), 450);
+                    return;
+                }
+
+                setTimeout(() => {
+                    badgeEl.classList.add('hidden');
+                    p.currentQIndex++;
+                    p.isLocked = false;
+                    renderQuestionForPlayer(playerNum);
+                }, 650);
+
+            } else {
+                // JAWABAN SALAH -> SLIP & EDUKATIF FEEDBACK
+                sfx.playSlip();
+                clickedBtn.classList.remove('bg-slate-900/90');
+                clickedBtn.classList.add('bg-rose-600/40', 'border-rose-500', 'text-rose-200');
+                cardEl.classList.add('animate-shake');
+                setTimeout(() => cardEl.classList.remove('animate-shake'), 450);
+
+                p.wrongCount++;
+                p.streak = 0;
+                p.slipTimer = 55; // frame efek asap ban
+                spawnParticles(playerNum, '#94a3b8', 15);
+
+                // Catat untuk review akhir
+                if (!gameState.wrongReviews.some(item => item.q === qObj.q)) {
+                    gameState.wrongReviews.push({
+                        player: p.name,
+                        q: qObj.q,
+                        correctAnswer: qObj.options[qObj.correct],
+                        explanation: qObj.explanation
+                    });
+                }
+
+                badgeEl.textContent = 'BAN SELIP! (-1.5 Detik)';
+                badgeEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/50';
+                badgeEl.classList.remove('hidden');
+
+                tipEl.innerHTML = `<i class="fa-solid fa-circle-info mr-1 text-amber-400"></i> <strong>Pembahasan:</strong> ${qObj.explanation}`;
+                tipEl.classList.remove('hidden');
+
+                updateHUD();
+
+                setTimeout(() => {
+                    badgeEl.classList.add('hidden');
+                    p.currentQIndex++;
+                    p.isLocked = false;
+                    renderQuestionForPlayer(playerNum);
+                }, 1900);
+            }
+        }
+
+        function updateHUD() {
+            const p1 = gameState.players[0];
+            const p2 = gameState.players[1];
+
+            document.getElementById('hud-p1-score').textContent = p1.score;
+            document.getElementById('hud-p1-streak').textContent = `Streak: ${p1.streak}x • ${Math.round(p1.progress)}%`;
+
+            document.getElementById('hud-p2-score').textContent = p2.score;
+            document.getElementById('hud-p2-streak').textContent = gameState.mode === 'multi' 
+                ? `Streak: ${p2.streak}x • ${Math.round(p2.progress)}%`
+                : `Jarak AI: ${Math.round(p2.progress)}%`;
+        }
+
+        /**
+         * 7. AKHIR BALAPAN, LEADERBOARD & REVIEW
+         */
+        function finishRace(winnerPlayer) {
+            if (!gameState.isPlaying) return;
+            gameState.isPlaying = false;
+            clearInterval(gameState.timerInterval);
+            clearInterval(gameState.aiInterval);
+            sfx.stopBGM();
+            sfx.playWin();
+
+            const p1 = gameState.players[0];
+            const p2 = gameState.players[1];
+
+            // Tentukan Judul Pemenang
+            const winnerTitle = document.getElementById('result-winner-title');
+            const subtitle = document.getElementById('result-subtitle');
+
+            if (gameState.mode === 'solo' && winnerPlayer.id === 2) {
+                winnerTitle.textContent = 'CYBERBOT AI MENANG!';
+                winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-pink-400 mb-2';
+                subtitle.textContent = 'Jangan menyerah! Pelajari pembahasan di bawah dan coba kalahkan AI lagi.';
+            } else {
+                winnerTitle.textContent = `JUARA 1: ${winnerPlayer.name.toUpperCase()}!`;
+                winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-amber-400 mb-2';
+                subtitle.textContent = `Selamat! Kecepatan analisis dekomposisi masalahmu menaklukkan sirkuit dalam ${gameState.elapsedSeconds} detik.`;
+            }
+
+            // Simpan Skor Pemain Manusia ke LocalStorage
+            saveToLeaderboard(p1);
+            if (gameState.mode === 'multi') {
+                saveToLeaderboard(p2);
+            }
+
+            // Render Kartu Statistik
+            const cardsContainer = document.getElementById('result-cards');
+            cardsContainer.innerHTML = [p1, p2].map(p => {
+                const totalAns = p.correctCount + p.wrongCount;
+                const accuracy = totalAns > 0 ? Math.round((p.correctCount / totalAns) * 100) : (p.id === 2 && gameState.mode === 'solo' ? 85 : 0);
+                const isWinner = p.id === winnerPlayer.id;
+
+                return `
+                    <div class="p-4 rounded-2xl bg-slate-900/90 border ${isWinner ? 'border-amber-400 shadow-lg shadow-amber-500/15' : 'border-slate-700'}">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3.5 h-3.5 rounded-full" style="background:${p.color}"></span>
+                                <span class="font-bold text-white text-base">${p.name}</span>
+                            </div>
+                            ${isWinner ? '<span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-cyber text-[10px] font-bold">WINNER</span>' : '<span class="text-xs text-slate-400">Runner Up</span>'}
+                        </div>
+                        <div class="text-xs text-slate-400 mb-3">${p.className} • Jarak: ${Math.round(p.progress)}%</div>
+                        <div class="grid grid-cols-3 gap-2 text-center bg-slate-950/70 p-2.5 rounded-xl">
+                            <div>
+                                <div class="text-[10px] text-slate-400">SKOR</div>
+                                <div class="font-cyber font-bold text-cyan-400 text-sm sm:text-base">${p.score}</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-400">AKURASI</div>
+                                <div class="font-cyber font-bold text-emerald-400 text-sm sm:text-base">${accuracy}%</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-400">BENAR/SALAH</div>
+                                <div class="font-cyber font-bold text-white text-sm sm:text-base">${p.correctCount}/${p.wrongCount}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Review Soal yang Salah
+            const reviewSec = document.getElementById('review-section');
+            const reviewList = document.getElementById('review-list');
+            if (gameState.wrongReviews.length > 0) {
+                reviewSec.classList.remove('hidden');
+                reviewList.innerHTML = gameState.wrongReviews.map(item => `
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-rose-500/30 text-xs sm:text-sm">
+                        <div class="font-bold text-white mb-1">${item.q}</div>
+                        <div class="text-emerald-400 font-semibold mb-1"><i class="fa-solid fa-check mr-1"></i> Jawaban Tepat: ${item.correctAnswer}</div>
+                        <div class="text-slate-300 text-xs">${item.explanation}</div>
+                    </div>
+                `).join('');
+            } else {
+                reviewSec.classList.add('hidden');
+            }
+
+            switchScreen('screen-result');
+        }
+
+        function saveToLeaderboard(player) {
+            try {
+                const raw = localStorage.getItem('kka_race_leaderboard');
+                const list = raw ? JSON.parse(raw) : [];
+                list.push({
+                    name: player.name,
+                    className: player.className,
+                    score: player.score,
+                    level: gameState.difficulty.toUpperCase(),
+                    time: gameState.elapsedSeconds,
+                    date: new Date().toLocaleDateString('id-ID')
+                });
+                list.sort((a, b) => b.score - a.score || a.time - b.time);
+                localStorage.setItem('kka_race_leaderboard', JSON.stringify(list.slice(0, 15)));
+            } catch (e) {
+                console.warn('LocalStorage tidak tersedia', e);
+            }
+        }
+
+        function openLeaderboard() {
+            const container = document.getElementById('leaderboard-content');
+            let list = [];
+            try {
+                const raw = localStorage.getItem('kka_race_leaderboard');
+                list = raw ? JSON.parse(raw) : [];
+            } catch (e) {}
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-sm">
+                        <i class="fa-solid fa-flag-checkered text-3xl mb-2 text-slate-600 block"></i>
+                        Belum ada catatan balapan. Jadilah pembalap pertama di papan peringkat!
+                    </div>
+                `;
+            } else {
+                container.innerHTML = list.map((item, idx) => {
+                    const medal = idx === 0 ? 'text-amber-400' : (idx === 1 ? 'text-slate-300' : (idx === 2 ? 'text-amber-600' : 'text-slate-500'));
+                    return `
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-900/90 border border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <div class="font-cyber font-black text-base w-6 text-center ${medal}">#${idx + 1}</div>
+                                <div>
+                                    <div class="font-bold text-white text-xs sm:text-sm">${item.name} <span class="text-cyan-400 font-normal">(${item.className})</span></div>
+                                    <div class="text-[10px] text-slate-400">Level: ${item.level} • Waktu: ${item.time} dtk • ${item.date}</div>
+                                </div>
+                            </div>
+                            <div class="font-cyber font-black text-sm sm:text-base text-amber-400">${item.score} PTS</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            toggleModal('modal-leaderboard', true);
+        }
+
+        function clearLeaderboard() {
+            localStorage.removeItem('kka_race_leaderboard');
+            openLeaderboard();
+        }
+
+        function confirmQuitGame() { toggleModal('modal-quit', true); }
+        function executeQuitGame() {
+            toggleModal('modal-quit', false);
+            gameState.isPlaying = false;
+            clearInterval(gameState.timerInterval);
+            clearInterval(gameState.aiInterval);
+            sfx.stopBGM();
+            switchScreen('screen-login');
+        }
+
+        function restartSameSettings() { startGameSetup(null); }
+        function backToMenu() { switchScreen('screen-login'); }
+
+        function switchScreen(screenId) {
+            ['screen-login', 'screen-game', 'screen-result'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === screenId) {
+                    el.classList.remove('hidden');
+                    if (id === 'screen-game') el.classList.add('flex');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+        }
+
+        function toggleModal(modalId, show) {
+            const el = document.getElementById(modalId);
+            if (show) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        /**
+         * 8. HTML5 CANVAS RENDER ENGINE (Sirkuit Cyberpunk, Mobil Sport & Partikel)
+         */
+        const canvas = document.getElementById('raceCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const wrapper = document.getElementById('canvas-wrapper');
+            if (!wrapper) return;
+            const rect = wrapper.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function spawnParticles(playerNum, color, count) {
+            const p = gameState.players[playerNum - 1];
+            const startX = 65;
+            const finishX = canvas.width - 75;
+            const carX = startX + (p.progress / 100) * (finishX - startX);
+            const laneY = playerNum === 1 ? canvas.height * 0.44 : canvas.height * 0.76;
+
+            for (let i = 0; i < count; i++) {
+                gameState.particles.push({
+                    x: carX - 24,
+                    y: laneY + (Math.random() - 0.5) * 14,
+                    vx: -(Math.random() * 4 + 2),
+                    vy: (Math.random() - 0.5) * 2.5,
+                    size: Math.random() * 5 + 2,
+                    color: color,
+                    alpha: 1
+                });
+            }
+        }
+
+        function drawCyberCar(x, y, color, isTurbo, isSlip, labelText) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Efek getar saat slip
+            if (isSlip) {
+                ctx.rotate(Math.sin(Date.now() * 0.05) * 0.14);
+            }
+
+            // Api Knalpot Turbo
+            if (isTurbo) {
+                const flameLen = 28 + Math.random() * 18;
+                const grad = ctx.createLinearGradient(-28, 0, -28 - flameLen, 0);
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.4, '#00f3ff');
+                grad.addColorStop(1, 'rgba(157, 78, 221, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.moveTo(-26, -7);
+                ctx.lineTo(-26 - flameLen, 0);
+                ctx.lineTo(-26, 7);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Bayangan bawah mobil
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+            ctx.beginPath();
+            ctx.ellipse(0, 14, 32, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Roda Mobil
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            // Roda belakang & depan
+            [[-17, 11], [17, 11]].forEach(([wx, wy]) => {
+                ctx.beginPath();
+                ctx.arc(wx, wy, 7.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            });
+
+            // Bodi Utama Mobil Sport Futuristik
+            ctx.shadowColor = color;
+            ctx.shadowBlur = isTurbo ? 20 : 10;
+            ctx.fillStyle = color;
+
+            ctx.beginPath();
+            ctx.moveTo(-28, 8);
+            ctx.lineTo(-30, -3);
+            ctx.lineTo(-18, -5);
+            ctx.lineTo(-6, -15);
+            ctx.lineTo(12, -15);
+            ctx.lineTo(28, -4);
+            ctx.lineTo(31, 6);
+            ctx.lineTo(26, 9);
+            ctx.lineTo(-26, 9);
+            ctx.closePath();
+            ctx.fill();
+
+            // Spoiler Belakang
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-31, -12, 6, 8);
+            ctx.fillRect(-34, -14, 10, 3);
+
+            // Kaca Kokpit Neon Gelap
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#090d16';
+            ctx.beginPath();
+            ctx.moveTo(-5, -13);
+            ctx.lineTo(10, -13);
+            ctx.lineTo(19, -4);
+            ctx.lineTo(-9, -4);
+            ctx.closePath();
+            ctx.fill();
+
+            // Lampu Depan LED
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(26, -2, 5, 3);
+
+            // Label Nama di Atas Mobil
+            ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(labelText, 0, -22);
+
+            ctx.restore();
+        }
+
+        function renderCanvasLoop() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            if (w > 0 && h > 0) {
+                ctx.clearRect(0, 0, w, h);
+
+                // 1. Langit & Horizon Cyberpunk
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.32);
+                skyGrad.addColorStop(0, '#050811');
+                skyGrad.addColorStop(1, '#1e1b4b');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, w, h * 0.32);
+
+                // Siluet Gedung Kota Futuristik
+                ctx.fillStyle = '#0f172a';
+                for (let bx = 0; bx < w; bx += 55) {
+                    const bh = 18 + ((bx * 7) % 28);
+                    ctx.fillRect(bx, h * 0.32 - bh, 42, bh);
+                    // Jendela neon kecil
+                    ctx.fillStyle = (bx % 110 === 0) ? 'rgba(0, 243, 255, 0.35)' : 'rgba(255, 0, 127, 0.3)';
+                    ctx.fillRect(bx + 8, h * 0.32 - bh + 5, 6, 4);
+                    ctx.fillStyle = '#0f172a';
+                }
+
+                // Garis Pembatas Horizon Neon
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, h * 0.32);
+                ctx.lineTo(w, h * 0.32);
+                ctx.stroke();
+
+                // 2. Aspal Lintasan Balap (2 Jalur)
+                ctx.fillStyle = '#111827';
+                ctx.fillRect(0, h * 0.32, w, h * 0.68);
+
+                // Animasi kecepatan jalan bergerak
+                const speedFactor = gameState.isPlaying ? 4 : 0.6;
+                gameState.roadOffset = (gameState.roadOffset - speedFactor) % 60;
+
+                // Garis Putus-putus Pemisah Jalur
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([30, 30]);
+                ctx.lineDashOffset = -gameState.roadOffset;
+                ctx.beginPath();
+                ctx.moveTo(0, h * 0.62);
+                ctx.lineTo(w, h * 0.62);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Pembatas Bawah Lintasan
+                ctx.strokeStyle = '#ff007f';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, h - 2);
+                ctx.lineTo(w, h - 2);
+                ctx.stroke();
+
+                // 3. Garis Start & Garis Finis (Checkered Flag)
+                const startX = 65;
+                const finishX = w - 65;
+
+                // Garis Start
+                ctx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(startX, h * 0.32);
+                ctx.lineTo(startX, h);
+                ctx.stroke();
+
+                // Garis Finis Kotak-Kotak
+                const sqSize = 8;
+                for (let fy = h * 0.32; fy < h; fy += sqSize) {
+                    for (let col = 0; col < 2; col++) {
+                        const isWhite = (Math.floor(fy / sqSize) + col) % 2 === 0;
+                        ctx.fillStyle = isWhite ? '#f8fafc' : '#090d16';
+                        ctx.fillRect(finishX + col * sqSize, fy, sqSize, sqSize);
+                    }
+                }
+
+                // 4. Update & Render Partikel
+                for (let i = gameState.particles.length - 1; i >= 0; i--) {
+                    const pt = gameState.particles[i];
+                    pt.x += pt.vx;
+                    pt.y += pt.vy;
+                    pt.alpha -= 0.03;
+                    if (pt.alpha <= 0) {
+                        gameState.particles.splice(i, 1);
+                    } else {
+                        ctx.globalAlpha = pt.alpha;
+                        ctx.fillStyle = pt.color;
+                        ctx.beginPath();
+                        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.globalAlpha = 1;
+                    }
+                }
+
+                // 5. Render Mobil Pemain 1 & Pemain 2
+                gameState.players.forEach((p, idx) => {
+                    if (p.turboTimer > 0) {
+                        p.turboTimer--;
+                        if (p.turboTimer % 3 === 0) spawnParticles(p.id, p.color, 2);
+                    }
+                    if (p.slipTimer > 0) p.slipTimer--;
+
+                    const trackSpan = Math.max(50, finishX - startX - 15);
+                    const carX = startX + (p.progress / 100) * trackSpan;
+                    const carY = idx === 0 ? h * 0.46 : h * 0.78;
+
+                    drawCyberCar(carX, carY, p.color, p.turboTimer > 0, p.slipTimer > 0, p.name);
+                });
+            }
+
+            requestAnimationFrame(renderCanvasLoop);
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.onload = function () {
+            resizeCanvas();
+            renderCanvasLoop();
+        };
+    </script>
 </body>
 </html>
