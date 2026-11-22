@@ -132,7 +132,7 @@
                         </div>
                         <div>
                             <div class="font-semibold text-white text-sm sm:text-base">Solo Race (1 Pemain vs AI)</div>
-                            <p class="text-xs text-slate-400 mt-0.5">Bersaing langsung melawan AI Track Bot di lintasan, lewati 10 gerbang kuis, dan raih posisi #1.</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Bersaing langsung melawan AI Track Bot di lintasan, tabrak 10 gerbang rintangan kuis, dan raih posisi #1.</p>
                         </div>
                     </button>
 
@@ -260,7 +260,7 @@
                             <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">Dasar</span>
                         </div>
                         <p class="text-xs text-slate-400 leading-relaxed">
-                            Kecepatan stabil, 10 gerbang kuis konsep dasar berpikir komputasional &amp; dekomposisi masalah.
+                            Kecepatan stabil, 10 gerbang rintangan kuis konsep dasar berpikir komputasional &amp; dekomposisi masalah.
                         </p>
                     </button>
 
@@ -319,6 +319,7 @@
                         <div id="hud-p1-gate" class="text-[11px] text-amber-300 font-medium">
                             Rintangan: 0/10 • <span id="hud-p1-pos" class="text-emerald-400 font-bold">POS 1/2</span>
                         </div>
+                        <div id="hud-p1-track-pct" class="text-[10px] text-slate-400">Jarak Finish: 0%</div>
                     </div>
                 </div>
 
@@ -353,12 +354,13 @@
                         <div id="hud-p2-gate" class="text-[11px] text-slate-300 font-medium">
                             Rintangan: 0/10 • <span id="hud-p2-pos" class="text-slate-300 font-bold">POS 2/2</span>
                         </div>
+                        <div id="hud-p2-track-pct" class="text-[10px] text-slate-400">Jarak Finish: 0%</div>
                     </div>
                 </div>
             </div>
 
             <!-- Area Canvas Lintasan -->
-            <div class="relative flex-1 min-h-[380px] sm:min-h-[460px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
+            <div class="relative flex-1 min-h-[400px] sm:min-h-[480px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
                 <canvas id="race-canvas"></canvas>
 
                 <!-- Countdown Start Overlay -->
@@ -367,7 +369,7 @@
                     <div id="countdown-number" class="font-tech font-bold text-6xl sm:text-7xl text-white">3</div>
                 </div>
 
-                <!-- Modal Pertanyaan Rintangan Kuis -->
+                <!-- Modal Pertanyaan Rintangan Kuis (Hanya muncul saat mobil menabrak gerbang rintangan) -->
                 <div id="quiz-modal" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-30 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
                     <div class="glass-panel max-w-2xl w-full rounded-2xl p-4 sm:p-6 border border-sky-500/30 shadow-2xl space-y-4 my-auto">
                         <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
@@ -556,6 +558,8 @@
         ];
 
         const TOTAL_GATES = 10;
+        // Skor target penuh untuk mencapai garis FINISH (10 soal x 150 PTS = 1500 PTS maksimal)
+        const FINISH_TARGET_SCORE = 1500;
         const STORAGE_KEY_LEADERBOARD = 'kka_track_racer_leaderboard_v1';
 
         const loadedImages = {
@@ -1096,7 +1100,8 @@
 
         function createPlayer(id, name, className, carId, diff) {
             const carMeta = CAR_OPTIONS.find(c => c.id === carId) || CAR_OPTIONS[0];
-            const baseSpeedMap = { easy: 3.8, medium: 4.8, hard: 5.9 };
+            // Kecepatan stabil agar pemain punya waktu berkendara bebas di lintasan sebelum gerbang rintangan mendekat
+            const baseSpeedMap = { easy: 3.5, medium: 4.1, hard: 4.7 };
             return {
                 id,
                 name,
@@ -1110,21 +1115,61 @@
                 score: 0,
                 streak: 0,
                 gatesCleared: 0,
+                // Progres menuju garis FINISH (0.0 sampai 1.0) dipacu oleh skor jawaban
+                finishProgress: 0,
+                // Progres fase ronde/gerbang (0.0 sampai TOTAL_GATES) untuk posisi relatif mobil lawan
                 progress: 0,
                 aiLaneTimer: 0,
                 aiHitTimer: 0,
                 correctCount: 0,
                 wrongCount: 0,
-                baseSpeed: baseSpeedMap[diff] || 3.8,
+                baseSpeed: baseSpeedMap[diff] || 3.5,
                 boostTimer: 0,
                 hitTimer: 0,
                 roadOffset: 0,
                 obstacles: [],
                 activeQuiz: null,
                 isFinished: false,
+                finishRank: null,
                 questions: getQuestionsForLevel(diff),
                 qIndex: 0
             };
+        }
+
+        /**
+         * Menghitung target progres finish (0.0 - 1.0) berdasarkan skor jawaban pemain.
+         */
+        function getScoreDrivenFinishTarget(player) {
+            if (!player) return 0;
+            const rawRatio = player.score / FINISH_TARGET_SCORE;
+            return Math.max(0, Math.min(1, rawRatio));
+        }
+
+        /**
+         * Menentukan pembalap yang berada di depan atau finish duluan berdasarkan skor jawaban.
+         */
+        function comparePlayersByScoreFinish(a, b) {
+            if (a.isFinished && !b.isFinished) return -1;
+            if (!a.isFinished && b.isFinished) return 1;
+            if (a.isFinished && b.isFinished && a.finishRank !== b.finishRank) {
+                return a.finishRank - b.finishRank;
+            }
+            if (b.score !== a.score) return b.score - a.score;
+            return b.finishProgress - a.finishProgress;
+        }
+
+        /**
+         * Memeriksa apakah pembalap mencapai garis FINISH berdasarkan skor jawaban.
+         */
+        function evaluateFinishLine(player) {
+            if (!player || player.isFinished) return;
+            const targetFromScore = getScoreDrivenFinishTarget(player);
+            if (player.finishProgress >= 1 || targetFromScore >= 1) {
+                player.finishProgress = 1;
+                player.isFinished = true;
+                const finishedCount = gameState.players.filter(p => p.finishRank !== null).length;
+                player.finishRank = finishedCount + 1;
+            }
         }
 
         /**
@@ -1176,7 +1221,6 @@
 
             renderCarGrid('p1-car-grid', gameState.p1Car, (carId) => {
                 gameState.p1Car = carId;
-                // Pada mode Solo Race, jika pemain memilih mobil yang sama dengan AI, pindahkan mobil AI otomatis
                 if (gameState.mode === 'solo' && gameState.p2Car === carId) {
                     const alt = CAR_OPTIONS.find(c => c.id !== carId);
                     if (alt) gameState.p2Car = alt.id;
@@ -1251,19 +1295,24 @@
         }
 
         /**
-         * 6. LOGIKA RINTANGAN (CONE JALUR & GERBANG KUIS)
+         * 6. LOGIKA RINTANGAN (GERBANG RINTANGAN KUIS & CONE JALUR)
+         * Jarak antar gerbang diatur cukup jauh (~1220 px) agar mobil melaju bebas di lintasan
+         * terlebih dahulu sebelum gerbang rintangan kuis muncul dari kejauhan dan ditabrak mobil.
          */
-        function buildObstaclesForPlayer(player, diff) {
+        function buildObstaclesForPlayer(diff) {
             const list = [];
             const coneCountPerGap = diff === 'easy' ? 0 : diff === 'medium' ? 1 : 2;
-            const spacingY = 540;
+            const spacingY = 1220;
+            const firstGateY = -1280;
 
             for (let g = 1; g <= TOTAL_GATES; g++) {
-                const gateY = -g * spacingY - 260;
+                const gateY = firstGateY - (g - 1) * spacingY;
+                const prevY = g === 1 ? 260 : firstGateY - (g - 2) * spacingY;
 
-                // Tambahkan cone rintangan jalur sebelum gerbang kuis pada Level 2 & 3
+                // Tambahkan cone rintangan jalur di antara segmen lintasan pada Level 2 & 3
                 for (let c = 1; c <= coneCountPerGap; c++) {
-                    const coneY = gateY + (c * (spacingY / (coneCountPerGap + 1)));
+                    const ratio = c / (coneCountPerGap + 1);
+                    const coneY = prevY + (gateY - prevY) * ratio;
                     const lane = Math.floor(Math.random() * 3);
                     list.push({
                         type: 'cone',
@@ -1273,7 +1322,7 @@
                     });
                 }
 
-                // Gerbang Rintangan Kuis
+                // Gerbang Rintangan Kuis fisik di atas lintasan
                 list.push({
                     type: 'gate',
                     gateNumber: g,
@@ -1298,12 +1347,13 @@
 
         /**
          * 7. KUIS GERBANG RINTANGAN & PEMBAHASAN
+         * Hanya dipanggil tepat ketika mobil benar-benar menyentuh / menabrak gerbang rintangan.
          */
         let currentQuizContext = null;
 
         function openGateQuestion(playerIdx, gateObs) {
             const player = gameState.players[playerIdx];
-            if (!player || player.activeQuiz) return;
+            if (!player || player.activeQuiz || gateObs.cleared) return;
 
             const qData = player.questions[player.qIndex % player.questions.length];
             player.qIndex++;
@@ -1344,7 +1394,7 @@
             modal.classList.remove('hidden');
         }
 
-        function handleAnswerQuestion(selectedIdx, clickedBtn) {
+        function handleAnswerQuestion(selectedIdx) {
             if (!currentQuizContext || currentQuizContext.answered) return;
             currentQuizContext.answered = true;
 
@@ -1374,6 +1424,8 @@
             fbDesc.textContent = qData.explain;
 
             gateObs.cleared = true;
+            // Dorong sedikit ke depan agar gerbang yang sudah ditembus tidak terdeteksi ulang
+            gateObs.y += 45;
             player.gatesCleared++;
             player.progress = Math.max(player.progress, player.gatesCleared);
 
@@ -1382,18 +1434,22 @@
                 player.streak++;
                 const ptsEarned = 120 + Math.min(player.streak * 20, 100);
                 player.score += ptsEarned;
-                player.boostTimer = 85;
+                player.boostTimer = 95;
                 SoundFX.correctBoost();
 
                 emitSparks(player.lane, '#38bdf8', 24);
                 feedbackBox.className = 'rounded-xl p-3.5 sm:p-4 border border-emerald-500/40 bg-emerald-950/35 space-y-3';
                 fbTitle.className = 'font-tech font-bold text-base sm:text-lg text-emerald-300';
-                fbTitle.textContent = 'JAWABAN TEPAT — TURBO BOOST AKTIF!';
+                fbTitle.textContent = 'JAWABAN TEPAT — SKOR NAIK & MELESAT KE FINISH!';
                 fbPts.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300';
                 fbPts.textContent = `+${ptsEarned} PTS`;
             } else {
                 player.wrongCount++;
                 player.streak = 0;
+                // Jawaban salah tidak menambah skor; pada level hard mengurangi sedikit skor tanpa minus negatif
+                if (gameState.difficulty === 'hard') {
+                    player.score = Math.max(0, player.score - 20);
+                }
                 player.lives = Math.max(0, player.lives - 1);
                 player.hitTimer = 70;
                 SoundFX.wrongHit();
@@ -1401,9 +1457,9 @@
                 emitSparks(player.lane, '#f43f5e', 20);
                 feedbackBox.className = 'rounded-xl p-3.5 sm:p-4 border border-rose-500/40 bg-rose-950/35 space-y-3';
                 fbTitle.className = 'font-tech font-bold text-base sm:text-lg text-rose-300';
-                fbTitle.textContent = 'KURANG TEPAT — KECEPATAN MENURUN';
+                fbTitle.textContent = 'KURANG TEPAT — LAJU TERHAMBAT';
                 fbPts.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300';
-                fbPts.textContent = '-1 ENERGI';
+                fbPts.textContent = gameState.difficulty === 'hard' ? '-20 PTS • +0 JAWABAN' : '+0 PTS JAWABAN';
 
                 gameState.reviewLog.push({
                     playerName: player.name,
@@ -1416,8 +1472,19 @@
                 });
             }
 
+            // Sinkronkan progres menuju garis finish berdasarkan skor jawaban terbaru
+            const scoreTarget = getScoreDrivenFinishTarget(player);
+            if (scoreTarget > player.finishProgress) {
+                player.finishProgress = Math.min(1, player.finishProgress + (scoreTarget - player.finishProgress) * 0.45);
+            }
+            evaluateFinishLine(player);
+
             if (player.gatesCleared >= TOTAL_GATES || player.lives <= 0) {
                 player.isFinished = true;
+                if (player.finishRank === null) {
+                    const finishedCount = gameState.players.filter(p => p.finishRank !== null).length;
+                    player.finishRank = finishedCount + 1;
+                }
             }
 
             updateHUD();
@@ -1567,13 +1634,12 @@
                     obs.y += stepSpeed;
                 }
 
-                if (obs.y < -120 || obs.y > viewH + 120) continue;
+                if (obs.y < -140 || obs.y > viewH + 140) continue;
 
                 if (obs.type === 'cone') {
                     if (obs.hit) continue;
                     const cx = roadLeft + laneW * (obs.lane + 0.5);
 
-                    // Gambar traffic cone realistis
                     ctx.save();
                     ctx.translate(cx, obs.y);
                     ctx.fillStyle = 'rgba(0,0,0,0.45)';
@@ -1593,42 +1659,50 @@
                     ctx.fillRect(-6, -4, 12, 4);
                     ctx.restore();
 
-                    // Deteksi tabrakan cone dengan mobil pemain
                     if (gameState.isPlaying && !player.activeQuiz && !player.isFinished) {
                         const dx = Math.abs(cx - (roadLeft + laneW * (player.visualLane + 0.5)));
                         const dy = Math.abs(obs.y - carY);
                         if (dx < 26 && dy < 36) {
                             obs.hit = true;
                             player.hitTimer = 45;
-                            player.score = Math.max(0, player.score - 30);
+                            player.score = Math.max(0, player.score - 25);
                             SoundFX.wrongHit();
                             emitSparks(player.lane, '#f59e0b', 14);
-                            showToast(`${player.name} menabrak cone jalur (-30 PTS)!`, 'warn');
+                            showToast(`${player.name} menabrak cone jalur (-25 PTS)!`, 'warn');
                             updateHUD();
                         }
                     }
                 } else if (obs.type === 'gate') {
                     if (obs.cleared) continue;
 
-                    // Palang Gerbang Rintangan Kuis melintang di lintasan
+                    // Rintangan fisik gerbang kuis di depan mobil yang mendekat dari kejauhan
                     ctx.save();
-                    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-                    ctx.fillRect(roadLeft, obs.y - 12, laneW * 3, 24);
+                    const barW = laneW * 3 - 8;
+                    const barX = roadLeft + 4;
 
-                    ctx.strokeStyle = '#38bdf8';
+                    // Tiang penyangga kiri & kanan rintangan
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.fillRect(barX - 4, obs.y - 18, 8, 36);
+                    ctx.fillRect(barX + barW - 4, obs.y - 18, 8, 36);
+
+                    // Palang rintangan melintang di lintasan
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                    ctx.fillRect(barX, obs.y - 13, barW, 26);
+
+                    ctx.strokeStyle = '#fbbf24';
                     ctx.lineWidth = 2;
-                    ctx.strokeRect(roadLeft + 1, obs.y - 12, laneW * 3 - 2, 24);
+                    ctx.strokeRect(barX, obs.y - 13, barW, 26);
 
                     ctx.font = 'bold 12px "Rajdhani", sans-serif';
-                    ctx.fillStyle = '#e0f2fe';
+                    ctx.fillStyle = '#fef3c7';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(`GERBANG KUIS #${obs.gateNumber} — JAWAB UNTUK MELAJU`, roadLeft + (laneW * 3) / 2, obs.y);
+                    ctx.fillText(`RINTANGAN KUIS #${obs.gateNumber} — TABRAK UNTUK MENJAWAB`, roadLeft + (laneW * 3) / 2, obs.y);
                     ctx.restore();
 
-                    // Jika mobil menyentuh gerbang kuis, hentikan mobil dan buka pertanyaan
-                    if (gameState.isPlaying && !player.activeQuiz && !player.isFinished && obs.y >= carY - 34) {
-                        obs.y = carY - 34;
+                    // Pertanyaan hanya muncul tepat saat bagian depan mobil benar-benar menyentuh rintangan
+                    if (gameState.isPlaying && !player.activeQuiz && !player.isFinished && obs.y >= carY - 38) {
+                        obs.y = carY - 38;
                         openGateQuestion(playerIdx, obs);
                     }
                 }
@@ -1651,41 +1725,61 @@
             const isMoving = gameState.isPlaying && !player.activeQuiz && !player.isFinished;
             let stepSpeed = 0;
 
+            // Faktor kecepatan dorongan skor jawaban: skor lebih tinggi melaju lebih cepat menuju garis finish
+            const scoreSpeedMultiplier = 1 + Math.min(player.score / FINISH_TARGET_SCORE, 1) * 0.85;
+
             if (isMoving) {
-                stepSpeed = player.baseSpeed;
+                stepSpeed = player.baseSpeed * scoreSpeedMultiplier;
                 if (player.boostTimer > 0) {
-                    stepSpeed *= 1.75;
+                    stepSpeed *= 1.65;
                     player.boostTimer--;
                 }
                 if (player.hitTimer > 0) {
-                    stepSpeed *= 0.6;
+                    stepSpeed *= 0.62;
                     player.hitTimer--;
                 }
                 player.roadOffset = (player.roadOffset + stepSpeed) % viewH;
+
                 if (player.progress < player.gatesCleared + 0.92) {
-                    player.progress = Math.min(player.gatesCleared + 0.92, player.progress + stepSpeed * 0.0022);
+                    player.progress = Math.min(player.gatesCleared + 0.92, player.progress + stepSpeed * 0.0012);
                 }
+
+                // Progres menuju garis FINISH dipacu oleh target skor jawaban
+                const targetFinish = getScoreDrivenFinishTarget(player);
+                if (player.finishProgress < targetFinish) {
+                    player.finishProgress = Math.min(targetFinish, player.finishProgress + 0.006 * scoreSpeedMultiplier);
+                } else if (player.finishProgress > targetFinish && player.score === 0) {
+                    player.finishProgress = Math.max(targetFinish, player.finishProgress - 0.003);
+                }
+                evaluateFinishLine(player);
             } else if (gameState.isCountdown) {
                 player.roadOffset = (player.roadOffset + 1.0) % viewH;
             }
 
-            // Update progres & jalur mobil lawan AI pada mode Solo Race
+            // Update progres & jalur mobil lawan AI pada mode Solo Race berdasarkan skor jawaban AI
             if (opponent && gameState.mode === 'solo' && gameState.isPlaying) {
+                const aiScoreMultiplier = 1 + Math.min(opponent.score / FINISH_TARGET_SCORE, 1) * 0.8;
                 if (!opponent.isFinished) {
-                    let aiStep = opponent.baseSpeed * 0.92;
+                    const aiTargetFinish = getScoreDrivenFinishTarget(opponent);
+                    if (opponent.finishProgress < aiTargetFinish) {
+                        opponent.finishProgress = Math.min(aiTargetFinish, opponent.finishProgress + 0.0055 * aiScoreMultiplier);
+                    }
+                    evaluateFinishLine(opponent);
+
+                    let aiStep = opponent.baseSpeed * 0.9 * aiScoreMultiplier;
                     if (opponent.boostTimer > 0) {
-                        aiStep *= 1.55;
+                        aiStep *= 1.5;
                         opponent.boostTimer--;
                     }
                     if (opponent.aiHitTimer > 0) {
                         aiStep *= 0.62;
                         opponent.aiHitTimer--;
                     }
-                    opponent.progress = Math.min(TOTAL_GATES, opponent.progress + aiStep * 0.0021);
+                    opponent.progress = Math.min(TOTAL_GATES, opponent.progress + aiStep * 0.00115);
                 }
 
                 opponent.aiLaneTimer++;
-                if (opponent.aiLaneTimer > 75) {
+                if (opponent.aiLaneTimer > 80) {
                     opponent.aiLaneTimer = 0;
                     const deltaLane = Math.floor(Math.random() * 3) - 1;
                     opponent.lane = Math.max(0, Math.min(2, opponent.lane + deltaLane));
@@ -1723,10 +1817,31 @@
             const carX = roadLeft + laneW * (player.visualLane + 0.5);
             const carY = viewH - 76;
 
-            // Render mobil lawan AI pada mode Solo Race berdasarkan selisih progres relatif
+            // Tampilkan garis FINISH mendekat saat progres skor mendekati 100%
+            if (player.finishProgress >= 0.85) {
+                const finishRatio = Math.min(1, (player.finishProgress - 0.85) / 0.15);
+                const finishY = -30 + finishRatio * (carY + 10);
+                ctx.save();
+                const checkerSize = 12;
+                const cols = Math.floor(roadW / checkerSize);
+                for (let c = 0; c < cols; c++) {
+                    for (let r = 0; r < 2; r++) {
+                        ctx.fillStyle = (c + r) % 2 === 0 ? '#f8fafc' : '#0f172a';
+                        ctx.fillRect(roadLeft + c * checkerSize, finishY + r * checkerSize, checkerSize, checkerSize);
+                    }
+                }
+                ctx.font = 'bold 12px "Rajdhani", sans-serif';
+                ctx.fillStyle = '#34d399';
+                ctx.textAlign = 'center';
+                ctx.fillText('GARIS FINISH', roadLeft + roadW / 2, finishY - 6);
+                ctx.restore();
+            }
+
+            // Render mobil lawan AI pada mode Solo Race berdasarkan selisih skor & progres finish
             if (opponent && gameState.mode === 'solo') {
-                const relDiff = opponent.progress - player.progress;
-                const oppY = carY - relDiff * 135;
+                const scoreDiffRatio = (opponent.score - player.score) / 260;
+                const relDiff = scoreDiffRatio + (opponent.finishProgress - player.finishProgress) * 4;
+                const oppY = carY - relDiff * 125;
                 if (oppY > -90 && oppY < viewH + 90) {
                     const sameLaneOffset = Math.abs(opponent.visualLane - player.visualLane) < 0.35 && Math.abs(oppY - carY) < 75
                         ? (opponent.visualLane <= player.visualLane ? -18 : 18)
@@ -1753,22 +1868,25 @@
                 badgeColor: player.id === 1 ? '#38bdf8' : '#f59e0b'
             });
 
-            // Indikator posisi balap langsung di pojok kiri atas lintasan
-            const p1Ahead = opponent && gameState.mode === 'solo' &&
-                (opponent.progress > player.progress + 0.08 || (Math.abs(opponent.progress - player.progress) <= 0.08 && opponent.score > player.score));
+            // Indikator posisi balap & progres skor finish di pojok kiri atas lintasan
+            const p1Ahead = opponent && comparePlayersByScoreFinish(opponent, player) < 0;
             const currentPos = p1Ahead ? 2 : 1;
+            const finishPct = Math.round(player.finishProgress * 100);
 
             ctx.font = 'bold 12px "Rajdhani", sans-serif';
             ctx.textAlign = 'left';
             ctx.fillStyle = currentPos === 1 ? '#34d399' : '#fbbf24';
-            ctx.fillText(`POSISI: #${currentPos}/2`, roadLeft + 10, 20);
+            ctx.fillText(`POSISI: #${currentPos}/2 • FINISH ${finishPct}%`, roadLeft + 10, 20);
 
             if (player.boostTimer > 0) {
                 ctx.fillStyle = '#38bdf8';
-                ctx.fillText('BOOST AKTIF', roadLeft + 10, 36);
+                ctx.fillText('BOOST SKOR AKTIF', roadLeft + 10, 36);
             } else if (player.hitTimer > 0) {
                 ctx.fillStyle = '#fb7185';
                 ctx.fillText('KECEPATAN TURUN', roadLeft + 10, 36);
+            } else if (isMoving) {
+                ctx.fillStyle = 'rgba(226, 232, 240, 0.78)';
+                ctx.fillText(`SKOR: ${player.score} PTS`, roadLeft + 10, 36);
             }
 
             ctx.restore();
@@ -1822,21 +1940,25 @@
             const p2 = gameState.players[1];
             if (!p1 || !p2) return;
 
-            const p1Ahead = p2.progress > p1.progress + 0.08 || (Math.abs(p2.progress - p1.progress) <= 0.08 && p2.score > p1.score);
+            const p1Ahead = comparePlayersByScoreFinish(p2, p1) < 0;
             const p1Rank = p1Ahead ? 2 : 1;
             const p2Rank = p1Ahead ? 1 : 2;
+            const p1Pct = Math.round(p1.finishProgress * 100);
+            const p2Pct = Math.round(p2.finishProgress * 100);
 
             document.getElementById('hud-p1-score').textContent = p1.score;
             document.getElementById('hud-p1-gate').innerHTML = `Rintangan: ${p1.gatesCleared}/${TOTAL_GATES} • <span class="${p1Rank === 1 ? 'text-emerald-400' : 'text-amber-300'} font-bold">POS ${p1Rank}/2</span>`;
+            document.getElementById('hud-p1-track-pct').textContent = `Progres Finish (Skor): ${p1Pct}%`;
             document.getElementById('hud-p1-lives').innerHTML = renderEnergyIcons(p1.lives);
 
             document.getElementById('hud-p2-score').textContent = p2.score;
             document.getElementById('hud-p2-gate').innerHTML = `Rintangan: ${p2.gatesCleared}/${TOTAL_GATES} • <span class="${p2Rank === 1 ? 'text-emerald-400' : 'text-slate-300'} font-bold">POS ${p2Rank}/2</span>`;
+            document.getElementById('hud-p2-track-pct').textContent = `Progres Finish (Skor): ${p2Pct}%`;
             if (gameState.mode === 'multi') {
                 document.getElementById('hud-p2-lives').innerHTML = renderEnergyIcons(p2.lives);
             } else {
-                const gap = (p1.progress - p2.progress).toFixed(1);
-                const gapText = Number(gap) >= 0 ? `Unggul +${gap} gerbang` : `Tertinggal ${gap} gerbang`;
+                const scoreGap = p1.score - p2.score;
+                const gapText = scoreGap >= 0 ? `Unggul +${scoreGap} PTS` : `Tertinggal ${scoreGap} PTS`;
                 document.getElementById('hud-p2-lives').innerHTML = `<span class="text-[11px] text-amber-300/90">AI Rival • ${gapText}</span>`;
             }
 
@@ -1868,8 +1990,8 @@
 
             const p1 = createPlayer(1, p1Name, p1Class, gameState.p1Car, gameState.difficulty);
             const p2 = createPlayer(2, p2Name, p2Class, gameState.p2Car, gameState.difficulty);
-            p1.obstacles = buildObstaclesForPlayer(p1, gameState.difficulty);
-            p2.obstacles = buildObstaclesForPlayer(p2, gameState.difficulty);
+            p1.obstacles = buildObstaclesForPlayer(gameState.difficulty);
+            p2.obstacles = buildObstaclesForPlayer(gameState.difficulty);
 
             gameState.players = [p1, p2];
 
@@ -1931,25 +2053,39 @@
             }, 1000);
 
             if (gameState.mode === 'solo') {
-                const pace = { easy: 3700, medium: 2950, hard: 2350 }[gameState.difficulty];
+                // Interval AI disesuaikan agar seimbang dengan jarak antar rintangan di lintasan
+                const pace = { easy: 6200, medium: 5200, hard: 4300 }[gameState.difficulty];
                 gameState.aiInterval = setInterval(() => {
                     if (!gameState.isPlaying) return;
                     const ai = gameState.players[1];
                     if (ai && !ai.isFinished && ai.gatesCleared < TOTAL_GATES) {
-                        const aiCorrect = Math.random() < ({ easy: 0.65, medium: 0.78, hard: 0.88 }[gameState.difficulty]);
+                        const aiCorrect = Math.random() < ({ easy: 0.62, medium: 0.75, hard: 0.85 }[gameState.difficulty]);
                         ai.gatesCleared++;
                         ai.progress = Math.max(ai.progress, ai.gatesCleared);
                         if (aiCorrect) {
                             ai.correctCount++;
-                            ai.score += 120;
+                            ai.streak++;
+                            ai.score += 120 + Math.min(ai.streak * 15, 75);
                             ai.boostTimer = 55;
                         } else {
                             ai.wrongCount++;
-                            ai.score = Math.max(0, ai.score + 40);
+                            ai.streak = 0;
+                            if (gameState.difficulty === 'hard') {
+                                ai.score = Math.max(0, ai.score - 20);
+                            }
                             ai.aiHitTimer = 45;
                         }
+                        const aiTarget = getScoreDrivenFinishTarget(ai);
+                        if (aiTarget > ai.finishProgress) {
+                            ai.finishProgress = Math.min(1, ai.finishProgress + (aiTarget - ai.finishProgress) * 0.45);
+                        }
+                        evaluateFinishLine(ai);
                         if (ai.gatesCleared >= TOTAL_GATES) {
                             ai.isFinished = true;
+                            if (ai.finishRank === null) {
+                                const finishedCount = gameState.players.filter(p => p.finishRank !== null).length;
+                                ai.finishRank = finishedCount + 1;
+                            }
                         }
                         updateHUD();
                         checkRaceCompletion();
@@ -1963,8 +2099,12 @@
             const p2 = gameState.players[1];
             if (!p1 || !p2) return;
 
+            evaluateFinishLine(p1);
+            evaluateFinishLine(p2);
+
             if (gameState.mode === 'solo') {
-                if (p1.isFinished || p1.lives <= 0) {
+                // Pembalap yang mencapai garis FINISH lebih dulu lewat skor tertinggi langsung menyelesaikan balapan
+                if (p1.isFinished || p2.isFinished || p1.lives <= 0) {
                     finishRace();
                 }
             } else {
@@ -1986,7 +2126,6 @@
             const p1 = gameState.players[0];
             const p2 = gameState.players[1];
 
-            // Simpan skor Pemain 1 ke papan peringkat lokal
             saveLeaderboardEntry({
                 name: p1.name,
                 className: p1.className,
@@ -2000,16 +2139,16 @@
             document.getElementById('screen-result').classList.remove('hidden');
             document.getElementById('result-time').textContent = formatDuration(gameState.elapsedSeconds);
 
-            const p1Wins = p1.score > p2.score || (p1.score === p2.score && p1.progress >= p2.progress);
+            const p1Wins = comparePlayersByScoreFinish(p1, p2) < 0;
             const posBadge = document.getElementById('result-position-badge');
             const titleEl = document.getElementById('result-title');
 
             if (gameState.mode === 'solo') {
-                posBadge.textContent = p1Wins ? 'POSISI AKHIR #1 • MENANG' : 'POSISI AKHIR #2 • EVALUASI';
-                titleEl.textContent = p1Wins ? `Selamat, ${p1.name} Memimpin Balapan!` : `Balapan Selesai — Ayo Kejar Posisi #1!`;
+                posBadge.textContent = p1Wins ? 'FINISH TERDEPAN #1 • SKOR TERTINGGI' : 'POSISI #2 • KEJAR SKOR JAWABAN';
+                titleEl.textContent = p1Wins ? `Selamat, ${p1.name} Finish Terdepan!` : `Balapan Selesai — Ayo Tingkatkan Skor Jawaban!`;
             } else {
                 const winner = p1Wins ? p1 : p2;
-                posBadge.textContent = 'HASIL DUEL 2 PEMAIN';
+                posBadge.textContent = 'FINISH TERDEPAN • SKOR JAWABAN TERTINGGI';
                 titleEl.textContent = `Pemenang: ${winner.name} (${winner.className})`;
             }
 
