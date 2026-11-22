@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CyberTurbo KKA: Balap Berpikir Komputasional & Dekomposisi</title>
+    <title>CyberTurbo KKA: Balap Rintangan Berpikir Komputasional & Dekomposisi</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Orbitron & Plus Jakarta Sans -->
@@ -21,8 +21,8 @@
                     },
                     colors: {
                         cyber: {
-                            dark: '#090d16',
-                            panel: '#111827',
+                            dark: '#070b14',
+                            panel: '#0f172a',
                             cyan: '#00f3ff',
                             pink: '#ff007f',
                             purple: '#9d4edd',
@@ -36,9 +36,8 @@
     </script>
 
     <style>
-        /* Custom Styles & Cyberpunk Glows */
         body {
-            background-color: #090d16;
+            background-color: #070b14;
             color: #f8fafc;
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
@@ -50,60 +49,56 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Glassmorphism Card */
         .glass-panel {
-            background: rgba(17, 24, 39, 0.78);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(0, 243, 255, 0.25);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 243, 255, 0.05);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 243, 255, 0.28);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), inset 0 0 18px rgba(0, 243, 255, 0.06);
         }
 
         .glass-panel-pink {
-            background: rgba(17, 24, 39, 0.82);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 0, 127, 0.35);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 0, 127, 0.08);
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 0, 127, 0.38);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), inset 0 0 18px rgba(255, 0, 127, 0.08);
         }
 
-        /* Neon Buttons */
         .btn-cyber {
             position: relative;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 4px 18px rgba(0, 243, 255, 0.35);
         }
         .btn-cyber:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 243, 255, 0.6);
+            box-shadow: 0 6px 28px rgba(0, 243, 255, 0.65);
         }
         .btn-cyber:active:not(:disabled) {
-            transform: translateY(1px) scale(0.98);
+            transform: translateY(1px) scale(0.97);
         }
 
         .btn-option {
             transition: all 0.15s ease;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.16);
         }
         .btn-option:hover:not(:disabled) {
             border-color: #00f3ff;
-            background: rgba(0, 243, 255, 0.15);
-            transform: translateX(4px);
+            background: rgba(0, 243, 255, 0.18);
+            transform: translateX(3px);
         }
         .btn-option:active:not(:disabled) {
             transform: scale(0.98);
         }
 
-        /* Animated Background Grid */
         .cyber-bg {
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(0, 243, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(0, 243, 255, 0.18) 0%, transparent 45%),
                 linear-gradient(to right, rgba(0, 243, 255, 0.04) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
         }
 
-        /* Shake animation on wrong answer */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
@@ -113,22 +108,26 @@
             animation: shake 0.4s ease-in-out;
         }
 
-        /* Pulse glow */
         @keyframes pulseGlow {
-            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.8)); }
-            50% { filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.9)); }
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.85)); }
+            50% { filter: drop-shadow(0 0 22px rgba(255, 0, 127, 0.95)); }
         }
         .glow-logo {
             animation: pulseGlow 3s infinite;
         }
 
-        /* Custom Scrollbar */
+        /* Touch Controls Pulse */
+        .touch-btn:active {
+            transform: scale(0.92);
+            filter: brightness(1.3);
+        }
+
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #090d16;
+            background: #070b14;
         }
         ::-webkit-scrollbar-thumb {
             background: #1e293b;
@@ -147,8 +146,8 @@
 </head>
 <body class="cyber-bg min-h-screen flex flex-col justify-between">
 
-    <!-- Top Navigation / Audio & Quick Info Bar -->
-    <header class="w-full px-4 py-2.5 flex items-center justify-between border-b border-cyan-500/20 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <!-- Top Navigation Bar -->
+    <header class="w-full px-3 sm:px-5 py-2.5 flex items-center justify-between border-b border-cyan-500/25 bg-slate-950/85 backdrop-blur-md sticky top-0 z-40">
         <div class="flex items-center gap-2.5">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
                 <i class="fa-solid fa-car-burst text-white text-lg"></i>
@@ -165,7 +164,7 @@
             <!-- Tombol Materi Singkat -->
             <button onclick="toggleModal('modal-materi', true)" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-cyan-500/30 text-xs sm:text-sm font-semibold text-cyan-300 flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-book-open"></i>
-                <span class="hidden sm:inline">Ringkasan Materi</span>
+                <span class="hidden sm:inline">Materi</span>
             </button>
 
             <!-- Tombol Leaderboard -->
@@ -182,75 +181,72 @@
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="flex-1 w-full max-w-7xl mx-auto p-3 sm:p-5 flex flex-col justify-center">
+    <main class="flex-1 w-full max-w-7xl mx-auto p-2.5 sm:p-4 flex flex-col justify-center">
 
         <!-- ========================================================= -->
         <!-- SCREEN 1: HALAMAN LOGIN & PENGATURAN BALAPAN              -->
         <!-- ========================================================= -->
         <section id="screen-login" class="w-full max-w-4xl mx-auto my-auto">
-            <div class="text-center mb-5 sm:mb-7">
+            <div class="text-center mb-4 sm:mb-6">
                 <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 mb-2">
                     <i class="fa-solid fa-microchip mr-1"></i> Modul Koding & Kecerdasan Artifisial (KKA)
                 </span>
                 <h2 class="font-cyber text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white glow-logo">
-                    ARENA BALAP <span class="text-cyan-400">DEKOMPOSISI</span>
+                    BALAP RINTANGAN <span class="text-cyan-400">DEKOMPOSISI</span>
                 </h2>
-                <p class="text-slate-300 text-xs sm:text-base mt-2 max-w-2xl mx-auto">
-                    Pecahkan masalah kompleks menjadi bagian kecil, aktifkan <span class="text-cyan-400 font-bold">Nitro Turbo</span>, dan jadilah pembalap tercepat di sirkuit SMK!
+                <p class="text-slate-300 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
+                    Kendalikan mobil di lintasan 3-jalur! Hindari penghalang jalan dan terobos <span class="text-amber-400 font-bold">10 Gerbang Rintangan Kuis</span> untuk mengaktifkan Nitro Turbo hingga garis finis!
                 </p>
             </div>
 
-            <div class="glass-panel rounded-3xl p-5 sm:p-8 shadow-2xl">
-                <form id="login-form" onsubmit="startGameSetup(event)" class="space-y-6">
+            <div class="glass-panel rounded-3xl p-4 sm:p-7 shadow-2xl">
+                <form id="login-form" onsubmit="startGameSetup(event)" class="space-y-5">
                     
-                    <!-- Pilihan Mode Permainan -->
+                    <!-- 1. Pilihan Mode Permainan -->
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2.5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">
                             <i class="fa-solid fa-gamepad mr-1.5"></i> 1. Pilih Mode Balapan
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <!-- Mode Solo vs AI -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="gameMode" value="solo" class="peer sr-only" checked onchange="handleModeChange()">
-                                <div class="p-4 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-cyan-400 peer-checked:bg-cyan-950/40 transition flex items-center gap-3.5">
-                                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl shrink-0">
-                                        <i class="fa-solid fa-robot"></i>
+                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/75 peer-checked:border-cyan-400 peer-checked:bg-cyan-950/40 transition flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl shrink-0">
+                                        <i class="fa-solid fa-user-astronaut"></i>
                                     </div>
                                     <div>
-                                        <div class="font-bold text-white text-sm sm:text-base">Solo Race vs AI Bot</div>
-                                        <div class="text-xs text-slate-400">Balapan individu melawan pembalap AI cerdas</div>
+                                        <div class="font-bold text-white text-sm sm:text-base">Solo Race (1 Pemain)</div>
+                                        <div class="text-xs text-slate-400">Taklukkan 10 Gerbang Kuis tercepat & kalahkan rekor AI</div>
                                     </div>
                                 </div>
                             </label>
 
-                            <!-- Mode Multiplayer 2 Pemain (Layar Terbagi / IFP) -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="gameMode" value="multi" class="peer sr-only" onchange="handleModeChange()">
-                                <div class="p-4 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-pink-500 peer-checked:bg-pink-950/40 transition flex items-center gap-3.5">
-                                    <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-2xl shrink-0">
+                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/75 peer-checked:border-pink-500 peer-checked:bg-pink-950/40 transition flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl shrink-0">
                                         <i class="fa-solid fa-users"></i>
                                     </div>
                                     <div>
-                                        <div class="font-bold text-white text-sm sm:text-base">Duel 2 Pemain (Split Screen)</div>
-                                        <div class="text-xs text-slate-400">Cocok untuk Tablet, Laptop & Papan Interaktif (IFP)</div>
+                                        <div class="font-bold text-white text-sm sm:text-base">Duel 2 Pemain (Split-Screen)</div>
+                                        <div class="text-xs text-slate-400">2 Lintasan berdampingan untuk Tablet, Laptop & Papan IFP</div>
                                     </div>
                                 </div>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Identitas Siswa -->
+                    <!-- 2. Identitas & Karakter Pembalap -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Player 1 -->
-                        <div class="p-4 rounded-2xl bg-slate-900/80 border border-cyan-500/30 space-y-3">
+                        <div class="p-4 rounded-2xl bg-slate-900/85 border border-cyan-500/35 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-extrabold uppercase tracking-wider text-cyan-400">
-                                    <i class="fa-solid fa-helmet-safety mr-1"></i> Pembalap 1 (Utama)
+                                    <i class="fa-solid fa-helmet-safety mr-1"></i> Pembalap 1 (Kiri)
                                 </span>
-                                <!-- Pilih Warna Mobil P1 -->
                                 <div class="flex items-center gap-1.5" id="p1-color-picker">
                                     <button type="button" onclick="selectCarColor(1, '#00f3ff', this)" class="w-5 h-5 rounded-full bg-[#00f3ff] ring-2 ring-white scale-110 transition" title="Cyan Neon"></button>
-                                    <button type="button" onclick="selectCarColor(1, '#00f5d4', this)" class="w-5 h-5 rounded-full bg-[#00f5d4] opacity-70 hover:opacity-100 transition" title="Emerald Cyber"></button>
+                                    <button type="button" onclick="selectCarColor(1, '#00f5d4', this)" class="w-5 h-5 rounded-full bg-[#00f5d4] opacity-70 hover:opacity-100 transition" title="Emerald"></button>
                                     <button type="button" onclick="selectCarColor(1, '#ffbe0b', this)" class="w-5 h-5 rounded-full bg-[#ffbe0b] opacity-70 hover:opacity-100 transition" title="Solar Gold"></button>
                                     <button type="button" onclick="selectCarColor(1, '#a855f7', this)" class="w-5 h-5 rounded-full bg-[#a855f7] opacity-70 hover:opacity-100 transition" title="Hyper Violet"></button>
                                 </div>
@@ -258,14 +254,14 @@
 
                             <div>
                                 <label class="block text-xs text-slate-300 mb-1">Nama Lengkap Siswa *</label>
-                                <input type="text" id="p1-name" required maxlength="24" placeholder="Contoh: Ahmad Rizki" 
+                                <input type="text" id="p1-name" required maxlength="22" placeholder="Contoh: Ahmad Rizki" 
                                     class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
                             </div>
 
-                            <div>
-                                <label class="block text-xs text-slate-300 mb-1">Kelas SMK *</label>
-                                <div class="flex gap-2">
-                                    <select id="p1-class-select" onchange="syncClassInput(1)" class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">Kelas SMK *</label>
+                                    <select id="p1-class-select" onchange="syncClassInput(1)" class="w-full px-2.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-xs sm:text-sm font-semibold">
                                         <option value="X RPL 1">X RPL 1</option>
                                         <option value="X RPL 2">X RPL 2</option>
                                         <option value="X TKJ 1">X TKJ 1</option>
@@ -275,9 +271,21 @@
                                         <option value="X TKR 1">X TKR 1</option>
                                         <option value="MANUAL">Ketik Manual...</option>
                                     </select>
-                                    <input type="text" id="p1-class" value="X RPL 1" required maxlength="18" placeholder="Ketik Kelas..."
-                                        class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-sm font-semibold">
                                 </div>
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">Nama Kelas</label>
+                                    <input type="text" id="p1-class" value="X RPL 1" required maxlength="16" placeholder="Kelas..."
+                                        class="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-xs sm:text-sm font-semibold">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Pilih Avatar / Tim Pembalap</label>
+                                <select id="p1-avatar" class="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 focus:border-cyan-400 focus:outline-none text-white text-xs sm:text-sm font-semibold">
+                                    <option value="ryu">Ryu Cyber Racer (Turbo Vector)</option>
+                                    <option value="sinta">Sinta Aero Racer (Hyper Vector)</option>
+                                    <option value="default">Cyber Formula GT-X</option>
+                                </select>
                             </div>
                         </div>
 
@@ -285,9 +293,8 @@
                         <div id="p2-setup-box" class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3 opacity-60 pointer-events-none transition-all">
                             <div class="flex items-center justify-between">
                                 <span id="p2-box-title" class="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                                    <i class="fa-solid fa-robot mr-1"></i> Lawan: CyberBot AI
+                                    <i class="fa-solid fa-robot mr-1"></i> Pembanding: CyberBot AI
                                 </span>
-                                <!-- Pilih Warna Mobil P2 -->
                                 <div class="flex items-center gap-1.5" id="p2-color-picker">
                                     <button type="button" onclick="selectCarColor(2, '#ff007f', this)" class="w-5 h-5 rounded-full bg-[#ff007f] ring-2 ring-white scale-110 transition" title="Neon Pink"></button>
                                     <button type="button" onclick="selectCarColor(2, '#ff5400', this)" class="w-5 h-5 rounded-full bg-[#ff5400] opacity-70 hover:opacity-100 transition" title="Blaze Orange"></button>
@@ -298,14 +305,14 @@
 
                             <div>
                                 <label class="block text-xs text-slate-300 mb-1">Nama Pembalap 2</label>
-                                <input type="text" id="p2-name" value="CyberBot AI" maxlength="24" placeholder="Nama Siswa 2" 
+                                <input type="text" id="p2-name" value="CyberBot AI" maxlength="22" placeholder="Nama Siswa 2" 
                                     class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
                             </div>
 
-                            <div>
-                                <label class="block text-xs text-slate-300 mb-1">Kelas Pembalap 2</label>
-                                <div class="flex gap-2">
-                                    <select id="p2-class-select" onchange="syncClassInput(2)" class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">Kelas Pembalap 2</label>
+                                    <select id="p2-class-select" onchange="syncClassInput(2)" class="w-full px-2.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-xs sm:text-sm font-semibold">
                                         <option value="X RPL 1">X RPL 1</option>
                                         <option value="X RPL 2">X RPL 2</option>
                                         <option value="X TKJ 1">X TKJ 1</option>
@@ -314,98 +321,104 @@
                                         <option value="X AKL 1">X AKL 1</option>
                                         <option value="MANUAL">Ketik Manual...</option>
                                     </select>
-                                    <input type="text" id="p2-class" value="AI SYSTEM" maxlength="18" placeholder="Kelas P2..."
-                                        class="w-1/2 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-sm font-semibold">
                                 </div>
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">Nama Kelas</label>
+                                    <input type="text" id="p2-class" value="AI SYSTEM" maxlength="16" placeholder="Kelas P2..."
+                                        class="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-xs sm:text-sm font-semibold">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">Avatar Pembalap 2</label>
+                                <select id="p2-avatar" class="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 focus:border-pink-500 focus:outline-none text-white text-xs sm:text-sm font-semibold">
+                                    <option value="sinta">Sinta Aero Racer (Hyper Vector)</option>
+                                    <option value="ryu">Ryu Cyber Racer (Turbo Vector)</option>
+                                    <option value="bot">CyberBot AI Interceptor</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tingkat Kesulitan -->
+                    <!-- 3. Tingkat Kesulitan -->
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2.5">
-                            <i class="fa-solid fa-gauge-high mr-1.5"></i> 2. Pilih Tingkat Kesulitan Materi & Kecepatan
+                        <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">
+                            <i class="fa-solid fa-gauge-high mr-1.5"></i> 3. Pilih Tingkat Kesulitan Lintasan & Materi
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <!-- Level 1 -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="difficulty" value="easy" class="peer sr-only" checked>
-                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-emerald-400 peer-checked:bg-emerald-950/40 transition text-center sm:text-left">
-                                    <div class="flex items-center justify-center sm:justify-between mb-1">
-                                        <span class="font-cyber font-bold text-emerald-400 text-sm">LEVEL 1: PEMULA</span>
-                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Dasar</span>
+                                <div class="p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/75 peer-checked:border-emerald-400 peer-checked:bg-emerald-950/40 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-cyber font-bold text-emerald-400 text-xs sm:text-sm">LEVEL 1: PEMULA</span>
+                                        <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Santai</span>
                                     </div>
-                                    <p class="text-xs text-slate-400">Konsep 4 Pilar Berpikir Komputasional & Definisi Dekomposisi.</p>
+                                    <p class="text-xs text-slate-400">Kecepatan stabil, fokus pada 10 Gerbang Kuis konsep dasar Berpikir Komputasional.</p>
                                 </div>
                             </label>
 
-                            <!-- Level 2 -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="difficulty" value="medium" class="peer sr-only">
-                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-amber-400 peer-checked:bg-amber-950/40 transition text-center sm:text-left">
-                                    <div class="flex items-center justify-center sm:justify-between mb-1">
-                                        <span class="font-cyber font-bold text-amber-400 text-sm">LEVEL 2: MENENGAH</span>
-                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">Aplikasi</span>
+                                <div class="p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/75 peer-checked:border-amber-400 peer-checked:bg-amber-950/40 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-cyber font-bold text-amber-400 text-xs sm:text-sm">LEVEL 2: MENENGAH</span>
+                                        <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">+Rintangan</span>
                                     </div>
-                                    <p class="text-xs text-slate-400">Studi kasus dekomposisi masalah sehari-hari & alur kerja SMK.</p>
+                                    <p class="text-xs text-slate-400">Kecepatan sedang + rintangan cone jalanan, studi kasus dekomposisi SMK.</p>
                                 </div>
                             </label>
 
-                            <!-- Level 3 -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="difficulty" value="hard" class="peer sr-only">
-                                <div class="p-3.5 rounded-2xl border-2 border-slate-700 bg-slate-900/70 peer-checked:border-rose-500 peer-checked:bg-rose-950/40 transition text-center sm:text-left">
-                                    <div class="flex items-center justify-center sm:justify-between mb-1">
-                                        <span class="font-cyber font-bold text-rose-400 text-sm">LEVEL 3: EXPERT</span>
-                                        <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">HOTS KKA</span>
+                                <div class="p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/75 peer-checked:border-rose-500 peer-checked:bg-rose-950/40 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-cyber font-bold text-rose-400 text-xs sm:text-sm">LEVEL 3: EXPERT</span>
+                                        <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">HOTS AI</span>
                                     </div>
-                                    <p class="text-xs text-slate-400">Dekomposisi sistem AI, perancangan aplikasi & debugging logika.</p>
+                                    <p class="text-xs text-slate-400">Kecepatan tinggi + banyak penghalang, soal arsitektur AI & debugging logika.</p>
                                 </div>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Tombol Start -->
-                    <div class="pt-2">
-                        <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-cyber font-black text-base sm:text-xl tracking-wider uppercase btn-cyber flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-flag-checkered text-xl"></i>
-                            <span>MULAI BALAPAN SEKARANG</span>
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-cyber font-black text-base sm:text-xl tracking-wider uppercase btn-cyber flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-flag-checkered text-xl"></i>
+                        <span>MULAI BALAPAN RINTANGAN</span>
+                    </button>
                 </form>
             </div>
         </section>
 
         <!-- ========================================================= -->
-        <!-- SCREEN 2: ARENA BALAPAN & KUIS INTERAKTIF                 -->
+        <!-- SCREEN 2: ARENA BALAPAN 3-JALUR & GERBANG KUIS            -->
         <!-- ========================================================= -->
-        <section id="screen-game" class="hidden w-full flex-col gap-3 sm:gap-4">
+        <section id="screen-game" class="hidden w-full flex-col gap-2.5 sm:gap-3">
             
             <!-- HUD Status Atas -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 items-center">
-                <!-- Info Player 1 -->
-                <div class="glass-panel rounded-2xl p-2.5 sm:p-3 flex items-center justify-between border-l-4 border-l-cyan-400">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 items-center">
+                <!-- HUD Player 1 -->
+                <div class="glass-panel rounded-2xl p-2 sm:p-2.5 flex items-center justify-between border-l-4 border-l-cyan-400">
                     <div class="truncate pr-2">
                         <div class="flex items-center gap-1.5">
-                            <span id="hud-p1-badge" class="w-3 h-3 rounded-full bg-cyan-400 inline-block shrink-0"></span>
+                            <span id="hud-p1-badge" class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block shrink-0"></span>
                             <span id="hud-p1-name" class="font-bold text-xs sm:text-sm text-white truncate">Siswa 1</span>
                         </div>
-                        <div class="text-[11px] text-slate-400" id="hud-p1-class">X RPL 1</div>
+                        <div id="hud-p1-hearts" class="text-xs text-rose-400 mt-0.5">
+                            <i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i>
+                        </div>
                     </div>
                     <div class="text-right shrink-0">
-                        <div class="font-cyber font-black text-sm sm:text-lg text-cyan-400"><span id="hud-p1-score">0</span> <span class="text-[10px]">PTS</span></div>
-                        <div id="hud-p1-streak" class="text-[10px] font-bold text-amber-400">Streak: 0x</div>
+                        <div class="font-cyber font-black text-sm sm:text-base text-cyan-400"><span id="hud-p1-score">0</span> <span class="text-[10px]">PTS</span></div>
+                        <div id="hud-p1-gate" class="text-[10px] font-bold text-amber-300">Gerbang: 0/10</div>
                     </div>
                 </div>
 
-                <!-- Timer & Level Badge (Tengah pada Desktop) -->
-                <div class="col-span-2 sm:col-span-1 order-first sm:order-none glass-panel rounded-2xl p-2 sm:p-2.5 flex items-center justify-between sm:justify-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <span id="hud-level-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-xs">
-                            LEVEL 1
-                        </span>
-                    </div>
-                    <div class="flex items-center gap-2 font-cyber font-bold text-base sm:text-xl text-white">
+                <!-- Timer & Level Badge -->
+                <div class="col-span-2 sm:col-span-1 order-first sm:order-none glass-panel rounded-2xl p-2 flex items-center justify-between sm:justify-center gap-3">
+                    <span id="hud-level-badge" class="px-2 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-[10px] sm:text-xs">
+                        LEVEL 1
+                    </span>
+                    <div class="flex items-center gap-1.5 font-cyber font-bold text-base sm:text-lg text-white">
                         <i class="fa-solid fa-stopwatch text-cyan-400"></i>
                         <span id="hud-timer">00:00</span>
                     </div>
@@ -414,38 +427,95 @@
                     </button>
                 </div>
 
-                <!-- Info Player 2 / AI -->
-                <div class="glass-panel-pink rounded-2xl p-2.5 sm:p-3 flex items-center justify-between border-r-4 border-r-pink-500">
+                <!-- HUD Player 2 / AI Benchmark -->
+                <div class="glass-panel-pink rounded-2xl p-2 sm:p-2.5 flex items-center justify-between border-r-4 border-r-pink-500">
                     <div class="truncate pr-2">
                         <div class="flex items-center gap-1.5">
-                            <span id="hud-p2-badge" class="w-3 h-3 rounded-full bg-pink-500 inline-block shrink-0"></span>
+                            <span id="hud-p2-badge" class="w-2.5 h-2.5 rounded-full bg-pink-500 inline-block shrink-0"></span>
                             <span id="hud-p2-name" class="font-bold text-xs sm:text-sm text-white truncate">CyberBot AI</span>
                         </div>
-                        <div class="text-[11px] text-slate-400" id="hud-p2-class">AI SYSTEM</div>
+                        <div id="hud-p2-hearts" class="text-xs text-pink-300 mt-0.5">
+                            Target Skor AI
+                        </div>
                     </div>
                     <div class="text-right shrink-0">
-                        <div class="font-cyber font-black text-sm sm:text-lg text-pink-400"><span id="hud-p2-score">0</span> <span class="text-[10px]">PTS</span></div>
-                        <div id="hud-p2-streak" class="text-[10px] font-bold text-amber-400">Jarak: 0%</div>
+                        <div class="font-cyber font-black text-sm sm:text-base text-pink-400"><span id="hud-p2-score">0</span> <span class="text-[10px]">PTS</span></div>
+                        <div id="hud-p2-gate" class="text-[10px] font-bold text-amber-300">Gerbang: 0/10</div>
                     </div>
                 </div>
             </div>
 
-            <!-- CANVAS LINTASAN BALAP FUTURISTIK -->
-            <div class="relative w-full h-44 sm:h-56 md:h-64 rounded-3xl overflow-hidden border-2 border-cyan-500/40 shadow-2xl bg-slate-950" id="canvas-wrapper">
+            <!-- ARENA CANVAS LINTASAN 3-JALUR -->
+            <div class="relative w-full h-[54vh] sm:h-[58vh] min-h-[340px] max-h-[540px] rounded-3xl overflow-hidden border-2 border-cyan-500/45 shadow-2xl bg-slate-950" id="canvas-wrapper">
                 <canvas id="raceCanvas"></canvas>
 
-                <!-- Countdown Overlay (3, 2, 1, GO!) -->
-                <div id="countdown-overlay" class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm flex flex-col items-center justify-center z-20">
-                    <div class="text-xs sm:text-sm font-bold uppercase tracking-widest text-cyan-300 mb-1">Bersiap di Garis Start</div>
+                <!-- Countdown Overlay -->
+                <div id="countdown-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center z-30">
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-widest text-cyan-300 mb-1">Mesin Menyala • Bersiap!</div>
                     <div id="countdown-text" class="font-cyber font-black text-6xl sm:text-8xl text-white drop-shadow-[0_0_25px_rgba(0,243,255,0.9)]">
                         3
                     </div>
+                    <div class="mt-3 text-xs text-slate-300 bg-slate-900/90 px-4 py-1.5 rounded-full border border-slate-700">
+                        Gunakan tombol <span class="text-cyan-400 font-bold">Kiri / Kanan</span> atau <span class="text-cyan-400 font-bold">Swipe</span> untuk pindah jalur
+                    </div>
+                </div>
+
+                <!-- MODAL KUIS RINTANGAN MUNCUL SAAT MENYENTUH GERBANG KUIS -->
+                <!-- Mode Solo: Overlay Terpusat | Mode Multi: Split Overlay Kiri & Kanan -->
+                <div id="quiz-overlay-solo" class="hidden absolute inset-0 bg-slate-950/75 backdrop-blur-md z-20 flex items-center justify-center p-3 sm:p-5">
+                    <div id="solo-quiz-card" class="glass-panel rounded-3xl max-w-2xl w-full p-4 sm:p-6 border-2 border-amber-400/70 shadow-[0_0_40px_rgba(255,190,11,0.25)]">
+                        <div class="flex items-center justify-between gap-2 mb-2.5">
+                            <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-cyber font-bold text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-road-barrier"></i> GERBANG RINTANGAN #<span id="solo-gate-num">1</span> / 10
+                            </span>
+                            <span id="solo-quiz-feedback" class="text-xs font-bold px-3 py-1 rounded-full hidden"></span>
+                        </div>
+                        <h3 id="solo-q-text" class="text-sm sm:text-lg font-bold text-white leading-snug mb-3.5">
+                            Pertanyaan kuis muncul di sini...
+                        </h3>
+                        <div id="solo-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+                        <div id="solo-edu-tip" class="hidden mt-3 p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-xs sm:text-sm text-rose-100"></div>
+                    </div>
+                </div>
+
+                <!-- Overlay Kuis Pemain 1 (Sisi Kiri pada Mode Split-Screen) -->
+                <div id="quiz-overlay-p1" class="hidden absolute inset-y-0 left-0 w-1/2 bg-slate-950/80 backdrop-blur-md z-20 flex items-center justify-center p-2 sm:p-3 border-r border-cyan-500/40">
+                    <div id="p1-quiz-card" class="glass-panel rounded-2xl w-full h-full max-h-full overflow-y-auto p-3 sm:p-4 border border-cyan-400/60 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-1 mb-1.5">
+                                <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-cyber font-bold text-[10px] sm:text-xs">
+                                    P1 • GERBANG #<span id="p1-gate-num">1</span>
+                                </span>
+                                <span id="p1-quiz-feedback" class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full hidden"></span>
+                            </div>
+                            <h3 id="p1-q-text" class="text-xs sm:text-sm font-bold text-white leading-snug mb-2.5">Pertanyaan P1...</h3>
+                            <div id="p1-options" class="space-y-1.5"></div>
+                        </div>
+                        <div id="p1-edu-tip" class="hidden mt-2 p-2 rounded-xl bg-rose-950/85 border border-rose-500/50 text-[11px] text-rose-100"></div>
+                    </div>
+                </div>
+
+                <!-- Overlay Kuis Pemain 2 (Sisi Kanan pada Mode Split-Screen) -->
+                <div id="quiz-overlay-p2" class="hidden absolute inset-y-0 right-0 w-1/2 bg-slate-950/80 backdrop-blur-md z-20 flex items-center justify-center p-2 sm:p-3 border-l border-pink-500/40">
+                    <div id="p2-quiz-card" class="glass-panel-pink rounded-2xl w-full h-full max-h-full overflow-y-auto p-3 sm:p-4 border border-pink-500/60 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-1 mb-1.5">
+                                <span class="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-cyber font-bold text-[10px] sm:text-xs">
+                                    P2 • GERBANG #<span id="p2-gate-num">1</span>
+                                </span>
+                                <span id="p2-quiz-feedback" class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full hidden"></span>
+                            </div>
+                            <h3 id="p2-q-text" class="text-xs sm:text-sm font-bold text-white leading-snug mb-2.5">Pertanyaan P2...</h3>
+                            <div id="p2-options" class="space-y-1.5"></div>
+                        </div>
+                        <div id="p2-edu-tip" class="hidden mt-2 p-2 rounded-xl bg-rose-950/85 border border-rose-500/50 text-[11px] text-rose-100"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- AREA SOAL & KONTROL JAWABAN (Adaptif Solo vs Split-Screen 2 Pemain) -->
-            <div id="quiz-arena" class="w-full">
-                <!-- Diisi secara dinamis oleh JavaScript sesuai mode Solo atau Multiplayer -->
+            <!-- KONTROL SENTUH / KEYBOARD DI BAWAH CANVAS (Ramah HP, Tablet & IFP) -->
+            <div id="touch-controls-bar" class="w-full">
+                <!-- Diisi dinamis: 1 pasang tombol besar untuk Solo, 2 pasang tombol untuk Split-Screen -->
             </div>
 
         </section>
@@ -455,32 +525,27 @@
         <!-- ========================================================= -->
         <section id="screen-result" class="hidden w-full max-w-4xl mx-auto my-auto">
             <div class="glass-panel rounded-3xl p-5 sm:p-8 text-center relative overflow-hidden">
-                <!-- Trophy / Winner Banner -->
                 <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 text-slate-950 text-3xl sm:text-4xl shadow-lg shadow-amber-500/40 mb-3">
                     <i class="fa-solid fa-trophy"></i>
                 </div>
                 
-                <div class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1">Balapan Selesai!</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1">Balapan Rintangan Selesai!</div>
                 <h2 id="result-winner-title" class="font-cyber text-2xl sm:text-4xl font-black text-white mb-2">
-                    JUARA 1: AHMAD RIZKI!
+                    JUARA 1: PEMBALAP!
                 </h2>
-                <p id="result-subtitle" class="text-slate-300 text-xs sm:text-sm mb-6">
-                    Luar biasa! Kamu berhasil menerapkan Dekomposisi Masalah dengan sangat cepat.
+                <p id="result-subtitle" class="text-slate-300 text-xs sm:text-sm mb-5">
+                    Luar biasa! Kamu berhasil melewati rintangan berpikir komputasional.
                 </p>
 
                 <!-- Statistik Kartu Pembalap -->
-                <div id="result-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-left">
-                    <!-- Diisi via JS -->
-                </div>
+                <div id="result-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 text-left"></div>
 
-                <!-- Review Soal yang Salah (Edukatif) -->
+                <!-- Review Soal yang Salah -->
                 <div id="review-section" class="hidden text-left mb-6">
-                    <h3 class="font-cyber font-bold text-sm sm:text-base text-amber-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-lightbulb"></i> Evaluasi & Pembahasan Materi (Jawaban Kurang Tepat)
+                    <h3 class="font-cyber font-bold text-sm sm:text-base text-amber-400 mb-2.5 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> Evaluasi Rintangan (Pembahasan Jawaban Kurang Tepat)
                     </h3>
-                    <div id="review-list" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                        <!-- List pembahasan soal salah -->
-                    </div>
+                    <div id="review-list" class="space-y-2.5 max-h-56 overflow-y-auto pr-1"></div>
                 </div>
 
                 <!-- Tombol Aksi -->
@@ -501,14 +566,14 @@
     </main>
 
     <!-- Footer -->
-    <footer class="w-full py-2.5 px-4 text-center text-[11px] sm:text-xs text-slate-500 border-t border-slate-800/80">
+    <footer class="w-full py-2 px-4 text-center text-[11px] sm:text-xs text-slate-500 border-t border-slate-800/80">
         Media Pembelajaran Interaktif Koding & Kecerdasan Artifisial (KKA) SMK Kelas X • Kurikulum Merdeka
     </footer>
 
     <!-- ========================================================= -->
     <!-- MODAL 1: RINGKASAN MATERI BERPIKIR KOMPUTASIONAL          -->
     <!-- ========================================================= -->
-    <div id="modal-materi" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="modal-materi" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="glass-panel rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
             <div class="p-4 sm:p-5 border-b border-cyan-500/20 flex items-center justify-between">
                 <h3 class="font-cyber font-bold text-base sm:text-lg text-cyan-400 flex items-center gap-2">
@@ -521,31 +586,31 @@
             <div class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
                 <div class="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-500/30">
                     <h4 class="font-bold text-cyan-300 text-sm sm:text-base mb-1">Apa itu Berpikir Komputasional?</h4>
-                    <p>Cara berpikir sistematis dan logis untuk memecahkan masalah kompleks agar solusinya dapat dijalankan secara efektif oleh manusia maupun komputer/AI.</p>
+                    <p>Pendekatan pemecahan masalah secara sistematis, logis, dan terstruktur sehingga solusinya dapat dijalankan secara efektif oleh manusia maupun sistem komputer/AI.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-purple-500/30">
                         <div class="font-bold text-purple-400 mb-1">1. Dekomposisi (Decomposition)</div>
-                        <p class="text-slate-300 text-xs">Memecah masalah besar atau sistem yang rumit menjadi sub-masalah kecil yang lebih sederhana dan mudah dikelola. <br><em class="text-cyan-300">Contoh: Membuat aplikasi kasir dipecah menjadi modul login, input barang, hitung total, dan cetak struk.</em></p>
+                        <p class="text-slate-300 text-xs">Memecah masalah besar dan kompleks menjadi bagian-bagian kecil (sub-masalah) yang lebih mudah dianalisis dan dikerjakan.</p>
                     </div>
                     <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-pink-500/30">
                         <div class="font-bold text-pink-400 mb-1">2. Pengenalan Pola (Pattern Recognition)</div>
-                        <p class="text-slate-300 text-xs">Mencari kesamaan, tren, atau keteraturan dari bagian-bagian masalah untuk memprediksi solusi.</p>
+                        <p class="text-slate-300 text-xs">Mengidentifikasi kesamaan, kemiripan, atau keteraturan dari masalah untuk memprediksi solusi terbaik.</p>
                     </div>
                     <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-amber-500/30">
                         <div class="font-bold text-amber-400 mb-1">3. Abstraksi (Abstraction)</div>
-                        <p class="text-slate-300 text-xs">Menyaring informasi yang penting dan mengabaikan detail yang tidak relevan dengan fokus penyelesaian masalah.</p>
+                        <p class="text-slate-300 text-xs">Menyaring informasi yang relevan dan mengabaikan detail tidak penting agar fokus pada inti persoalan.</p>
                     </div>
                     <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-emerald-500/30">
                         <div class="font-bold text-emerald-400 mb-1">4. Algoritma (Algorithm)</div>
-                        <p class="text-slate-300 text-xs">Menyusun langkah-langkah instruksi yang logis, berurutan, dan jelas untuk menyelesaikan masalah.</p>
+                        <p class="text-slate-300 text-xs">Menyusun urutan langkah-langkah instruksi yang logis dan jelas untuk menyelesaikan masalah.</p>
                     </div>
                 </div>
             </div>
             <div class="p-4 border-t border-slate-800 text-right">
                 <button onclick="toggleModal('modal-materi', false)" class="px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs sm:text-sm">
-                    Siap Balapan!
+                    Mengerti!
                 </button>
             </div>
         </div>
@@ -554,7 +619,7 @@
     <!-- ========================================================= -->
     <!-- MODAL 2: PAPAN PERINGKAT (LEADERBOARD)                    -->
     <!-- ========================================================= -->
-    <div id="modal-leaderboard" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="modal-leaderboard" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="glass-panel rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
             <div class="p-4 sm:p-5 border-b border-amber-500/30 flex items-center justify-between">
                 <h3 class="font-cyber font-bold text-base sm:text-lg text-amber-400 flex items-center gap-2">
@@ -565,9 +630,7 @@
                 </button>
             </div>
             <div class="p-4 sm:p-5 overflow-y-auto flex-1">
-                <div id="leaderboard-content" class="space-y-2">
-                    <!-- Diisi via JS -->
-                </div>
+                <div id="leaderboard-content" class="space-y-2"></div>
             </div>
             <div class="p-4 border-t border-slate-800 flex justify-between items-center">
                 <button onclick="clearLeaderboard()" class="text-xs text-rose-400 hover:underline">
@@ -581,9 +644,9 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- MODAL 3: KONFIRMASI KELUAR (PENGGANTI CONFIRM())          -->
+    <!-- MODAL 3: KONFIRMASI KELUAR                                -->
     <!-- ========================================================= -->
-    <div id="modal-quit" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="modal-quit" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="glass-panel rounded-3xl max-w-sm w-full p-6 text-center">
             <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl mx-auto mb-3">
                 <i class="fa-solid fa-triangle-exclamation"></i>
@@ -598,11 +661,11 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- JAVASCRIPT: AUDIO ENGINE, BANK SOAL, GAME & CANVAS        -->
+    <!-- JAVASCRIPT: AUDIO ENGINE, BANK SOAL & 3-LANE OBSTACLE GAME-->
     <!-- ========================================================= -->
     <script>
         /**
-         * 1. WEB AUDIO API SYNTHESIZER (Efek Suara & Musik Latar Tanpa File Eksternal)
+         * 1. WEB AUDIO API SYNTHESIZER
          */
         class SoundEngine {
             constructor() {
@@ -657,7 +720,6 @@
                 osc.stop(now + duration);
             }
 
-            // Suara Countdown (3, 2, 1)
             playCountdownBeep(isGo = false) {
                 if (isGo) {
                     this.playTone(880, 'sawtooth', 0.45, 0.2, 1174.66);
@@ -666,19 +728,26 @@
                 }
             }
 
-            // Suara Turbo Boost (Jawaban Benar)
+            playLaneSwitch() {
+                this.playTone(320, 'sine', 0.1, 0.08, 520);
+            }
+
+            playBrakeAlarm() {
+                // Suara rem mendecit + alarm gerbang kuis
+                this.playTone(420, 'sawtooth', 0.18, 0.14, 180);
+                setTimeout(() => this.playTone(660, 'square', 0.15, 0.12), 110);
+            }
+
             playTurbo() {
-                this.playTone(220, 'sawtooth', 0.35, 0.18, 880);
+                this.playTone(240, 'sawtooth', 0.35, 0.18, 920);
                 setTimeout(() => this.playTone(587.33, 'triangle', 0.25, 0.15, 1174.66), 80);
             }
 
-            // Suara Decit Ban / Salah
-            playSlip() {
-                this.playTone(180, 'sawtooth', 0.35, 0.2, 95);
-                setTimeout(() => this.playTone(140, 'square', 0.25, 0.15, 80), 100);
+            playCrash() {
+                this.playTone(150, 'sawtooth', 0.35, 0.22, 65);
+                setTimeout(() => this.playTone(110, 'square', 0.25, 0.18, 55), 90);
             }
 
-            // Suara Kemenangan
             playWin() {
                 const notes = [523.25, 659.25, 783.99, 1046.50];
                 notes.forEach((n, idx) => {
@@ -686,7 +755,6 @@
                 });
             }
 
-            // Musik Latar Synthwave Ringan
             startBGM() {
                 if (this.isMuted || this.bgmInterval) return;
                 this.init();
@@ -694,9 +762,9 @@
                 this.bgmInterval = setInterval(() => {
                     if (this.isMuted || !gameState.isPlaying) return;
                     const freq = bassLine[this.bgmStep % bassLine.length];
-                    this.playTone(freq, 'triangle', 0.18, 0.05);
+                    this.playTone(freq, 'triangle', 0.16, 0.045);
                     this.bgmStep++;
-                }, 260);
+                }, 250);
             }
 
             stopBGM() {
@@ -711,7 +779,18 @@
         function toggleAudio() { sfx.toggleMute(); }
 
         /**
-         * 2. BANK SOAL BERPIKIR KOMPUTASIONAL & DEKOMPOSISI MASALAH (SMK KELAS X)
+         * 2. PRELOAD OPSIONAL GAMBAR KARAKTER DARI REPO (Fallback ke Vektor jika tidak ada)
+         */
+        const spriteAssets = {};
+        ['ryu.png', 'sinta.png', 'bot-ai.png'].forEach(file => {
+            const img = new Image();
+            img.src = `./${file}`;
+            img.onload = () => { spriteAssets[file] = img; };
+            img.onerror = () => { spriteAssets[file] = null; };
+        });
+
+        /**
+         * 3. BANK SOAL BERPIKIR KOMPUTASIONAL & DEKOMPOSISI MASALAH (SMK KELAS X)
          */
         const QUESTION_BANK = {
             easy: [
@@ -802,6 +881,28 @@
                     ],
                     correct: 0,
                     explanation: "Memecah sistem game yang kompleks menjadi fitur-fitur kecil merupakan proses dekomposisi."
+                },
+                {
+                    q: "Mengapa masalah kompleks perlu didekomposisi terlebih dahulu sebelum diselesaikan oleh AI?",
+                    options: [
+                        "Karena sistem AI bekerja lebih akurat ketika memproses sub-tugas yang spesifik dan terstruktur",
+                        "Karena AI tidak membutuhkan data sama sekali",
+                        "Agar listrik komputer menjadi hemat 100%",
+                        "Supaya layar monitor tidak perlu dinyalakan"
+                    ],
+                    correct: 0,
+                    explanation: "Dekomposisi membagi alur kerja AI menjadi tahapan terukur (input, pemrosesan, klasifikasi, output)."
+                },
+                {
+                    q: "Jika kamu diminta membersihkan seluruh gedung sekolah, cara berpikir dekomposisi yang tepat adalah...",
+                    options: [
+                        "Membagi area pembersihan per lantai, per ruang kelas, lalu per bagian (lantai, kaca, meja)",
+                        "Menyapu semua ruangan secara acak tanpa pembagian tugas",
+                        "Menunggu gedung bersih dengan sendirinya",
+                        "Hanya membersihkan satu kursi saja"
+                    ],
+                    correct: 0,
+                    explanation: "Membagi area besar menjadi zona-zona kecil membuat pekerjaan lebih terukur dan cepat selesai."
                 }
             ],
             medium: [
@@ -881,6 +982,39 @@
                     ],
                     correct: 0,
                     explanation: "Membuat nasi goreng dipecah menjadi sub-proses persiapan bahan hingga tahap pemasakan."
+                },
+                {
+                    q: "Siswa DKV diminta membuat video profil sekolah berdurasi 3 menit. Dekomposisi produksi video yang tepat adalah...",
+                    options: [
+                        "Pra-produksi (naskah & storyboard), Produksi (pengambilan gambar & audio), Pasca-produksi (editing & color grading)",
+                        "Langsung upload video kosong ke YouTube",
+                        "Membeli kamera lalu menyimpannya di lemari",
+                        "Mengedit video sebelum merekam adegan"
+                    ],
+                    correct: 0,
+                    explanation: "Produksi multimedia didekomposisi menjadi 3 fase standar: pra-produksi, produksi, dan pasca-produksi."
+                },
+                {
+                    q: "Dalam akuntansi (AKL), penyusunan laporan keuangan akhir tahun dipecah menjadi: pencatatan jurnal, posting buku besar, neraca saldo, dan laporan laba rugi. Ini membuktikan bahwa dekomposisi...",
+                    options: [
+                        "Dapat diterapkan di berbagai bidang kejuruan, bukan hanya pemrograman komputer",
+                        "Hanya berlaku untuk mata pelajaran matematika",
+                        "Membuat laporan keuangan menjadi tidak akurat",
+                        "Menghilangkan kebutuhan akan bukti transaksi"
+                    ],
+                    correct: 0,
+                    explanation: "Berpikir komputasional adalah keterampilan lintas disiplin yang sangat berguna di semua jurusan SMK."
+                },
+                {
+                    q: "Apa manfaat utama membagi kode program menjadi beberapa fungsi kecil saat bekerja dalam tim?",
+                    options: [
+                        "Setiap anggota tim dapat mengerjakan fungsi berbeda secara paralel tanpa saling menimpa kode",
+                        "Kode tidak perlu diuji lagi kebenarannya",
+                        "Aplikasi otomatis berjalan tanpa koneksi internet",
+                        "Ukuran layar komputer menjadi lebih lebar"
+                    ],
+                    correct: 0,
+                    explanation: "Modularitas hasil dekomposisi memungkinkan kolaborasi tim (parallel development) yang rapi."
                 }
             ],
             hard: [
@@ -949,63 +1083,106 @@
                     ],
                     correct: 0,
                     explanation: "Sub-masalah validasi data (data validation) menjaga integritas input agar algoritma perhitungan menghasilkan output yang valid."
+                },
+                {
+                    q: "Dalam arsitektur sistem Smart Home IoT di lab SMK, pemisahan antara lapisan 'Sensor & Aktuator (Edge)', 'Protokol Komunikasi (MQTT)', dan 'Dashboard Monitoring (Cloud)' merupakan penerapan...",
+                    options: [
+                        "Dekomposisi arsitektur berlapis (Layered Architecture) agar setiap lapisan mudah dirawat dan dikembangkan",
+                        "Penghapusan fungsi keamanan jaringan",
+                        "Penggabungan seluruh kabel listrik menjadi satu jalur",
+                        "Abstraksi tampilan ikon baterai"
+                    ],
+                    correct: 0,
+                    explanation: "Memecah sistem IoT menjadi lapisan perangkat keras, komunikasi, dan aplikasi adalah prinsip dekomposisi sistem modern."
+                },
+                {
+                    q: "Sebuah model AI pendeteksi sentimen ulasan produk memiliki akurasi rendah karena kalimat mengandung banyak singkatan gaul dan emoji. Sub-proses mana dalam pipeline NLP yang perlu diperbaiki?",
+                    options: [
+                        "Sub-proses Text Preprocessing (normalisasi kata tidak baku, tokenisasi, dan penanganan emoji)",
+                        "Sub-proses pengaturan kecerahan layar laptop",
+                        "Sub-proses pencetakan sertifikat kelulusan",
+                        "Sub-proses instalasi driver printer"
+                    ],
+                    correct: 0,
+                    explanation: "Dengan mendekomposisi alur NLP, masalah data kotor ditangani khusus pada tahap Text Preprocessing sebelum masuk ke model."
+                },
+                {
+                    q: "Ketika merancang sistem rekomendasi film berbasis AI, masalah besar 'Memprediksi film yang disukai pengguna' dipecah menjadi: profil preferensi pengguna, kemiripan metadata film, dan riwayat rating. Mengapa pendekatan ini unggul?",
+                    options: [
+                        "Memungkinkan penggabungan metode Content-Based dan Collaborative Filtering secara modular dan terukur",
+                        "Menghapus seluruh film yang berdurasi lebih dari 2 jam",
+                        "Membuat pengguna tidak perlu membuat akun",
+                        "Mengurangi kapasitas penyimpanan server menjadi nol"
+                    ],
+                    correct: 0,
+                    explanation: "Dekomposisi komponen rekomendasi memudahkan sistem AI menimbang berbagai faktor preferensi secara akurat."
+                },
+                {
+                    q: "Dalam rekayasa perangkat lunak modern, prinsip 'Single Responsibility Principle' (satu fungsi/modul hanya bertanggung jawab atas satu tugas spesifik) sangat erat kaitannya dengan pilar...",
+                    options: [
+                        "Dekomposisi Masalah",
+                        "Kompresi File",
+                        "Overclocking CPU",
+                        "Rendering 3D"
+                    ],
+                    correct: 0,
+                    explanation: "Single Responsibility Principle adalah penerapan langsung dari dekomposisi dalam desain kode program."
                 }
             ]
         };
 
         /**
-         * 3. STATE MANAJEMEN PERMAINAN
+         * 4. STATE PERMAINAN 3-JALUR DENGAN GERBANG RINTANGAN KUIS
          */
+        const TOTAL_GATES = 10;
+
         const gameState = {
             mode: 'solo', // 'solo' | 'multi'
-            difficulty: 'easy', // 'easy' | 'medium' | 'hard'
+            difficulty: 'easy',
             isPlaying: false,
             isCountdown: false,
             startTime: 0,
             elapsedSeconds: 0,
             timerInterval: null,
             aiInterval: null,
-            roadOffset: 0,
             particles: [],
-            players: [
-                {
-                    id: 1,
-                    name: 'Siswa 1',
-                    className: 'X RPL 1',
-                    color: '#00f3ff',
-                    progress: 0, // 0 to 100 (%)
-                    score: 0,
-                    streak: 0,
-                    correctCount: 0,
-                    wrongCount: 0,
-                    turboTimer: 0,
-                    slipTimer: 0,
-                    currentQIndex: 0,
-                    questions: [],
-                    isLocked: false
-                },
-                {
-                    id: 2,
-                    name: 'CyberBot AI',
-                    className: 'AI SYSTEM',
-                    color: '#ff007f',
-                    progress: 0,
-                    score: 0,
-                    streak: 0,
-                    correctCount: 0,
-                    wrongCount: 0,
-                    turboTimer: 0,
-                    slipTimer: 0,
-                    currentQIndex: 0,
-                    questions: [],
-                    isLocked: false
-                }
-            ],
-            wrongReviews: [] // Menyimpan soal salah untuk evaluasi akhir
+            players: [],
+            wrongReviews: []
         };
 
+        function createPlayerState(id, name, className, color, avatar) {
+            return {
+                id,
+                name,
+                className,
+                color,
+                avatar,
+                lane: 1, // 0 = Kiri, 1 = Tengah, 2 = Kanan
+                visualLane: 1, // Untuk animasi perpindahan jalur yang mulus
+                lives: 3,
+                score: 0,
+                streak: 0,
+                gatesCleared: 0,
+                correctCount: 0,
+                wrongCount: 0,
+                speed: 0,
+                baseSpeed: 0,
+                turboTimer: 0,
+                slipTimer: 0,
+                roadOffset: 0,
+                distanceTraveled: 0,
+                nextGateDistance: 420,
+                gateGap: 680,
+                obstacles: [], // { type: 'gate'|'cone', lane: 0..2, y: number, gateNum?: number, passed: boolean, shattered?: boolean }
+                activeQuiz: null, // Menyimpan objek rintangan gerbang yang sedang dihadapi
+                isFinished: false,
+                questions: [],
+                currentQIndex: 0
+            };
+        }
+
         /**
-         * 4. PENGATURAN LOGIN & UI FORM
+         * 5. PENGATURAN LOGIN & UI FORM
          */
         function handleModeChange() {
             const mode = document.querySelector('input[name="gameMode"]:checked').value;
@@ -1016,16 +1193,16 @@
 
             if (mode === 'multi') {
                 p2Box.classList.remove('opacity-60', 'pointer-events-none', 'border-slate-800');
-                p2Box.classList.add('border-pink-500/40', 'bg-slate-900/80');
-                p2Title.innerHTML = '<i class="fa-solid fa-helmet-safety mr-1 text-pink-400"></i> Pembalap 2 (Layar Sentuh / Split)';
+                p2Box.classList.add('border-pink-500/40', 'bg-slate-900/85');
+                p2Title.innerHTML = '<i class="fa-solid fa-helmet-safety mr-1 text-pink-400"></i> Pembalap 2 (Kanan)';
                 p2Title.classList.replace('text-slate-400', 'text-pink-400');
                 if (p2Name.value === 'CyberBot AI') p2Name.value = '';
                 p2Name.required = true;
                 if (p2Class.value === 'AI SYSTEM') p2Class.value = 'X RPL 1';
             } else {
                 p2Box.classList.add('opacity-60', 'pointer-events-none', 'border-slate-800');
-                p2Box.classList.remove('border-pink-500/40', 'bg-slate-900/80');
-                p2Title.innerHTML = '<i class="fa-solid fa-robot mr-1"></i> Lawan: CyberBot AI';
+                p2Box.classList.remove('border-pink-500/40', 'bg-slate-900/85');
+                p2Title.innerHTML = '<i class="fa-solid fa-robot mr-1"></i> Pembanding: CyberBot AI';
                 p2Title.classList.replace('text-pink-400', 'text-slate-400');
                 p2Name.value = 'CyberBot AI';
                 p2Name.required = false;
@@ -1044,8 +1221,9 @@
             }
         }
 
+        const selectedColors = { 1: '#00f3ff', 2: '#ff007f' };
         function selectCarColor(playerNum, hexColor, btnEl) {
-            gameState.players[playerNum - 1].color = hexColor;
+            selectedColors[playerNum] = hexColor;
             const container = document.getElementById(`p${playerNum}-color-picker`);
             container.querySelectorAll('button').forEach(b => {
                 b.classList.remove('ring-2', 'ring-white', 'scale-110');
@@ -1073,83 +1251,213 @@
 
             const p1Name = document.getElementById('p1-name').value.trim() || 'Pembalap 1';
             const p1Class = document.getElementById('p1-class').value.trim() || 'X SMK';
+            const p1Avatar = document.getElementById('p1-avatar').value;
 
             let p2Name = 'CyberBot AI';
             let p2Class = diff === 'easy' ? 'AI PEMULA' : (diff === 'medium' ? 'AI MENENGAH' : 'AI EXPERT');
+            let p2Avatar = 'bot';
 
             if (mode === 'multi') {
                 p2Name = document.getElementById('p2-name').value.trim() || 'Pembalap 2';
                 p2Class = document.getElementById('p2-class').value.trim() || 'X SMK';
+                p2Avatar = document.getElementById('p2-avatar').value;
             }
 
             gameState.mode = mode;
             gameState.difficulty = diff;
             gameState.wrongReviews = [];
+            gameState.particles = [];
 
-            // Reset Player 1
-            Object.assign(gameState.players[0], {
-                name: p1Name,
-                className: p1Class,
-                progress: 0,
-                score: 0,
-                streak: 0,
-                correctCount: 0,
-                wrongCount: 0,
-                turboTimer: 0,
-                slipTimer: 0,
-                currentQIndex: 0,
-                questions: shuffleArray(QUESTION_BANK[diff]),
-                isLocked: false
-            });
+            const speedConfig = { easy: 4.2, medium: 5.5, hard: 6.8 };
+            const gateGapConfig = { easy: 620, medium: 720, hard: 800 };
 
-            // Reset Player 2 / AI
-            Object.assign(gameState.players[1], {
-                name: p2Name,
-                className: p2Class,
-                progress: 0,
-                score: 0,
-                streak: 0,
-                correctCount: 0,
-                wrongCount: 0,
-                turboTimer: 0,
-                slipTimer: 0,
-                currentQIndex: 0,
-                questions: shuffleArray(QUESTION_BANK[diff]),
-                isLocked: false
-            });
+            const p1 = createPlayerState(1, p1Name, p1Class, selectedColors[1], p1Avatar);
+            p1.baseSpeed = speedConfig[diff];
+            p1.speed = p1.baseSpeed;
+            p1.gateGap = gateGapConfig[diff];
+            p1.questions = shuffleArray(QUESTION_BANK[diff]);
 
-            // Update HUD
+            const p2 = createPlayerState(2, p2Name, p2Class, selectedColors[2], p2Avatar);
+            p2.baseSpeed = speedConfig[diff];
+            p2.speed = p2.baseSpeed;
+            p2.gateGap = gateGapConfig[diff];
+            p2.questions = shuffleArray(QUESTION_BANK[diff]);
+
+            gameState.players = [p1, p2];
+
+            // Spawn rintangan awal
+            spawnNextObstacleSet(p1, 1);
+            if (mode === 'multi') {
+                spawnNextObstacleSet(p2, 1);
+            }
+
+            // Update HUD Header
             document.getElementById('hud-p1-name').textContent = p1Name;
-            document.getElementById('hud-p1-class').textContent = p1Class;
-            document.getElementById('hud-p1-badge').style.backgroundColor = gameState.players[0].color;
-
+            document.getElementById('hud-p1-badge').style.backgroundColor = p1.color;
             document.getElementById('hud-p2-name').textContent = p2Name;
-            document.getElementById('hud-p2-class').textContent = p2Class;
-            document.getElementById('hud-p2-badge').style.backgroundColor = gameState.players[1].color;
+            document.getElementById('hud-p2-badge').style.backgroundColor = p2.color;
 
             const lvlBadge = document.getElementById('hud-level-badge');
             if (diff === 'easy') {
                 lvlBadge.textContent = 'LEVEL 1: PEMULA';
-                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-xs';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cyber font-bold text-[10px] sm:text-xs';
             } else if (diff === 'medium') {
                 lvlBadge.textContent = 'LEVEL 2: MENENGAH';
-                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-cyber font-bold text-xs';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-cyber font-bold text-[10px] sm:text-xs';
             } else {
                 lvlBadge.textContent = 'LEVEL 3: EXPERT';
-                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 font-cyber font-bold text-xs';
+                lvlBadge.className = 'px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 font-cyber font-bold text-[10px] sm:text-xs';
             }
 
-            updateHUD();
-            buildQuizUI();
+            // Sembunyikan semua overlay kuis
+            document.getElementById('quiz-overlay-solo').classList.add('hidden');
+            document.getElementById('quiz-overlay-p1').classList.add('hidden');
+            document.getElementById('quiz-overlay-p2').classList.add('hidden');
 
-            // Pindah Layar ke Arena Balap
+            buildTouchControls();
+            updateHUD();
+
             switchScreen('screen-game');
             resizeCanvas();
             startCountdown();
         }
 
         /**
-         * 5. COUNTDOWN & LOOP PERMAINAN
+         * 6. SISTEM KONTROL JALUR (KEYBOARD, TOMBOL SENTUH & SWIPE)
+         */
+        function buildTouchControls() {
+            const bar = document.getElementById('touch-controls-bar');
+            if (gameState.mode === 'solo') {
+                bar.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3 max-w-xl mx-auto">
+                        <button type="button" onpointerdown="moveLane(1, -1)" class="touch-btn py-3.5 sm:py-4 rounded-2xl bg-slate-900/95 border-2 border-cyan-400/60 text-cyan-300 font-cyber font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/15">
+                            <i class="fa-solid fa-chevron-left text-xl"></i> JALUR KIRI
+                        </button>
+                        <button type="button" onpointerdown="moveLane(1, 1)" class="touch-btn py-3.5 sm:py-4 rounded-2xl bg-slate-900/95 border-2 border-cyan-400/60 text-cyan-300 font-cyber font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/15">
+                            JALUR KANAN <i class="fa-solid fa-chevron-right text-xl"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                bar.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3 sm:gap-6">
+                        <!-- Kontrol P1 -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onpointerdown="moveLane(1, -1)" class="touch-btn py-3 sm:py-3.5 rounded-2xl bg-cyan-950/80 border-2 border-cyan-400/60 text-cyan-300 font-cyber font-bold text-xs sm:text-sm flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-arrow-left"></i> P1 KIRI (A)
+                            </button>
+                            <button type="button" onpointerdown="moveLane(1, 1)" class="touch-btn py-3 sm:py-3.5 rounded-2xl bg-cyan-950/80 border-2 border-cyan-400/60 text-cyan-300 font-cyber font-bold text-xs sm:text-sm flex items-center justify-center gap-1">
+                                P1 KANAN (D) <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <!-- Kontrol P2 -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onpointerdown="moveLane(2, -1)" class="touch-btn py-3 sm:py-3.5 rounded-2xl bg-pink-950/80 border-2 border-pink-500/60 text-pink-300 font-cyber font-bold text-xs sm:text-sm flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-arrow-left"></i> P2 KIRI (◀)
+                            </button>
+                            <button type="button" onpointerdown="moveLane(2, 1)" class="touch-btn py-3 sm:py-3.5 rounded-2xl bg-pink-950/80 border-2 border-pink-500/60 text-pink-300 font-cyber font-bold text-xs sm:text-sm flex items-center justify-center gap-1">
+                                P2 KANAN (▶) <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function moveLane(playerNum, delta) {
+            if (!gameState.isPlaying) return;
+            const p = gameState.players[playerNum - 1];
+            if (!p || p.activeQuiz || p.isFinished) return;
+
+            const newLane = Math.max(0, Math.min(2, p.lane + delta));
+            if (newLane !== p.lane) {
+                p.lane = newLane;
+                sfx.playLaneSwitch();
+            }
+        }
+
+        // Kontrol Keyboard (ArrowLeft/Right & A/D)
+        window.addEventListener('keydown', (e) => {
+            if (!gameState.isPlaying) return;
+            if (gameState.mode === 'solo') {
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveLane(1, -1);
+                if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveLane(1, 1);
+            } else {
+                // Mode Split-Screen: P1 = A/D, P2 = ArrowLeft/ArrowRight
+                if (e.key === 'a' || e.key === 'A') moveLane(1, -1);
+                if (e.key === 'd' || e.key === 'D') moveLane(1, 1);
+                if (e.key === 'ArrowLeft') moveLane(2, -1);
+                if (e.key === 'ArrowRight') moveLane(2, 1);
+            }
+        });
+
+        // Kontrol Swipe Sentuh di atas Canvas
+        let touchStartX = 0;
+        const canvasWrapperEl = document.getElementById('canvas-wrapper');
+        canvasWrapperEl.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                touchStartX = e.touches[0].clientX;
+            }
+        }, { passive: true });
+
+        canvasWrapperEl.addEventListener('touchend', (e) => {
+            if (!gameState.isPlaying || e.changedTouches.length === 0) return;
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchEndX - touchStartX;
+            if (Math.abs(diffX) > 30) {
+                const dir = diffX > 0 ? 1 : -1;
+                if (gameState.mode === 'solo') {
+                    moveLane(1, dir);
+                } else {
+                    // Tentukan sisi kiri (P1) atau kanan (P2) berdasarkan posisi sentuhan
+                    const midX = window.innerWidth / 2;
+                    const playerNum = touchStartX < midX ? 1 : 2;
+                    moveLane(playerNum, dir);
+                }
+            }
+        }, { passive: true });
+
+        /**
+         * 7. GENERATOR RINTANGAN (GERBANG KUIS + PENGHALANG CONE)
+         */
+        function spawnNextObstacleSet(player, gateNumber) {
+            if (gateNumber > TOTAL_GATES) return;
+
+            // 1. Gerbang Rintangan Kuis (Merentang di seluruh 3 jalur agar wajib dihadapi & dijawab)
+            player.obstacles.push({
+                type: 'gate',
+                lane: 1,
+                y: -90,
+                gateNum: gateNumber,
+                passed: false,
+                shattered: false
+            });
+
+            // 2. Pada Level Menengah & Expert, tambahkan rintangan Cone/Penghalang kecil sebelum Gerbang Kuis
+            if (gameState.difficulty === 'medium' || gameState.difficulty === 'hard') {
+                const coneLane = Math.floor(Math.random() * 3);
+                player.obstacles.push({
+                    type: 'cone',
+                    lane: coneLane,
+                    y: -340,
+                    passed: false
+                });
+
+                if (gameState.difficulty === 'hard') {
+                    // Tambahkan 1 penghalang lagi di jalur berbeda
+                    const secondLane = (coneLane + 1 + Math.floor(Math.random() * 2)) % 3;
+                    player.obstacles.push({
+                        type: 'cone',
+                        lane: secondLane,
+                        y: -520,
+                        passed: false
+                    });
+                }
+            }
+        }
+
+        /**
+         * 8. COUNTDOWN & LOOP PERMAINAN
          */
         function startCountdown() {
             gameState.isPlaying = false;
@@ -1178,7 +1486,7 @@
                     gameState.isCountdown = false;
                     beginRace();
                 }
-            }, 750);
+            }, 700);
         }
 
         function beginRace() {
@@ -1186,12 +1494,6 @@
             gameState.startTime = Date.now();
             gameState.elapsedSeconds = 0;
             sfx.startBGM();
-
-            // Render soal pertama
-            renderQuestionForPlayer(1);
-            if (gameState.mode === 'multi') {
-                renderQuestionForPlayer(2);
-            }
 
             // Timer Balapan
             clearInterval(gameState.timerInterval);
@@ -1203,199 +1505,168 @@
                 document.getElementById('hud-timer').textContent = `${mins}:${secs}`;
             }, 500);
 
-            // AI Bot Behavior jika Mode Solo
+            // AI Pembanding pada Mode Solo
             clearInterval(gameState.aiInterval);
             if (gameState.mode === 'solo') {
-                const aiSpeedMap = { easy: 1.35, medium: 2.15, hard: 3.1 };
-                const aiStep = aiSpeedMap[gameState.difficulty];
-
+                const aiRate = { easy: 3800, medium: 3100, hard: 2500 }[gameState.difficulty];
                 gameState.aiInterval = setInterval(() => {
                     if (!gameState.isPlaying) return;
                     const ai = gameState.players[1];
-                    // AI melaju stabil dengan sedikit variasi acak
-                    const boostChance = Math.random();
-                    if (boostChance > 0.85) {
-                        ai.turboTimer = 25;
-                        ai.progress += aiStep * 1.6;
-                        ai.score += 50;
-                        spawnParticles(2, ai.color, 8);
-                    } else {
-                        ai.progress += aiStep;
+                    if (ai.gatesCleared < TOTAL_GATES) {
+                        ai.gatesCleared++;
+                        ai.score += 110;
+                        updateHUD();
                     }
-
-                    if (ai.progress >= 100) {
-                        ai.progress = 100;
-                        finishRace(ai);
-                    }
-                    updateHUD();
-                }, 900);
+                }, aiRate);
             }
         }
 
         /**
-         * 6. RENDER UI SOAL & LOGIKA JAWABAN (SOLO & SPLIT-SCREEN MULTIPLAYER)
+         * 9. INTERAKSI GERBANG RINTANGAN KUIS
          */
-        function buildQuizUI() {
-            const arena = document.getElementById('quiz-arena');
-            if (gameState.mode === 'solo') {
-                arena.innerHTML = `
-                    <div id="p1-card" class="glass-panel rounded-3xl p-4 sm:p-6 border-t-4 border-t-cyan-400 transition-all">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs">
-                                <i class="fa-solid fa-bolt mr-1"></i> Tantangan Berpikir Komputasional #<span id="p1-q-num">1</span>
-                            </span>
-                            <span id="p1-feedback-badge" class="text-xs font-bold px-3 py-1 rounded-full hidden"></span>
-                        </div>
-                        <h3 id="p1-q-text" class="text-base sm:text-xl font-bold text-white leading-snug mb-4">
-                            Menunggu aba-aba start...
-                        </h3>
-                        <div id="p1-options" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3">
-                            <!-- Tombol Opsi -->
-                        </div>
-                        <div id="p1-edu-tip" class="hidden mt-3 p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-xs sm:text-sm text-rose-200"></div>
-                    </div>
-                `;
-            } else {
-                // Split Screen 2 Pemain (Side-by-side di Tablet/Laptop/IFP, Stacked rapi di HP)
-                arena.innerHTML = `
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-                        <!-- Panel Pemain 1 -->
-                        <div id="p1-card" class="glass-panel rounded-3xl p-3.5 sm:p-5 border-t-4 border-t-cyan-400">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs">
-                                    P1: ${gameState.players[0].name} • Soal #<span id="p1-q-num">1</span>
-                                </span>
-                                <span id="p1-feedback-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full hidden"></span>
-                            </div>
-                            <h3 id="p1-q-text" class="text-sm sm:text-base font-bold text-white leading-snug mb-3 min-h-[3rem]">
-                                Bersiap...
-                            </h3>
-                            <div id="p1-options" class="grid grid-cols-1 gap-2"></div>
-                            <div id="p1-edu-tip" class="hidden mt-2 p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200"></div>
-                        </div>
+        function triggerQuizGate(player, gateObstacle) {
+            player.activeQuiz = gateObstacle;
+            sfx.playBrakeAlarm();
 
-                        <!-- Panel Pemain 2 -->
-                        <div id="p2-card" class="glass-panel-pink rounded-3xl p-3.5 sm:p-5 border-t-4 border-t-pink-500">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-bold text-xs">
-                                    P2: ${gameState.players[1].name} • Soal #<span id="p2-q-num">1</span>
-                                </span>
-                                <span id="p2-feedback-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full hidden"></span>
-                            </div>
-                            <h3 id="p2-q-text" class="text-sm sm:text-base font-bold text-white leading-snug mb-3 min-h-[3rem]">
-                                Bersiap...
-                            </h3>
-                            <div id="p2-options" class="grid grid-cols-1 gap-2"></div>
-                            <div id="p2-edu-tip" class="hidden mt-2 p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200"></div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function renderQuestionForPlayer(playerNum) {
-            const p = gameState.players[playerNum - 1];
-            if (p.currentQIndex >= p.questions.length) {
-                // Acak ulang soal jika habis sebelum garis finis
-                p.questions = shuffleArray(QUESTION_BANK[gameState.difficulty]);
-                p.currentQIndex = 0;
+            if (player.currentQIndex >= player.questions.length) {
+                player.questions = shuffleArray(QUESTION_BANK[gameState.difficulty]);
+                player.currentQIndex = 0;
             }
 
-            const qObj = p.questions[p.currentQIndex];
-            // Acak urutan opsi jawaban sambil menjaga indeks jawaban benar
+            const qObj = player.questions[player.currentQIndex];
             const indexedOptions = qObj.options.map((text, idx) => ({
                 text,
                 isCorrect: idx === qObj.correct
             }));
             const shuffledOptions = shuffleArray(indexedOptions);
 
-            document.getElementById(`p${playerNum}-q-num`).textContent = p.correctCount + p.wrongCount + 1;
-            document.getElementById(`p${playerNum}-q-text`).textContent = qObj.q;
+            if (gameState.mode === 'solo') {
+                const overlay = document.getElementById('quiz-overlay-solo');
+                document.getElementById('solo-gate-num').textContent = gateObstacle.gateNum;
+                document.getElementById('solo-q-text').textContent = qObj.q;
 
-            const tipEl = document.getElementById(`p${playerNum}-edu-tip`);
-            tipEl.classList.add('hidden');
+                const fb = document.getElementById('solo-quiz-feedback');
+                fb.classList.add('hidden');
+                const tip = document.getElementById('solo-edu-tip');
+                tip.classList.add('hidden');
 
-            const optionsContainer = document.getElementById(`p${playerNum}-options`);
-            optionsContainer.innerHTML = '';
+                const optContainer = document.getElementById('solo-options');
+                optContainer.innerHTML = '';
+                const letters = ['A', 'B', 'C', 'D'];
 
-            const letters = ['A', 'B', 'C', 'D'];
-            shuffledOptions.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'btn-option w-full text-left p-3 sm:p-3.5 rounded-2xl bg-slate-900/90 text-slate-100 text-xs sm:text-sm font-semibold flex items-start gap-3 cursor-pointer';
-                btn.innerHTML = `
-                    <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-cyber font-bold text-xs text-cyan-400 shrink-0 mt-0.5">
-                        ${letters[i]}
-                    </span>
-                    <span class="flex-1 leading-snug">${opt.text}</span>
-                `;
-                btn.onclick = () => handleAnswer(playerNum, opt.isCorrect, btn, qObj);
-                optionsContainer.appendChild(btn);
-            });
+                shuffledOptions.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn-option w-full text-left p-3 sm:p-3.5 rounded-2xl bg-slate-900/95 text-slate-100 text-xs sm:text-sm font-semibold flex items-start gap-2.5 cursor-pointer';
+                    btn.innerHTML = `
+                        <span class="w-6 h-6 rounded-lg bg-slate-800 border border-amber-400/50 flex items-center justify-center font-cyber font-bold text-xs text-amber-300 shrink-0 mt-0.5">${letters[idx]}</span>
+                        <span class="flex-1 leading-snug">${opt.text}</span>
+                    `;
+                    btn.onclick = () => resolveQuizAnswer(1, opt.isCorrect, btn, qObj);
+                    optContainer.appendChild(btn);
+                });
+
+                overlay.classList.remove('hidden');
+            } else {
+                // Mode Split-Screen (P1 Kiri, P2 Kanan)
+                const pNum = player.id;
+                const overlay = document.getElementById(`quiz-overlay-p${pNum}`);
+                document.getElementById(`p${pNum}-gate-num`).textContent = gateObstacle.gateNum;
+                document.getElementById(`p${pNum}-q-text`).textContent = qObj.q;
+
+                const fb = document.getElementById(`p${pNum}-quiz-feedback`);
+                fb.classList.add('hidden');
+                const tip = document.getElementById(`p${pNum}-edu-tip`);
+                tip.classList.add('hidden');
+
+                const optContainer = document.getElementById(`p${pNum}-options`);
+                optContainer.innerHTML = '';
+                const letters = ['A', 'B', 'C', 'D'];
+
+                shuffledOptions.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn-option w-full text-left p-2 sm:p-2.5 rounded-xl bg-slate-900/95 text-slate-100 text-[11px] sm:text-xs font-semibold flex items-start gap-2 cursor-pointer';
+                    btn.innerHTML = `
+                        <span class="w-5 h-5 rounded bg-slate-800 border border-slate-600 flex items-center justify-center font-cyber font-bold text-[10px] text-cyan-300 shrink-0 mt-0.5">${letters[idx]}</span>
+                        <span class="flex-1 leading-tight">${opt.text}</span>
+                    `;
+                    btn.onclick = () => resolveQuizAnswer(pNum, opt.isCorrect, btn, qObj);
+                    optContainer.appendChild(btn);
+                });
+
+                overlay.classList.remove('hidden');
+            }
         }
 
-        function handleAnswer(playerNum, isCorrect, clickedBtn, qObj) {
+        function resolveQuizAnswer(playerNum, isCorrect, clickedBtn, qObj) {
             if (!gameState.isPlaying) return;
             const p = gameState.players[playerNum - 1];
-            if (p.isLocked) return;
+            if (!p.activeQuiz) return;
 
-            p.isLocked = true;
-            const cardEl = document.getElementById(`p${playerNum}-card`);
-            const badgeEl = document.getElementById(`p${playerNum}-feedback-badge`);
-            const tipEl = document.getElementById(`p${playerNum}-edu-tip`);
-            const allBtns = document.getElementById(`p${playerNum}-options`).querySelectorAll('button');
+            const isSolo = gameState.mode === 'solo';
+            const optContainer = document.getElementById(isSolo ? 'solo-options' : `p${playerNum}-options`);
+            const fbEl = document.getElementById(isSolo ? 'solo-quiz-feedback' : `p${playerNum}-quiz-feedback`);
+            const tipEl = document.getElementById(isSolo ? 'solo-edu-tip' : `p${playerNum}-edu-tip`);
+            const cardEl = document.getElementById(isSolo ? 'solo-quiz-card' : `p${playerNum}-quiz-card`);
+            const overlayEl = document.getElementById(isSolo ? 'quiz-overlay-solo' : `quiz-overlay-p${playerNum}`);
 
-            allBtns.forEach(b => b.disabled = true);
+            optContainer.querySelectorAll('button').forEach(b => b.disabled = true);
+
+            const gateObj = p.activeQuiz;
+            gateObj.passed = true;
 
             if (isCorrect) {
-                // JAWABAN BENAR -> TURBO BOOST!
+                // JAWABAN BENAR -> HANCURKAN GERBANG & NITRO TURBO!
                 sfx.playTurbo();
-                clickedBtn.classList.remove('bg-slate-900/90');
-                clickedBtn.classList.add('bg-emerald-600/40', 'border-emerald-400', 'text-white');
+                clickedBtn.classList.remove('bg-slate-900/95');
+                clickedBtn.classList.add('bg-emerald-600/45', 'border-emerald-400', 'text-white');
 
+                gateObj.shattered = true;
                 p.correctCount++;
+                p.gatesCleared++;
                 p.streak++;
-                const streakBonus = Math.min(p.streak * 25, 150);
-                p.score += (100 + streakBonus);
+                const bonus = Math.min(p.streak * 25, 150);
+                p.score += (120 + bonus);
+                p.turboTimer = 85; // Melaju sangat kencang dengan api turbo
 
-                // Dorongan jarak (sekitar 6-7 soal benar untuk mencapai 100%)
-                const boostStep = gameState.difficulty === 'easy' ? 16.5 : (gameState.difficulty === 'medium' ? 15 : 14.5);
-                p.progress = Math.min(100, p.progress + boostStep + (p.streak > 2 ? 2 : 0));
-                p.turboTimer = 45; // frame efek api turbo
-                spawnParticles(playerNum, p.color, 22);
+                spawnExplosionParticles(playerNum, p.lane, p.color, 30);
 
-                badgeEl.textContent = `TURBO BOOST! +${100 + streakBonus}`;
-                badgeEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/50';
-                badgeEl.classList.remove('hidden');
+                fbEl.textContent = `GERBANG TERBUKA! +${120 + bonus}`;
+                fbEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/25 text-emerald-300 border border-emerald-400/50';
+                fbEl.classList.remove('hidden');
 
                 updateHUD();
 
-                if (p.progress >= 100) {
-                    setTimeout(() => finishRace(p), 450);
-                    return;
-                }
-
                 setTimeout(() => {
-                    badgeEl.classList.add('hidden');
+                    overlayEl.classList.add('hidden');
                     p.currentQIndex++;
-                    p.isLocked = false;
-                    renderQuestionForPlayer(playerNum);
+                    p.activeQuiz = null;
+
+                    if (p.gatesCleared >= TOTAL_GATES) {
+                        p.isFinished = true;
+                        finishRace(p);
+                    } else {
+                        spawnNextObstacleSet(p, p.gatesCleared + 1);
+                    }
                 }, 650);
 
             } else {
-                // JAWABAN SALAH -> SLIP & EDUKATIF FEEDBACK
-                sfx.playSlip();
-                clickedBtn.classList.remove('bg-slate-900/90');
-                clickedBtn.classList.add('bg-rose-600/40', 'border-rose-500', 'text-rose-200');
+                // JAWABAN SALAH -> BENTURAN GERBANG, PENJELASAN SINGKAT & KURANGI NYAWA
+                sfx.playCrash();
+                clickedBtn.classList.remove('bg-slate-900/95');
+                clickedBtn.classList.add('bg-rose-600/45', 'border-rose-500', 'text-rose-200');
                 cardEl.classList.add('animate-shake');
                 setTimeout(() => cardEl.classList.remove('animate-shake'), 450);
 
                 p.wrongCount++;
+                p.gatesCleared++;
                 p.streak = 0;
-                p.slipTimer = 55; // frame efek asap ban
-                spawnParticles(playerNum, '#94a3b8', 15);
+                p.lives = Math.max(0, p.lives - 1);
+                p.slipTimer = 75;
 
-                // Catat untuk review akhir
+                spawnExplosionParticles(playerNum, p.lane, '#ef4444', 25);
+
                 if (!gameState.wrongReviews.some(item => item.q === qObj.q)) {
                     gameState.wrongReviews.push({
                         player: p.name,
@@ -1405,9 +1676,9 @@
                     });
                 }
 
-                badgeEl.textContent = 'BAN SELIP! (-1.5 Detik)';
-                badgeEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/50';
-                badgeEl.classList.remove('hidden');
+                fbEl.textContent = 'TABRAKAN! -1 ENERGI';
+                fbEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/25 text-rose-300 border border-rose-500/50';
+                fbEl.classList.remove('hidden');
 
                 tipEl.innerHTML = `<i class="fa-solid fa-circle-info mr-1 text-amber-400"></i> <strong>Pembahasan:</strong> ${qObj.explanation}`;
                 tipEl.classList.remove('hidden');
@@ -1415,11 +1686,25 @@
                 updateHUD();
 
                 setTimeout(() => {
-                    badgeEl.classList.add('hidden');
+                    overlayEl.classList.add('hidden');
                     p.currentQIndex++;
-                    p.isLocked = false;
-                    renderQuestionForPlayer(playerNum);
-                }, 1900);
+                    p.activeQuiz = null;
+
+                    // Cek apakah energi habis pada mode Solo, atau sudah melewati 10 gerbang
+                    if (gameState.mode === 'solo' && p.lives <= 0) {
+                        finishRace(gameState.players[1], true); // Energi habis
+                        return;
+                    }
+
+                    if (p.gatesCleared >= TOTAL_GATES) {
+                        p.isFinished = true;
+                        finishRace(p);
+                    } else {
+                        // Reset nyawa jika habis di mode multi agar tetap bisa menyelesaikan 10 gerbang
+                        if (p.lives <= 0) p.lives = 1;
+                        spawnNextObstacleSet(p, p.gatesCleared + 1);
+                    }
+                }, 2200);
             }
         }
 
@@ -1428,66 +1713,89 @@
             const p2 = gameState.players[1];
 
             document.getElementById('hud-p1-score').textContent = p1.score;
-            document.getElementById('hud-p1-streak').textContent = `Streak: ${p1.streak}x • ${Math.round(p1.progress)}%`;
+            document.getElementById('hud-p1-gate').textContent = `Gerbang: ${p1.gatesCleared}/${TOTAL_GATES}`;
+            document.getElementById('hud-p1-hearts').innerHTML = renderHearts(p1.lives);
 
             document.getElementById('hud-p2-score').textContent = p2.score;
-            document.getElementById('hud-p2-streak').textContent = gameState.mode === 'multi' 
-                ? `Streak: ${p2.streak}x • ${Math.round(p2.progress)}%`
-                : `Jarak AI: ${Math.round(p2.progress)}%`;
+            document.getElementById('hud-p2-gate').textContent = `Gerbang: ${p2.gatesCleared}/${TOTAL_GATES}`;
+            if (gameState.mode === 'multi') {
+                document.getElementById('hud-p2-hearts').innerHTML = renderHearts(p2.lives);
+            } else {
+                document.getElementById('hud-p2-hearts').innerHTML = `<span class="text-[11px] text-pink-300">Pembanding AI</span>`;
+            }
+        }
+
+        function renderHearts(lives) {
+            let html = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < lives) {
+                    html += '<i class="fa-solid fa-heart text-rose-500 mr-1"></i>';
+                } else {
+                    html += '<i class="fa-regular fa-heart text-slate-600 mr-1"></i>';
+                }
+            }
+            return html;
         }
 
         /**
-         * 7. AKHIR BALAPAN, LEADERBOARD & REVIEW
+         * 10. AKHIR BALAPAN, LEADERBOARD & REVIEW
          */
-        function finishRace(winnerPlayer) {
+        function finishRace(winnerPlayer, isOutOfEnergy = false) {
             if (!gameState.isPlaying) return;
             gameState.isPlaying = false;
             clearInterval(gameState.timerInterval);
             clearInterval(gameState.aiInterval);
             sfx.stopBGM();
-            sfx.playWin();
 
             const p1 = gameState.players[0];
             const p2 = gameState.players[1];
 
-            // Tentukan Judul Pemenang
             const winnerTitle = document.getElementById('result-winner-title');
             const subtitle = document.getElementById('result-subtitle');
 
-            if (gameState.mode === 'solo' && winnerPlayer.id === 2) {
-                winnerTitle.textContent = 'CYBERBOT AI MENANG!';
-                winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-pink-400 mb-2';
-                subtitle.textContent = 'Jangan menyerah! Pelajari pembahasan di bawah dan coba kalahkan AI lagi.';
+            if (isOutOfEnergy) {
+                sfx.playCrash();
+                winnerTitle.textContent = 'ENERGI MOBIL HABIS!';
+                winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-rose-400 mb-2';
+                subtitle.textContent = 'Mobil mengalami 3 kali benturan rintangan. Pelajari pembahasan di bawah untuk percobaan berikutnya!';
+            } else if (gameState.mode === 'solo') {
+                sfx.playWin();
+                const beatAI = p1.score >= p2.score;
+                winnerTitle.textContent = beatAI ? `FINIS! ${p1.name.toUpperCase()} UNGGUL!` : `FINIS! SKOR: ${p1.score} PTS`;
+                winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-amber-400 mb-2';
+                subtitle.textContent = beatAI
+                    ? `Hebat! Kamu menaklukkan 10 Gerbang Rintangan dalam ${gameState.elapsedSeconds} detik dan mengalahkan skor CyberBot AI!`
+                    : `Kamu berhasil mencapai finis dalam ${gameState.elapsedSeconds} detik! Tingkatkan kecepatan & akurasi untuk melampaui skor AI.`;
             } else {
+                sfx.playWin();
+                // Pada mode Split-Screen, pemenang adalah yang lebih dulu mencapai 10 gerbang
                 winnerTitle.textContent = `JUARA 1: ${winnerPlayer.name.toUpperCase()}!`;
                 winnerTitle.className = 'font-cyber text-2xl sm:text-4xl font-black text-amber-400 mb-2';
-                subtitle.textContent = `Selamat! Kecepatan analisis dekomposisi masalahmu menaklukkan sirkuit dalam ${gameState.elapsedSeconds} detik.`;
+                subtitle.textContent = `Luar biasa! ${winnerPlayer.name} lebih dulu menerobos 10 Gerbang Rintangan dalam ${gameState.elapsedSeconds} detik.`;
             }
 
-            // Simpan Skor Pemain Manusia ke LocalStorage
             saveToLeaderboard(p1);
             if (gameState.mode === 'multi') {
                 saveToLeaderboard(p2);
             }
 
-            // Render Kartu Statistik
             const cardsContainer = document.getElementById('result-cards');
             cardsContainer.innerHTML = [p1, p2].map(p => {
                 const totalAns = p.correctCount + p.wrongCount;
-                const accuracy = totalAns > 0 ? Math.round((p.correctCount / totalAns) * 100) : (p.id === 2 && gameState.mode === 'solo' ? 85 : 0);
-                const isWinner = p.id === winnerPlayer.id;
+                const accuracy = totalAns > 0 ? Math.round((p.correctCount / totalAns) * 100) : (p.id === 2 && gameState.mode === 'solo' ? 90 : 0);
+                const isWinner = !isOutOfEnergy && (gameState.mode === 'solo' ? p.id === 1 : p.id === winnerPlayer.id);
 
                 return `
                     <div class="p-4 rounded-2xl bg-slate-900/90 border ${isWinner ? 'border-amber-400 shadow-lg shadow-amber-500/15' : 'border-slate-700'}">
-                        <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center justify-between mb-1.5">
                             <div class="flex items-center gap-2">
                                 <span class="w-3.5 h-3.5 rounded-full" style="background:${p.color}"></span>
                                 <span class="font-bold text-white text-base">${p.name}</span>
                             </div>
-                            ${isWinner ? '<span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-cyber text-[10px] font-bold">WINNER</span>' : '<span class="text-xs text-slate-400">Runner Up</span>'}
+                            ${isWinner ? '<span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-cyber text-[10px] font-bold">FINISHER</span>' : '<span class="text-xs text-slate-400">Statistik</span>'}
                         </div>
-                        <div class="text-xs text-slate-400 mb-3">${p.className} • Jarak: ${Math.round(p.progress)}%</div>
-                        <div class="grid grid-cols-3 gap-2 text-center bg-slate-950/70 p-2.5 rounded-xl">
+                        <div class="text-xs text-slate-400 mb-3">${p.className} • Gerbang Dilewati: ${p.gatesCleared}/${TOTAL_GATES}</div>
+                        <div class="grid grid-cols-3 gap-2 text-center bg-slate-950/75 p-2.5 rounded-xl">
                             <div>
                                 <div class="text-[10px] text-slate-400">SKOR</div>
                                 <div class="font-cyber font-bold text-cyan-400 text-sm sm:text-base">${p.score}</div>
@@ -1505,7 +1813,6 @@
                 `;
             }).join('');
 
-            // Render Review Soal yang Salah
             const reviewSec = document.getElementById('review-section');
             const reviewList = document.getElementById('review-list');
             if (gameState.wrongReviews.length > 0) {
@@ -1538,9 +1845,7 @@
                 });
                 list.sort((a, b) => b.score - a.score || a.time - b.time);
                 localStorage.setItem('kka_race_leaderboard', JSON.stringify(list.slice(0, 15)));
-            } catch (e) {
-                console.warn('LocalStorage tidak tersedia', e);
-            }
+            } catch (e) {}
         }
 
         function openLeaderboard() {
@@ -1616,7 +1921,7 @@
         }
 
         /**
-         * 8. HTML5 CANVAS RENDER ENGINE (Sirkuit Cyberpunk, Mobil Sport & Partikel)
+         * 11. HTML5 CANVAS RENDER ENGINE (LINTASAN 3-JALUR, MOBIL TOP-DOWN SPORT, GERBANG KUIS & CONE)
          */
         const canvas = document.getElementById('raceCanvas');
         const ctx = canvas.getContext('2d');
@@ -1628,115 +1933,308 @@
             canvas.width = rect.width;
             canvas.height = rect.height;
         }
-
         window.addEventListener('resize', resizeCanvas);
 
-        function spawnParticles(playerNum, color, count) {
-            const p = gameState.players[playerNum - 1];
-            const startX = 65;
-            const finishX = canvas.width - 75;
-            const carX = startX + (p.progress / 100) * (finishX - startX);
-            const laneY = playerNum === 1 ? canvas.height * 0.44 : canvas.height * 0.76;
+        function spawnExplosionParticles(playerNum, laneIdx, color, count) {
+            const isSolo = gameState.mode === 'solo';
+            const viewW = isSolo ? canvas.width : canvas.width / 2;
+            const offsetX = isSolo ? 0 : (playerNum === 2 ? canvas.width / 2 : 0);
+            const roadWidth = Math.min(viewW * 0.82, 460);
+            const roadLeft = offsetX + (viewW - roadWidth) / 2;
+            const laneWidth = roadWidth / 3;
+            const cx = roadLeft + laneWidth * (laneIdx + 0.5);
+            const cy = canvas.height - 95;
 
             for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const spd = Math.random() * 5 + 1.5;
                 gameState.particles.push({
-                    x: carX - 24,
-                    y: laneY + (Math.random() - 0.5) * 14,
-                    vx: -(Math.random() * 4 + 2),
-                    vy: (Math.random() - 0.5) * 2.5,
-                    size: Math.random() * 5 + 2,
+                    x: cx,
+                    y: cy,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd,
+                    size: Math.random() * 5 + 2.5,
                     color: color,
                     alpha: 1
                 });
             }
         }
 
-        function drawCyberCar(x, y, color, isTurbo, isSlip, labelText) {
+        function drawTopDownSportCar(x, y, player) {
             ctx.save();
             ctx.translate(x, y);
 
-            // Efek getar saat slip
-            if (isSlip) {
-                ctx.rotate(Math.sin(Date.now() * 0.05) * 0.14);
+            // Efek getar saat ban selip / tertabrak
+            if (player.slipTimer > 0) {
+                ctx.rotate(Math.sin(Date.now() * 0.06) * 0.16);
             }
 
-            // Api Knalpot Turbo
-            if (isTurbo) {
-                const flameLen = 28 + Math.random() * 18;
-                const grad = ctx.createLinearGradient(-28, 0, -28 - flameLen, 0);
+            // Api Knalpot Nitro Turbo
+            if (player.turboTimer > 0) {
+                const flameLen = 32 + Math.random() * 22;
+                const grad = ctx.createLinearGradient(0, 28, 0, 28 + flameLen);
                 grad.addColorStop(0, '#ffffff');
-                grad.addColorStop(0.4, '#00f3ff');
+                grad.addColorStop(0.35, '#00f3ff');
                 grad.addColorStop(1, 'rgba(157, 78, 221, 0)');
                 ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.moveTo(-26, -7);
-                ctx.lineTo(-26 - flameLen, 0);
-                ctx.lineTo(-26, 7);
-                ctx.closePath();
-                ctx.fill();
+
+                // Dual exhaust flame
+                [-9, 9].forEach(ex => {
+                    ctx.beginPath();
+                    ctx.moveTo(ex - 5, 28);
+                    ctx.lineTo(ex, 28 + flameLen);
+                    ctx.lineTo(ex + 5, 28);
+                    ctx.closePath();
+                    ctx.fill();
+                });
             }
 
             // Bayangan bawah mobil
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
             ctx.beginPath();
-            ctx.ellipse(0, 14, 32, 7, 0, 0, Math.PI * 2);
+            ctx.roundRect(-22, -32, 44, 68, 12);
             ctx.fill();
 
-            // Roda Mobil
-            ctx.fillStyle = '#0f172a';
-            ctx.strokeStyle = '#64748b';
-            ctx.lineWidth = 2;
-            // Roda belakang & depan
-            [[-17, 11], [17, 11]].forEach(([wx, wy]) => {
-                ctx.beginPath();
-                ctx.arc(wx, wy, 7.5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
+            // 4 Roda Balap
+            ctx.fillStyle = '#090d16';
+            [[-23, -20], [17, -20], [-23, 14], [17, 14]].forEach(([wx, wy]) => {
+                ctx.fillRect(wx, wy, 6, 14);
             });
 
-            // Bodi Utama Mobil Sport Futuristik
-            ctx.shadowColor = color;
-            ctx.shadowBlur = isTurbo ? 20 : 10;
-            ctx.fillStyle = color;
+            // Bodi Mobil Sport Futuristik
+            ctx.shadowColor = player.color;
+            ctx.shadowBlur = player.turboTimer > 0 ? 22 : 12;
+            ctx.fillStyle = player.color;
 
             ctx.beginPath();
-            ctx.moveTo(-28, 8);
-            ctx.lineTo(-30, -3);
-            ctx.lineTo(-18, -5);
-            ctx.lineTo(-6, -15);
-            ctx.lineTo(12, -15);
-            ctx.lineTo(28, -4);
-            ctx.lineTo(31, 6);
-            ctx.lineTo(26, 9);
-            ctx.lineTo(-26, 9);
+            ctx.moveTo(-16, -34); // Hidung depan kiri
+            ctx.lineTo(16, -34);  // Hidung depan kanan
+            ctx.lineTo(20, -14);
+            ctx.lineTo(20, 24);
+            ctx.lineTo(15, 32);
+            ctx.lineTo(-15, 32);
+            ctx.lineTo(-20, 24);
+            ctx.lineTo(-20, -14);
+            ctx.closePath();
+            ctx.fill();
+
+            // Garis Balap Tengah (Racing Stripe)
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.fillRect(-3, -33, 6, 64);
+
+            // Kaca Kokpit Gelap
+            ctx.fillStyle = '#070b14';
+            ctx.beginPath();
+            ctx.moveTo(-12, -12);
+            ctx.lineTo(12, -12);
+            ctx.lineTo(14, 6);
+            ctx.lineTo(-14, 6);
             ctx.closePath();
             ctx.fill();
 
             // Spoiler Belakang
             ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-31, -12, 6, 8);
-            ctx.fillRect(-34, -14, 10, 3);
+            ctx.fillRect(-21, 26, 42, 6);
 
-            // Kaca Kokpit Neon Gelap
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#090d16';
+            // Sorot Lampu Depan LED
+            const beamGrad = ctx.createLinearGradient(0, -34, 0, -95);
+            beamGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+            beamGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = beamGrad;
             ctx.beginPath();
-            ctx.moveTo(-5, -13);
-            ctx.lineTo(10, -13);
-            ctx.lineTo(19, -4);
-            ctx.lineTo(-9, -4);
+            ctx.moveTo(-14, -34);
+            ctx.lineTo(-26, -95);
+            ctx.lineTo(26, -95);
+            ctx.lineTo(14, -34);
             ctx.closePath();
             ctx.fill();
 
-            // Lampu Depan LED
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(26, -2, 5, 3);
+            // Jika ada gambar avatar dari repo (ryu.png / sinta.png / bot-ai.png), tampilkan badge bulat kecil di atas mobil
+            const spriteKey = player.avatar === 'ryu' ? 'ryu.png' : (player.avatar === 'sinta' ? 'sinta.png' : (player.avatar === 'bot' ? 'bot-ai.png' : null));
+            if (spriteKey && spriteAssets[spriteKey]) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(0, 0, 13, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.drawImage(spriteAssets[spriteKey], -13, -13, 26, 26);
+                ctx.restore();
+            }
 
-            // Label Nama di Atas Mobil
+            // Label Nama Pemain
             ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
             ctx.textAlign = 'center';
             ctx.fillStyle = '#ffffff';
-            ctx.fillText(labelText, 0, -22);
+            ctx.fillText(player.name, 0, 48);
+
+            ctx.restore();
+        }
+
+        function renderViewport(player, offsetX, viewW, viewH) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(offsetX, 0, viewW, viewH);
+            ctx.clip();
+
+            // Background Sisi Luar Lintasan (Cyber Grid Dark)
+            ctx.fillStyle = '#070b14';
+            ctx.fillRect(offsetX, 0, viewW, viewH);
+
+            // Lebar Jalan Raya 3-Jalur
+            const roadWidth = Math.min(viewW * 0.84, 480);
+            const roadLeft = offsetX + (viewW - roadWidth) / 2;
+            const roadRight = roadLeft + roadWidth;
+            const laneWidth = roadWidth / 3;
+
+            // Aspal Lintasan
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(roadLeft, 0, roadWidth, viewH);
+
+            // Update pergerakan jalan jika mobil sedang melaju (tidak berhenti di gerbang kuis)
+            const isMoving = gameState.isPlaying && !player.activeQuiz && !player.isFinished;
+            let currentSpeed = 0;
+            if (isMoving) {
+                currentSpeed = player.baseSpeed;
+                if (player.turboTimer > 0) {
+                    currentSpeed *= 1.85;
+                    player.turboTimer--;
+                }
+                if (player.slipTimer > 0) {
+                    currentSpeed *= 0.55;
+                    player.slipTimer--;
+                }
+                player.roadOffset = (player.roadOffset + currentSpeed) % 60;
+            } else if (gameState.isCountdown) {
+                player.roadOffset = (player.roadOffset + 1.2) % 60;
+            }
+
+            // Bahu Jalan Neon (Kiri & Kanan)
+            ctx.fillStyle = player.id === 1 ? '#00f3ff' : '#ff007f';
+            ctx.fillRect(roadLeft - 5, 0, 5, viewH);
+            ctx.fillRect(roadRight, 0, 5, viewH);
+
+            // Garis Pemisah 3-Jalur (Putus-putus bergerak cepat)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.32)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([28, 32]);
+            ctx.lineDashOffset = -player.roadOffset;
+
+            for (let l = 1; l <= 2; l++) {
+                const lx = roadLeft + laneWidth * l;
+                ctx.beginPath();
+                ctx.moveTo(lx, 0);
+                ctx.lineTo(lx, viewH);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            // Posisi Mobil Pemain
+            player.visualLane += (player.lane - player.visualLane) * 0.25;
+            const carX = roadLeft + laneWidth * (player.visualLane + 0.5);
+            const carY = viewH - 72;
+
+            // Update & Render Rintangan (Cone Penghalang & Gerbang Rintangan Kuis)
+            for (let i = player.obstacles.length - 1; i >= 0; i--) {
+                const obs = player.obstacles[i];
+                if (isMoving) {
+                    obs.y += currentSpeed;
+                }
+
+                if (obs.type === 'cone') {
+                    // Rintangan Cone / Penghalang Jalan Kecil di 1 Jalur
+                    const ox = roadLeft + laneWidth * (obs.lane + 0.5);
+                    const oy = obs.y;
+
+                    // Gambar Traffic Cone / Cyber Barrier
+                    ctx.save();
+                    ctx.translate(ox, oy);
+                    ctx.fillStyle = '#f97316';
+                    ctx.shadowColor = '#f97316';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.roundRect(-18, -12, 36, 24, 6);
+                    ctx.fill();
+                    // Garis reflektif putih
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(-12, -4, 24, 8);
+                    ctx.restore();
+
+                    // Deteksi tabrakan dengan Cone
+                    if (!obs.passed && Math.abs(oy - carY) < 34 && player.lane === obs.lane) {
+                        obs.passed = true;
+                        player.slipTimer = 45;
+                        player.score = Math.max(0, player.score - 25);
+                        sfx.playCrash();
+                        spawnExplosionParticles(player.id, player.lane, '#f97316', 14);
+                        updateHUD();
+                    }
+
+                    if (oy > viewH + 60) {
+                        player.obstacles.splice(i, 1);
+                    }
+
+                } else if (obs.type === 'gate') {
+                    // GERBANG RINTANGAN KUIS (Membentang selebar jalan raya)
+                    const gy = obs.y;
+
+                    if (!obs.shattered) {
+                        ctx.save();
+                        // Palang Laser / Gerbang Rintangan
+                        const gateGrad = ctx.createLinearGradient(roadLeft, gy - 14, roadRight, gy + 14);
+                        gateGrad.addColorStop(0, '#ffbe0b');
+                        gateGrad.addColorStop(0.5, '#ff007f');
+                        gateGrad.addColorStop(1, '#ffbe0b');
+
+                        ctx.fillStyle = 'rgba(255, 190, 11, 0.22)';
+                        ctx.fillRect(roadLeft, gy - 16, roadWidth, 32);
+
+                        ctx.fillStyle = gateGrad;
+                        ctx.shadowColor = '#ffbe0b';
+                        ctx.shadowBlur = 15;
+                        ctx.fillRect(roadLeft, gy - 6, roadWidth, 12);
+
+                        // Badge Nomor Gerbang di Tengah Palang
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = '#090d16';
+                        ctx.beginPath();
+                        ctx.roundRect(roadLeft + roadWidth / 2 - 68, gy - 15, 136, 30, 10);
+                        ctx.fill();
+                        ctx.strokeStyle = '#ffbe0b';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+
+                        ctx.font = 'bold 11px "Orbitron", sans-serif';
+                        ctx.fillStyle = '#ffbe0b';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(`KUIS GERBANG #${obs.gateNum}`, roadLeft + roadWidth / 2, gy + 4);
+                        ctx.restore();
+                    }
+
+                    // Deteksi Mobil Menyentuh Gerbang Rintangan Kuis -> Berhenti & Munculkan Pertanyaan!
+                    if (!obs.passed && !player.activeQuiz && gy >= carY - 46) {
+                        obs.y = carY - 46; // Tahan posisi tepat di depan hidung mobil
+                        triggerQuizGate(player, obs);
+                    }
+
+                    if (obs.passed && gy > viewH + 80) {
+                        player.obstacles.splice(i, 1);
+                    }
+                }
+            }
+
+            // Render Mobil Pemain
+            drawTopDownSportCar(carX, carY, player);
+
+            // Indikator Status Kecepatan di Pojok Atas Viewport
+            ctx.font = 'bold 11px "Orbitron", sans-serif';
+            ctx.textAlign = 'left';
+            if (player.turboTimer > 0) {
+                ctx.fillStyle = '#00f3ff';
+                ctx.fillText('⚡ NITRO TURBO AKTIF!', roadLeft + 10, 24);
+            } else if (player.slipTimer > 0) {
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillText('⚠ KECEPATAN MENURUN', roadLeft + 10, 24);
+            }
 
             ctx.restore();
         }
@@ -1745,90 +2243,32 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            if (w > 0 && h > 0) {
+            if (w > 0 && h > 0 && gameState.players.length > 0) {
                 ctx.clearRect(0, 0, w, h);
 
-                // 1. Langit & Horizon Cyberpunk
-                const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.32);
-                skyGrad.addColorStop(0, '#050811');
-                skyGrad.addColorStop(1, '#1e1b4b');
-                ctx.fillStyle = skyGrad;
-                ctx.fillRect(0, 0, w, h * 0.32);
+                if (gameState.mode === 'solo') {
+                    renderViewport(gameState.players[0], 0, w, h);
+                } else {
+                    // Split-Screen 2 Lintasan (Kiri P1, Kanan P2)
+                    const halfW = w / 2;
+                    renderViewport(gameState.players[0], 0, halfW, h);
+                    renderViewport(gameState.players[1], halfW, halfW, h);
 
-                // Siluet Gedung Kota Futuristik
-                ctx.fillStyle = '#0f172a';
-                for (let bx = 0; bx < w; bx += 55) {
-                    const bh = 18 + ((bx * 7) % 28);
-                    ctx.fillRect(bx, h * 0.32 - bh, 42, bh);
-                    // Jendela neon kecil
-                    ctx.fillStyle = (bx % 110 === 0) ? 'rgba(0, 243, 255, 0.35)' : 'rgba(255, 0, 127, 0.3)';
-                    ctx.fillRect(bx + 8, h * 0.32 - bh + 5, 6, 4);
-                    ctx.fillStyle = '#0f172a';
+                    // Garis pemisah tengah layar
+                    ctx.strokeStyle = '#334155';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(halfW, 0);
+                    ctx.lineTo(halfW, h);
+                    ctx.stroke();
                 }
 
-                // Garis Pembatas Horizon Neon
-                ctx.strokeStyle = '#00f3ff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(0, h * 0.32);
-                ctx.lineTo(w, h * 0.32);
-                ctx.stroke();
-
-                // 2. Aspal Lintasan Balap (2 Jalur)
-                ctx.fillStyle = '#111827';
-                ctx.fillRect(0, h * 0.32, w, h * 0.68);
-
-                // Animasi kecepatan jalan bergerak
-                const speedFactor = gameState.isPlaying ? 4 : 0.6;
-                gameState.roadOffset = (gameState.roadOffset - speedFactor) % 60;
-
-                // Garis Putus-putus Pemisah Jalur
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
-                ctx.lineWidth = 3;
-                ctx.setLineDash([30, 30]);
-                ctx.lineDashOffset = -gameState.roadOffset;
-                ctx.beginPath();
-                ctx.moveTo(0, h * 0.62);
-                ctx.lineTo(w, h * 0.62);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Pembatas Bawah Lintasan
-                ctx.strokeStyle = '#ff007f';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(0, h - 2);
-                ctx.lineTo(w, h - 2);
-                ctx.stroke();
-
-                // 3. Garis Start & Garis Finis (Checkered Flag)
-                const startX = 65;
-                const finishX = w - 65;
-
-                // Garis Start
-                ctx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(startX, h * 0.32);
-                ctx.lineTo(startX, h);
-                ctx.stroke();
-
-                // Garis Finis Kotak-Kotak
-                const sqSize = 8;
-                for (let fy = h * 0.32; fy < h; fy += sqSize) {
-                    for (let col = 0; col < 2; col++) {
-                        const isWhite = (Math.floor(fy / sqSize) + col) % 2 === 0;
-                        ctx.fillStyle = isWhite ? '#f8fafc' : '#090d16';
-                        ctx.fillRect(finishX + col * sqSize, fy, sqSize, sqSize);
-                    }
-                }
-
-                // 4. Update & Render Partikel
+                // Update & Render Partikel Ledakan / Percikan
                 for (let i = gameState.particles.length - 1; i >= 0; i--) {
                     const pt = gameState.particles[i];
                     pt.x += pt.vx;
                     pt.y += pt.vy;
-                    pt.alpha -= 0.03;
+                    pt.alpha -= 0.032;
                     if (pt.alpha <= 0) {
                         gameState.particles.splice(i, 1);
                     } else {
@@ -1840,27 +2280,11 @@
                         ctx.globalAlpha = 1;
                     }
                 }
-
-                // 5. Render Mobil Pemain 1 & Pemain 2
-                gameState.players.forEach((p, idx) => {
-                    if (p.turboTimer > 0) {
-                        p.turboTimer--;
-                        if (p.turboTimer % 3 === 0) spawnParticles(p.id, p.color, 2);
-                    }
-                    if (p.slipTimer > 0) p.slipTimer--;
-
-                    const trackSpan = Math.max(50, finishX - startX - 15);
-                    const carX = startX + (p.progress / 100) * trackSpan;
-                    const carY = idx === 0 ? h * 0.46 : h * 0.78;
-
-                    drawCyberCar(carX, carY, p.color, p.turboTimer > 0, p.slipTimer > 0, p.name);
-                });
             }
 
             requestAnimationFrame(renderCanvasLoop);
         }
 
-        // Inisialisasi saat halaman dimuat
         window.onload = function () {
             resizeCanvas();
             renderCanvasLoop();
